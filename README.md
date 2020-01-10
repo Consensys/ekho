@@ -8,6 +8,14 @@ Project Ekho - peer-to-peer communication module
 $ npm install
 ```
 
+## Configuration
+
+```bash
+# .env contents
+IPFS_HOST=ipfs.infura.io
+IPFS_PORT=5001
+```
+
 ## Running the app
 
 ```bash
@@ -20,6 +28,8 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+In development mode (`npm run start:dev`), Swagger endpoint should be accessible: http://localhost:3000/api/#
 
 ## Test
 
