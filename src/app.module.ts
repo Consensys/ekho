@@ -1,8 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { CryptographyModule } from './cryptography/cryptography.module';
+import configuration from './config/configuration';
 
 @Module({
-  imports: [CryptographyModule],
+  imports: [ConfigModule.forRoot({
+    load: [configuration],
+  }), CryptographyModule],
   controllers: [],
   providers: [],
 })
