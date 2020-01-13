@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as ipfsClient from 'ipfs-http-client';
+import IpfsClient from 'ipfs-http-client';
 import { IpfsMessageDto } from './dto/ipfs-message.dto';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class IpfsService {
         const host = this.configService.get<string>('ipfs.host');
         const port = this.configService.get<number>('ipfs.port');
         const protocol = 'https';
-        this.ipfs = ipfsClient({ host, port, protocol });
+        this.ipfs = IpfsClient({ host, port, protocol });
     }
 
     /**
