@@ -1,0 +1,16 @@
+---
+version: "3.7"
+services:
+    db:
+        image: docker.io/postgres:11.6-alpine
+        restart: always
+        ports: 
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=ekho
+            - POSTGRES_PASSWORD=ekho
+            - POSTGRES_DB=ekho
+        volumes:
+            - ekho-db:/var/lib/postgresql/data
+volumes: 
+    ekho-db:
