@@ -15,8 +15,4 @@ describe('CryptographyService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
-  it('run sandbox code (temporary)', () => {
-    service.sandbox();
-  });
 });
