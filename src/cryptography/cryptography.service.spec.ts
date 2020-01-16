@@ -65,7 +65,7 @@ describe('CryptographyService', () => {
 
   describe('generateSHA256Hash', () => {
     it('should be able to hash shit', async () => {
-      const anon = Buffer.from("durrr I'm a bunch of data, lalala.");
+      const anon = Buffer.from(`durrr I'm a bunch of data, lalala.`);
       const actual = await service.generateSHA256Hash(anon);
 
       expect(actual).toBeInstanceOf(Buffer);
@@ -123,7 +123,7 @@ describe('CryptographyService', () => {
     });
 
     it('given a data buffer and private signing key,generateSignature generates signature', async () => {
-      const anonData = Buffer.from("I'm totally Alice.");
+      const anonData = Buffer.from(`I'm totally Alice.`);
 
       const actual = await service.generateSignature(anonData, alice.privateKey);
 
@@ -132,7 +132,7 @@ describe('CryptographyService', () => {
     });
 
     it('can validate a signature against expected public key and the expected data', async () => {
-      const anonData = Buffer.from("I'm totally Alice.");
+      const anonData = Buffer.from(`I'm totally Alice.`);
 
       const signature = await service.generateSignature(anonData, alice.privateKey);
 
@@ -142,7 +142,7 @@ describe('CryptographyService', () => {
     });
 
     it('can refuse to validate a signature against expected public key and the wrong data', async () => {
-      const expectedData = Buffer.from("I'm totally Alice.");
+      const expectedData = Buffer.from(`I'm totally Alice.`);
       const incorrectData = Buffer.from('Fascist lies!');
 
       const signature = await service.generateSignature(expectedData, alice.privateKey);
@@ -153,7 +153,7 @@ describe('CryptographyService', () => {
     });
 
     it('can refuse to validate a signature against wrong public key and the expected data', async () => {
-      const expectedData = Buffer.from("I'm totally Alice.");
+      const expectedData = Buffer.from(`I'm totally Alice.`);
 
       const signature = await service.generateSignature(expectedData, alice.privateKey);
 
