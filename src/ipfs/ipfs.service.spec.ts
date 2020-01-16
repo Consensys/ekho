@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { IpfsService } from './ipfs.service';
 
-describe('IpfsService', () => {
+xdescribe('IpfsService', () => {
   let service: IpfsService;
 
   beforeEach(async () => {
