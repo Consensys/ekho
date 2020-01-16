@@ -1,12 +1,11 @@
-import { Controller, Post, Body, Query, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import SendMessageDto from './dto/send-message.dto';
-import { MessagesService } from './messages.service';
 import { Message } from './messages.entity';
+import { MessagesService } from './messages.service';
 
 @Controller('messages')
 export class MessagesController {
-  constructor(
-    private readonly messagesService: MessagesService) { }
+  constructor(private readonly messagesService: MessagesService) {}
   @Post()
   async sendMessage(@Body() message: SendMessageDto): Promise<void> {
     await this.messagesService.sendMessage(message.from, message.to, message.channelId, message.content);
@@ -23,7 +22,7 @@ export class MessagesController {
     // TODO: for now we're just simulating a sequence of channel id
     //       example: ['bob-1', 'bob-2', 'bob-3', ...]
     let i = 1;
-    while(true) {
+    while (true) {
       const message = await this.messagesService.findForUser(user, `${user}-${i++}`);
       if (message) {
         messages.push(message);

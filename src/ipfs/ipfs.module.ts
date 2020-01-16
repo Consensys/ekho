@@ -4,9 +4,9 @@ import { IpfsController } from './ipfs.controller';
 import { IpfsService } from './ipfs.service';
 
 @Module({
-    imports: [ConfigModule],
-    providers: [IpfsService],
-    controllers: [IpfsController],
-    exports: [IpfsService],
+  imports: [ConfigModule],
+  providers: [IpfsService],
+  controllers: [IpfsController],
+  exports: [IpfsService],
 })
 export class IpfsModule {}

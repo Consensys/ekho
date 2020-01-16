@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { MessagesController } from './messages.controller';
-import { MessagesService } from './messages.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { IpfsModule } from '../ipfs/ipfs.module';
 import { Web3Module } from '../web3/web3.module';
+import { MessagesController } from './messages.controller';
 import { Message } from './messages.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MessagesService } from './messages.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Message]), IpfsModule, Web3Module],
