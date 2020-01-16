@@ -3,11 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { Transaction as Tx } from 'ethereumjs-tx';
 import { bufferToHex } from 'ethereumjs-util';
 import Web3 from 'web3';
-
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EkhoEvent } from '../events/events.entity';
+import { EventsService } from '../events/events.service';
 import { Web3Constants } from './web3.constants';
-import { Web3Transaction } from './web3.entity';
 import { Web3Factory } from './web3.factory';
 
 @Injectable()
@@ -39,10 +37,9 @@ export class Web3Service {
   private readonly web3;
 
   constructor(
-    @InjectRepository(Web3Transaction)
-    private readonly transactionsRepository: Repository<Web3Transaction>,
+    private readonly eventsService: EventsService,
     private readonly configService: ConfigService,
-    private readonly web3Factory: Web3Factory,
+    web3Factory: Web3Factory,
   ) {
     this.chain = this.configService.get<string>('web3.chain');
     this.hardfork = this.configService.get<string>('web3.hardfork');
@@ -75,18 +72,16 @@ export class Web3Service {
         Logger.debug(`parsed channelId='${channelId}'`, transactionHash);
         Logger.debug(`parsed   content='${content}'`, transactionHash);
         Logger.debug(`parsed signature='${signature}'`, transactionHash);
-        let tx = await this.transactionsRepository.findOne({
-          txHash: transactionHash,
-        });
+        let tx = await this.eventsService.getByTransactionHash(transactionHash);
         if (!tx) {
-          tx = new Web3Transaction();
+          tx = new EkhoEvent();
         }
         tx.txHash = transactionHash;
         tx.channelId = channelId;
         tx.content = content;
         tx.signature = signature;
         tx.status = 'confirmed';
-        await this.transactionsRepository.save(tx);
+        await this.eventsService.save(tx);
       })
       .on('changed', log => {
         Logger.debug(log);
@@ -94,15 +89,7 @@ export class Web3Service {
     Logger.debug(`Subcribed logs from ${this.contractAddress} via ${this.rpcUrl}`);
   }
 
-  async getAll(): Promise<Web3Transaction[]> {
-    return this.transactionsRepository.find();
-  }
-
-  async getTransactionByChannelId(channelId: string): Promise<Web3Transaction> {
-    return this.transactionsRepository.findOne({ where: { channelId } });
-  }
-
-  async broadcastNotification(channelId: string, content: string, signature: string): Promise<string> {
+  async emitEvent(channelId: string, content: string, signature: string): Promise<string> {
     const txCount = await this.getTransactionCount(this.address);
     Logger.debug(`TransactionCount: ${txCount}`);
     const bufferedPrivateKey = Buffer.from(this.privateKey, 'hex');
@@ -132,7 +119,7 @@ export class Web3Service {
     const raw = '0x' + serializedTx.toString('hex');
 
     const txHash = await this.sendSignerTransaction(raw);
-    await this.transactionsRepository.save({ txHash, status: 'pending' });
+    await this.eventsService.save({ txHash, status: 'pending' });
     return txHash;
   }
 
