@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
 @Unique('UQ_TX_HASH', ['txHash'])
@@ -12,13 +12,13 @@ export class Web3Transaction {
   @Column()
   status: string;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   channelId?: string;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   content?: string;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   signature?: string;
 
   @CreateDateColumn()

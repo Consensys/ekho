@@ -1,10 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Message } from './messages.entity';
 import { Repository } from 'typeorm';
 import { IpfsService } from '../ipfs/ipfs.service';
 import { Web3Service } from '../web3/web3.service';
-import SendMessageDto from './dto/send-message.dto';
+import { Message } from './messages.entity';
 
 @Injectable()
 export class MessagesService {
@@ -16,7 +15,11 @@ export class MessagesService {
   ) {}
 
   async sendMessage(from: string, to: string, channelId: string, content: string): Promise<void> {
-    const ipfsPath: string = await this.ipfsService.store({ to, from, content });
+    const ipfsPath: string = await this.ipfsService.store({
+      to,
+      from,
+      content,
+    });
     Logger.debug(ipfsPath);
     const txHash: string = await this.web3Service.broadcastNotification(channelId, ipfsPath, '');
     Logger.debug(txHash);
@@ -42,7 +45,9 @@ export class MessagesService {
     // calculate next channelId
 
     // check if message is already in the repository
-    let message = await this.messageRepository.findOne({ where: { to: user, channelId }});
+    let message = await this.messageRepository.findOne({
+      where: { to: user, channelId },
+    });
     if (message) {
       return message;
     }
@@ -66,6 +71,6 @@ export class MessagesService {
     message.timestamp = tx.createdDate;
     await this.messageRepository.save(message);
 
-    return this.messageRepository.findOne({ where: { channelId }});
+    return this.messageRepository.findOne({ where: { channelId } });
   }
 }

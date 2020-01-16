@@ -1,177 +1,175 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import SodiumNative from 'sodium-native';
-import { ConfigService, ConfigModule } from '@nestjs/config';
-import {CryptographyKeyPairDto } from './dto/cryptography-keypair.dto';
+import { CryptographyKeyPairDto } from './dto/cryptography-keypair.dto';
 
 @Injectable()
 export class CryptographyService {
+  /**
+   * Generates a public and private signing key pair (ed25519)
+   * @returns dto containing public and private key buffers
+   */
+  async generateSigningKeyPair(): Promise<CryptographyKeyPairDto> {
+    const publicSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_PUBLICKEYBYTES);
+    const privateSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_SECRETKEYBYTES);
 
-    /**
-     * Generates a public and private signing key pair (ed25519)
-     * @returns dto containing public and private key buffers
-     */
-    async generateSigningKeyPair(): Promise<CryptographyKeyPairDto> {
-        let publicSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_PUBLICKEYBYTES);
-        let privateSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_SECRETKEYBYTES);
+    SodiumNative.crypto_sign_keypair(publicSigningKey, privateSigningKey);
 
-        SodiumNative.crypto_sign_keypair(publicSigningKey, privateSigningKey);
+    const keyPair: CryptographyKeyPairDto = {
+      publicKey: publicSigningKey,
+      privateKey: privateSigningKey,
+    };
 
-        const keyPair: CryptographyKeyPairDto = {
-        publicKey: publicSigningKey,
-        privateKey : privateSigningKey,
-        }
+    return keyPair;
+  }
 
-        return keyPair;
-    }
+  /**
+   * Generate a public and private one-use key pair (c25519)
+   * This is used to perform Diffie-Hellman secret exchanges
+   * not for signing!
+   * @returns dto containing public and private key buffers
+   */
+  async generateOneUseKeyPair(): Promise<CryptographyKeyPairDto> {
+    const publicOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
+    const privateOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_SCALARBYTES);
 
-    /**
-     * Generate a public and private one-use key pair (c25519)
-     * This is used to perform Diffie-Hellman secret exchanges
-     * not for signing!
-     * @returns dto containing public and private key buffers
-     */
-    async generateOneUseKeyPair(): Promise<CryptographyKeyPairDto> {
-        let publicOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
-        let privateOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_SCALARBYTES);
+    SodiumNative.crypto_scalarmult_base(publicOneUseKey, privateOneUseKey);
 
-        SodiumNative.crypto_scalarmult_base(publicOneUseKey, privateOneUseKey);
+    const keyPair: CryptographyKeyPairDto = {
+      publicKey: publicOneUseKey,
+      privateKey: privateOneUseKey,
+    };
 
-        const keyPair: CryptographyKeyPairDto = {
-            publicKey: publicOneUseKey,
-            privateKey: privateOneUseKey,
-        }
+    return keyPair;
+  }
 
-        return keyPair;
-    }
+  /**
+   * Generates an ECDH shared secret from one-use keys
+   * @param publicKey other party public one-use key
+   * @param privateKey user private one-use key
+   * @returns sharedSecret buffer containing ECDH shared secret
+   */
+  async generateECDHSharedSecret(publicKey: Buffer, privateKey: Buffer): Promise<Buffer> {
+    const sharedSecret: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
 
-    /**
-     * Generates an ECDH shared secret from one-use keys
-     * @param publicKey other party public one-use key
-     * @param privateKey user private one-use key
-     * @returns sharedSecret buffer containing ECDH shared secret
-     */
-    async generateECDHSharedSecret(publicKey: Buffer, privateKey: Buffer): Promise<Buffer> {
-        let sharedSecret: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
+    SodiumNative.crypto_scalarmult(sharedSecret, privateKey, publicKey);
 
-        SodiumNative.crypto_scalarmult(sharedSecret, privateKey, publicKey);
+    return sharedSecret;
+  }
 
-        return sharedSecret;
-    }
+  /**
+   * Generates a digital signature of data using the private signing key
+   * @param data data to be signed
+   * @param privateSigningKey key used to sign data
+   * @returns buffer containing signature
+   */
+  async generateSignature(data: Buffer, privateSigningKey: Buffer): Promise<Buffer> {
+    const signature: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_BYTES);
 
-    /**
-     * Generates a digital signature of data using the private signing key
-     * @param data data to be signed
-     * @param privateSigningKey key used to sign data
-     * @returns buffer containing signature
-     */
-    async generateSignature(data: Buffer, privateSigningKey: Buffer): Promise<Buffer> {
-        let signature: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_BYTES);
+    SodiumNative.crypto_sign_detached(signature, data, privateSigningKey);
 
-        SodiumNative.crypto_sign_detached(signature, data, privateSigningKey);
+    return signature;
+  }
 
-        return signature;
-    }
+  /**
+   * Validates a digital signature of data using the public signing key
+   * @param signature detached signature of data param
+   * @param data data that has been signed
+   * @param publicSigningKey public key of signing keypair used to sign data
+   * @returns boolean true/false if signature valid/invalid
+   */
+  async validateSignature(signature: Buffer, data: Buffer, publicSigningKey: Buffer): Promise<boolean> {
+    const retval: boolean = SodiumNative.crypto_sign_verify_detached(signature, data, publicSigningKey);
 
-    /**
-     * Validates a digital signature of data using the public signing key
-     * @param signature detached signature of data param
-     * @param data data that has been signed
-     * @param publicSigningKey public key of signing keypair used to sign data
-     * @returns boolean true/false if signature valid/invalid
-     */
-    async validateSignature(signature: Buffer, data: Buffer, publicSigningKey: Buffer): Promise<boolean> {
-        let retval: boolean = SodiumNative.crypto_sign_verify_detached(signature, data, publicSigningKey);
+    return retval;
+  }
 
-        return retval;
-    }
+  /**
+   * Generates a SHA256 hash
+   * @param data input buffer to be hashed
+   * @returns buffer containing the 32-byte SHA-256 hash
+   */
+  async generateSHA256Hash(data: Buffer): Promise<Buffer> {
+    const outputHash: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_hash_sha256_BYTES);
 
-    /**
-     * Generates a SHA256 hash 
-     * @param data input buffer to be hashed
-     * @returns buffer containing the 32-byte SHA-256 hash
-     */
-    async generateSHA256Hash(data: Buffer): Promise<Buffer> {
-        let outputHash: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_hash_sha256_BYTES);
+    SodiumNative.crypto_hash_sha256(outputHash, data);
 
-        SodiumNative.crypto_hash_sha256(outputHash, data);
+    return outputHash;
+  }
 
-        return outputHash;
-    }
+  /**
+   * Derives a symmetric key from secret
+   * @param secret input buffer containing key derivation secret
+   * @param nonce number used once - must not be reused or secret will be exposed!
+   * @param context string describing context of key generation
+   * @returns buffer containing the derived 32-byte symmetric key
+   */
+  async deriveSymmetricKeyfromSecret(secret: Buffer, nonce: number, context: string): Promise<Buffer> {
+    const outputSymmetricKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_kdf_KEYBYTES);
+    const keyContext: Buffer = Buffer.from(context);
 
-    /**
-     * Derives a symmetric key from secret
-     * @param secret input buffer containing key derivation secret
-     * @param nonce number used once - must not be reused or secret will be exposed!
-     * @param context string describing context of key generation
-     * @returns buffer containing the derived 32-byte symmetric key
-     */
-    async deriveSymmetricKeyfromSecret(secret: Buffer, nonce: number, context: string): Promise<Buffer> {
-        let outputSymmetricKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_kdf_KEYBYTES);
-        let keyContext: Buffer = Buffer.from(context);
+    SodiumNative.crypto_kdf_derive_from_key(outputSymmetricKey, nonce, keyContext, secret);
 
-        SodiumNative.crypto_kdf_derive_from_key(outputSymmetricKey, nonce, keyContext, secret);
+    return outputSymmetricKey;
+  }
 
-        return outputSymmetricKey;
-    }
+  /**
+   * Generates an 8-byte buffer from nonce
+   * @param nonce number passed in - either random 32-bit integer or counter
+   * @returns nonceBuffer padded noncebuffer suitable for use in chacha20 encryption/decryption
+   */
+  async generateNonceBuffer(nonce: number): Promise<Buffer> {
+    const nonceBuffer = SodiumNative.sodium_malloc(SodiumNative.crypto_stream_chacha20_NONCEBYTES);
 
-    /**
-     * Generates an 8-byte buffer from nonce
-     * @param nonce number passed in - either random 32-bit integer or counter
-     * @returns nonceBuffer padded noncebuffer suitable for use in chacha20 encryption/decryption
-     */
-    async generateNonceBuffer(nonce: number): Promise<Buffer> {
-        let nonceBuffer = SodiumNative.sodium_malloc(SodiumNative.crypto_stream_chacha20_NONCEBYTES);
-        
-        nonceBuffer.writeUInt32BE(nonce, 0);
+    nonceBuffer.writeUInt32BE(nonce, 0);
 
-        return nonceBuffer;
-    }
+    return nonceBuffer;
+  }
 
-    /**
-     * Encrypts data using a symmetric key and nonce
-     * @param data data buffer to be encrypted
-     * @param nonce number used once - must not be reused or secret will be exposed
-     * @param key symmetric key used to encrypt data
-     * @returns buffer containing encrypted data
-     */
-    async encrypt(data: Buffer, nonce: Buffer, key: Buffer): Promise<Buffer> {
-        let encryptedData: Buffer = SodiumNative.sodium_malloc(data.length);
+  /**
+   * Encrypts data using a symmetric key and nonce
+   * @param data data buffer to be encrypted
+   * @param nonce number used once - must not be reused or secret will be exposed
+   * @param key symmetric key used to encrypt data
+   * @returns buffer containing encrypted data
+   */
+  async encrypt(data: Buffer, nonce: Buffer, key: Buffer): Promise<Buffer> {
+    const encryptedData: Buffer = SodiumNative.sodium_malloc(data.length);
 
-        SodiumNative.crypto_stream_chacha20_xor(encryptedData, data, nonce, key);
+    SodiumNative.crypto_stream_chacha20_xor(encryptedData, data, nonce, key);
 
-        return encryptedData;
-    }
+    return encryptedData;
+  }
 
-    /**
-     * Decrypts data using a symmetric key and nonce
-     * @param data data buffer to be decrypted
-     * @param nonce number used once - must not be reused or secret will be exposed
-     * @param key symmetric key used to decrypt data
-     * @returns buffer containing decrypted data
-     */
-    async decrypt(data: Buffer, nonce: Buffer, key: Buffer): Promise<Buffer> {
-        let decryptedData: Buffer = SodiumNative.sodium_malloc(data.length);
+  /**
+   * Decrypts data using a symmetric key and nonce
+   * @param data data buffer to be decrypted
+   * @param nonce number used once - must not be reused or secret will be exposed
+   * @param key symmetric key used to decrypt data
+   * @returns buffer containing decrypted data
+   */
+  async decrypt(data: Buffer, nonce: Buffer, key: Buffer): Promise<Buffer> {
+    const decryptedData: Buffer = SodiumNative.sodium_malloc(data.length);
 
-        SodiumNative.crypto_stream_chacha20_xor(decryptedData, data, nonce, key);
+    SodiumNative.crypto_stream_chacha20_xor(decryptedData, data, nonce, key);
 
-        return decryptedData;
-    }
+    return decryptedData;
+  }
 
-    /**
-     * Generates 32-bit random number
-     */
-    async generateRandomNumber(): Promise<number> {
-        let retval = SodiumNative.randombytes_random();
+  /**
+   * Generates 32-bit random number
+   */
+  async generateRandomNumber(): Promise<number> {
+    const retval = SodiumNative.randombytes_random();
 
-        return retval;
-    }
+    return retval;
+  }
 
-    /**
-     * Generates a random 32-byte buffer
-     */
-    async generateRandomBytes(): Promise<Buffer> {
-        let retval = Buffer.alloc(32);
-        SodiumNative.randombytes_buf(retval);
-        return retval;
-    }
+  /**
+   * Generates a random 32-byte buffer
+   */
+  async generateRandomBytes(): Promise<Buffer> {
+    const retval = Buffer.alloc(32);
+    SodiumNative.randombytes_buf(retval);
+    return retval;
+  }
 }
