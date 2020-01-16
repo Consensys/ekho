@@ -1,6 +1,8 @@
 ## Description
 
-Project Ekho - peer-to-peer communication module
+Project Ekho - peer-to-peer communication module.
+
+Check [detailed documentation](https://consensys.github.io/ekho/).
 
 ## Installation
 
@@ -82,6 +84,7 @@ $ docker-compose -f docker-compose-dual-node.yml up
 ```
 
 Swagger endpoints should be accessible:
+
 - http://localhost:3100/api/#
 - http://localhost:3200/api/#
 
