@@ -25,13 +25,16 @@
     "@nestjs/core": "^6.7.2",
     "@nestjs/platform-express": "^6.7.2",
     "@nestjs/swagger": "^4.1.7",
+    "@nestjs/typeorm": "^6.2.0",
     "ethereumjs-tx": "^2.1.2",
     "ipfs-http-client": "^40.2.1",
+    "pg": "^7.17.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
     "sodium-native": "^2.4.6",
     "swagger-ui-express": "^4.1.2",
+    "typeorm": "^0.2.22",
     "web3": "^1.2.4"
   },
   "devDependencies": {

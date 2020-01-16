@@ -1,0 +1,52 @@
+---
+version: "3.7"
+services:
+    ekho1:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 3100:3000
+        networks:
+            - network1
+    db1:
+        image: docker.io/postgres:11.6-alpine
+        restart: always
+        environment:
+            - POSTGRES_USER=ekho
+            - POSTGRES_PASSWORD=ekho
+            - POSTGRES_DB=ekho
+        volumes:
+            - ekho-db1:/var/lib/postgresql/data
+        networks:
+            network1:
+                aliases:
+                    - db
+    ekho2:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 3200:3000
+        networks:
+            - network2
+    db2:
+        image: docker.io/postgres:11.6-alpine
+        restart: always
+        environment:
+            - POSTGRES_USER=ekho
+            - POSTGRES_PASSWORD=ekho
+            - POSTGRES_DB=ekho
+        volumes:
+            - ekho-db2:/var/lib/postgresql/data
+        networks:
+            network2:
+                aliases:
+                    - db
+volumes: 
+    ekho-db1:
+    ekho-db2:
+
+networks:
+    network1:
+    network2:
