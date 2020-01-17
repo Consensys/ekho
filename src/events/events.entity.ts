@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique } from
 
 @Entity()
 @Unique('UQ_TX_HASH', ['txHash'])
-export class Web3Transaction {
+export class EkhoEvent {
   @PrimaryGeneratedColumn()
   id: number;
 

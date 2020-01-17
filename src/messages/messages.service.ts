@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EventsService } from '../events/events.service';
 import { IpfsService } from '../ipfs/ipfs.service';
 import { Web3Service } from '../web3/web3.service';
 import { Message } from './messages.entity';
@@ -12,6 +13,7 @@ export class MessagesService {
     private readonly messageRepository: Repository<Message>,
     private readonly ipfsService: IpfsService,
     private readonly web3Service: Web3Service,
+    private readonly eventsService: EventsService,
   ) {}
 
   async sendMessage(from: string, to: string, channelId: string, content: string): Promise<void> {
@@ -21,7 +23,7 @@ export class MessagesService {
       content,
     });
     Logger.debug(ipfsPath);
-    const txHash: string = await this.web3Service.broadcastNotification(channelId, ipfsPath, '');
+    const txHash: string = await this.web3Service.emitEvent(channelId, ipfsPath, '');
     Logger.debug(txHash);
 
     const message = new Message();
@@ -55,7 +57,7 @@ export class MessagesService {
     // given message is not in the repository, check if received transactions contain the channel id
     // if not, simply return nothing
     // if yes, extract the message and save it in the repository
-    const tx = await this.web3Service.getTransactionByChannelId(channelId);
+    const tx = await this.eventsService.getTransactionByChannelId(channelId);
     if (!tx) {
       return null;
     }

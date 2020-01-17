@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Web3Transaction } from './web3.entity';
+import { EkhoEvent } from '../events/events.entity';
 import { Web3Factory } from './web3.factory';
 import { Web3Service } from './web3.service';
 
@@ -20,7 +20,7 @@ describe('Web3Service', () => {
       providers: [
         Web3Service,
         {
-          provide: getRepositoryToken(Web3Transaction),
+          provide: getRepositoryToken(EkhoEvent),
           useValue: transactionRepository,
         },
         ConfigService,
