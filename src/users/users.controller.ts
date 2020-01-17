@@ -16,4 +16,9 @@ export class UsersController {
   async get(@Query('name') name: string): Promise<UserDto> {
     return this.userService.findByName(name);
   }
+
+  @Get('e2e')
+  async e2eflow(): Promise<boolean> {
+    return this.userService.e2eflow();
+  }
 }
