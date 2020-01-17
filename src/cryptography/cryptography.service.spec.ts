@@ -190,39 +190,98 @@ describe('CryptographyService', () => {
         alice.oneTimePair.publicKey,
         alice.signingPair.privateKey,
       );
-      const actual = await service.validateSignature(
+
+      const bobOneTimePubKeySignature = await service.generateSignature(
+        bob.oneTimePair.publicKey,
+        bob.signingPair.privateKey,
+      );
+      const bobValidates = await service.validateSignature(
         aliceOneTimePubKeySignature,
         alice.oneTimePair.publicKey,
         alice.signingPair.publicKey,
       );
 
-      expect(actual).toBe(true);
+      const aliceValidates = await service.validateSignature(
+        bobOneTimePubKeySignature,
+        bob.oneTimePair.publicKey,
+        bob.signingPair.publicKey,
+      );
+
+      expect(bobValidates).toBe(true);
+      expect(aliceValidates).toBe(true);
     });
   });
 
-  // describe('independently generate chain keys from shared secret', () => {
-  //   let alice: TestSubject;
-  //   let bob: TestSubject;
+  describe('generate a symmetric key from a shared secret', () => {
+    let alice: TestSubject;
+    let bob: TestSubject;
 
-  //   let aliceSharedSecret: Buffer;
-  //   let bobSharedSecret: Buffer;
+    const commonContext = 'ANON_CONTEXT';
+    const commonChainId = 1;
 
-  //   beforeAll(async () => {
-  //     const testSubjects = await helpers.generateAlicenBob();
-  //     alice = testSubjects.alice;
-  //     bob = testSubjects.bob;
+    beforeAll(async () => {
+      const testSubjects = await helpers.generateAlicenBob();
+      alice = testSubjects.alice;
+      bob = testSubjects.bob;
 
-  //     alice.sharedSecret = await generateSharedSecret(
-  //       bob.oneTimePair.publicKey,
-  //       alice.oneTimePair.privateKey,
-  //       alice.signingPair.privateKey);
+      alice.sharedSecret = await helpers.generateSharedSecret(
+        bob.oneTimePair.publicKey,
+        alice.oneTimePair.privateKey,
+        alice.signingPair.privateKey,
+      );
 
-  //     bob.sharedSecret = await generateSharedSecret(
-  //       alice.oneTimePair.publicKey,
-  //       bob.oneTimePair.privateKey,
-  //       bob.signingPair.privateKey);
-  //   });
-  // });
+      bob.sharedSecret = await helpers.generateSharedSecret(
+        alice.oneTimePair.publicKey,
+        bob.oneTimePair.privateKey,
+        bob.signingPair.privateKey,
+      );
+    });
+
+    it(`given
+      - a secret,
+      - context and
+      - numeric chain id,
+      a user can generate a symmetric key`, async () => {
+      const actual = await service.deriveSymmetricKeyfromSecret(
+        alice.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+
+      expect(actual).toBeInstanceOf(Buffer);
+      expect(actual).toHaveProperty('length', 32);
+    });
+
+    it('two users can independently generate the same symmetric key by using a shared secret', async () => {
+      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
+        alice.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
+        bob.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+
+      expect(aliceSymmetricKey.toString('base64')).toEqual(bobSymmeticKey.toString('base64'));
+    });
+
+    it('changing the context or nonce breaks the symmetry', async () => {
+      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
+        alice.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
+        bob.sharedSecret.secret,
+        commonChainId + 1,
+        commonContext,
+      );
+
+      expect(aliceSymmetricKey.toString('base64')).not.toEqual(bobSymmeticKey.toString('base64'));
+    });
+  });
 
   describe('plain -> encrypt -> decrypt; Basic flow.', () => {
     let alice: TestSubject;
@@ -260,6 +319,77 @@ describe('CryptographyService', () => {
       expect(actual).toHaveProperty('length', cipher.length);
       expect(actual.toString('utf8')).toEqual(Buffer.from(secretMessage).toString('utf8'));
       expect(actual.toString('utf8')).toEqual(plain.toString('utf8'));
+    });
+  });
+
+  describe('users with a common symmetric key can decrypt each others messages once', () => {
+    let alice: TestSubject;
+    let bob: TestSubject;
+
+    let anonNonce: Buffer;
+
+    const commonContext = 'ANON_CONTEXT';
+    const commonChainId = 1;
+
+    const secretMessage = Buffer.from('I saw Trudy today. She looks fat.');
+
+    beforeAll(async () => {
+      anonNonce = await service.generateNonceBuffer(0);
+
+      const testSubjects = await helpers.generateAlicenBob();
+      alice = testSubjects.alice;
+      bob = testSubjects.bob;
+
+      alice.sharedSecret = await helpers.generateSharedSecret(
+        bob.oneTimePair.publicKey,
+        alice.oneTimePair.privateKey,
+        alice.signingPair.privateKey,
+      );
+
+      bob.sharedSecret = await helpers.generateSharedSecret(
+        alice.oneTimePair.publicKey,
+        bob.oneTimePair.privateKey,
+        bob.signingPair.privateKey,
+      );
+    });
+
+    it('symmetric key generated from shared secret can be used to encipher and decipher a message', async () => {
+      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
+        alice.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
+        bob.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+
+      const cipher = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
+
+      const actual = await service.decrypt(cipher, anonNonce, bobSymmeticKey);
+
+      expect(actual.toString('utf8')).toEqual(secretMessage.toString('utf8'));
+    });
+
+    it('the enciphered message cannot be read without knowing the nonce', async () => {
+      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
+        alice.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
+        bob.sharedSecret.secret,
+        commonChainId,
+        commonContext,
+      );
+
+      const wrongNonce = await service.generateNonceBuffer(1);
+      const cipher = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
+
+      const actual = await service.decrypt(cipher, wrongNonce, bobSymmeticKey);
+
+      expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
     });
   });
 });
