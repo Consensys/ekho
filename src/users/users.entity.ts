@@ -8,4 +8,10 @@ export class User {
 
   @Column({ length: 500 })
   name: string;
+
+  @Column({ type: 'bytea', nullable: true })
+  privateSigningKey?: Buffer;
+
+  @Column({ type: 'bytea', nullable: true })
+  publicSigningKey?: Buffer;
 }
