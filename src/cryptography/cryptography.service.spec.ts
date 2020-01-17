@@ -2,34 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import SodiumNative from 'sodium-native';
 import { CryptographyService } from './cryptography.service';
 import { CryptographyKeyPairDto } from './dto/cryptography-keypair.dto';
+import { getTestHelper, TestSubject } from './test-helpers/cryptography.test-helpers';
 
 describe('CryptographyService', () => {
   let service: CryptographyService;
-
-  const generateAnonKeys = async () => {
-    const signingPair = await service.generateSigningKeyPair();
-    const oneTimePair = await service.generateOneUseKeyPair();
-
-    return {
-      signingPair,
-      oneTimePair,
-    };
-  };
-
-  interface TestSubject {
-    signingPair: CryptographyKeyPairDto;
-    oneTimePair: CryptographyKeyPairDto;
-  }
-  const generateAlicenBob = async (): Promise<{ alice: TestSubject; bob: TestSubject; trudy: TestSubject }> => {
-    const alice = await generateAnonKeys();
-    const bob = await generateAnonKeys();
-    const trudy = await generateAnonKeys();
-    return {
-      alice,
-      bob,
-      trudy,
-    };
-  };
+  let helpers;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,6 +14,7 @@ describe('CryptographyService', () => {
     }).compile();
 
     service = module.get<CryptographyService>(CryptographyService);
+    helpers = getTestHelper(service);
   });
 
   it('should be defined', () => {
@@ -168,7 +146,7 @@ describe('CryptographyService', () => {
     let bob: TestSubject;
 
     beforeAll(async () => {
-      const testSubjects = await generateAlicenBob();
+      const testSubjects = await helpers.generateAlicenBob();
       alice = testSubjects.alice;
       bob = testSubjects.bob;
     });
@@ -206,39 +184,77 @@ describe('CryptographyService', () => {
 
       expect(actual).toBe(true);
     });
+
+    it('two users independently generating signed shared secret should be able to verify each others signature', async () => {
+      const aliceOneTimePubKeySignature = await service.generateSignature(
+        alice.oneTimePair.publicKey,
+        alice.signingPair.privateKey,
+      );
+      const actual = await service.validateSignature(
+        aliceOneTimePubKeySignature,
+        alice.oneTimePair.publicKey,
+        alice.signingPair.publicKey,
+      );
+
+      expect(actual).toBe(true);
+    });
   });
 
-  // describe('generate channel key from shared secret', () => {
+  // describe('independently generate chain keys from shared secret', () => {
+  //   let alice: TestSubject;
+  //   let bob: TestSubject;
 
+  //   let aliceSharedSecret: Buffer;
+  //   let bobSharedSecret: Buffer;
+
+  //   beforeAll(async () => {
+  //     const testSubjects = await helpers.generateAlicenBob();
+  //     alice = testSubjects.alice;
+  //     bob = testSubjects.bob;
+
+  //     alice.sharedSecret = await generateSharedSecret(
+  //       bob.oneTimePair.publicKey,
+  //       alice.oneTimePair.privateKey,
+  //       alice.signingPair.privateKey);
+
+  //     bob.sharedSecret = await generateSharedSecret(
+  //       alice.oneTimePair.publicKey,
+  //       bob.oneTimePair.privateKey,
+  //       bob.signingPair.privateKey);
+  //   });
   // });
 
-  xdescribe('plain -> encrypt -> decrypt; end-to-end flow.', () => {
+  describe('plain -> encrypt -> decrypt; Basic flow.', () => {
     let alice: TestSubject;
     let bob: TestSubject;
+
+    let symmetricKey: Buffer;
 
     const secretMessage = 'Up yours, Bob.';
     const plain = Buffer.from(secretMessage);
 
     beforeAll(async () => {
-      const testSubjects = await generateAlicenBob();
+      const testSubjects = await helpers.generateAlicenBob();
       alice = testSubjects.alice;
       bob = testSubjects.bob;
+
+      symmetricKey = await service.generateRandomBytes();
     });
 
     it('.encrypt, given data, a nonce and a key, returns Buffer of data encrypted using chacha20_xor', async () => {
       const anonNonce = await service.generateNonceBuffer(0);
 
-      const actual = await service.encrypt(plain, anonNonce, alice.oneTimePair.publicKey);
+      const actual = await service.encrypt(plain, anonNonce, symmetricKey);
 
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', plain.length);
     });
 
-    it('.decrypt, given corresponding public-key, ciphertext and nonce returns Buffer of decrypted data', async () => {
+    it('.decrypt, given corresponding ciphertext and nonce returns Buffer of decrypted data', async () => {
       const anonNonce = await service.generateNonceBuffer(1);
-      const cipher = await service.encrypt(plain, anonNonce, bob.oneTimePair.publicKey);
+      const cipher = await service.encrypt(plain, anonNonce, symmetricKey);
 
-      const actual = await service.decrypt(cipher, anonNonce, bob.oneTimePair.privateKey);
+      const actual = await service.decrypt(cipher, anonNonce, symmetricKey);
 
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', cipher.length);
