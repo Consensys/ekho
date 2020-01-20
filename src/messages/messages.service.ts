@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { EventsService } from '../events/events.service';
 import { IpfsService } from '../ipfs/ipfs.service';
 import { Web3Service } from '../web3/web3.service';
-import { Message } from './messages.entity';
+import { Message } from './entities/messages.entity';
 
 @Injectable()
 export class MessagesService {
@@ -23,7 +23,7 @@ export class MessagesService {
       content,
     });
     Logger.debug(ipfsPath);
-    const txHash: string = await this.web3Service.emitEvent(channelId, ipfsPath, '');
+    const txHash: string = await this.web3Service.broadcastNotification(channelId, ipfsPath, '');
     Logger.debug(txHash);
 
     const message = new Message();
