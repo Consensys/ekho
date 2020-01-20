@@ -23,7 +23,7 @@ export class MessagesService {
       content,
     });
     Logger.debug(ipfsPath);
-    const txHash: string = await this.web3Service.broadcastNotification(channelId, ipfsPath, '');
+    const txHash: string = await this.web3Service.emitEvent(channelId, ipfsPath, '');
     Logger.debug(txHash);
 
     const message = new Message();
