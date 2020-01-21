@@ -89,6 +89,34 @@ describe('CryptographyService', () => {
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', 32);
     });
+
+    it('.getZeroedBuffer returns a Buffer of given size with all bits set to zero', async () => {
+      const anonLength = 4;
+      const expected = Buffer.alloc(anonLength)
+        .fill(0)
+        .toString('base64');
+
+      const actual = await service.getZeroedBuffer(anonLength);
+
+      expect(actual).toBeInstanceOf(Buffer);
+      expect(actual).toHaveProperty('length', anonLength);
+      expect(actual.toString('utf8')).toHaveLength(anonLength);
+      expect(actual.toString('base64')).toEqual(expected);
+    });
+
+    it('getRandomisedBuffer returns a Buffer of given size of random bytes', async () => {
+      const anonSize = 4;
+      const first = await service.getRandomisedBuffer(anonSize);
+      const second = await service.getRandomisedBuffer(anonSize);
+
+      expect(first).toBeInstanceOf(Buffer);
+      expect(first).toHaveLength(anonSize);
+
+      expect(second).toBeInstanceOf(Buffer);
+      expect(second).toHaveLength(anonSize);
+
+      expect(first.toString('base64')).not.toEqual(second.toString('base64'));
+    });
   });
 
   describe('can generate and validate digital signature', () => {
