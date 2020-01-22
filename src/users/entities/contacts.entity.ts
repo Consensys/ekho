@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { ChannelMember } from '../../messages/entities/channelmembers.entity';
+import { ChannelMember } from '../../channels/entities/channelmembers.entity';
 
 @Entity()
 @Unique('UQ_CONTACT_NAME', ['name'])

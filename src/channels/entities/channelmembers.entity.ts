@@ -1,7 +1,7 @@
 import { Contact } from 'src/users/entities/contacts.entity';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ChannelMessage } from '../../messages/entities/channelmessages.entity';
 import { User } from '../../users/entities/users.entity';
-import { ChannelMessage } from './channelmessages.entity';
 import { Channel } from './channels.entity';
 
 @Entity()
@@ -36,6 +36,6 @@ export class ChannelMember {
   @Column({ type: 'bytea' })
   messageChainKey: Buffer;
 
-  @Column({ type: 'bytea' })
+  @Column()
   nonce: number;
 }

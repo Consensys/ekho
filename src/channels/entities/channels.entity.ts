@@ -7,6 +7,9 @@ export class Channel {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  name: string;
+
   @Column({ type: 'bytea' })
   channelKey: Buffer;
 

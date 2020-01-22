@@ -1,4 +1,4 @@
-import { ChannelMember } from 'src/messages/entities/channelmembers.entity';
+import { ChannelMember } from 'src/channels/entities/channelmembers.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity()
