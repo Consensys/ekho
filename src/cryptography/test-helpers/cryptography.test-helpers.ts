@@ -1,7 +1,12 @@
 import { CryptographyService } from '../cryptography.service';
 import { CryptographyKeyPairDto } from '../dto/cryptography-keypair.dto';
 
-export interface TestSubject {
+export interface AnonKeySet {
+  signingPair: CryptographyKeyPairDto;
+  oneTimePair: CryptographyKeyPairDto;
+}
+
+export interface TestSubject extends AnonKeySet {
   signingPair: CryptographyKeyPairDto;
   oneTimePair: CryptographyKeyPairDto;
   sharedSecret?: Buffer;
@@ -12,8 +17,24 @@ export interface SignedSharedSecret {
   signature: Buffer;
 }
 
-export const getTestHelper = (service: CryptographyService) => {
-  const generateAnonKeys = async () => {
+export interface TestUsers {
+  alice: TestSubject;
+  bob: TestSubject;
+  trudy: TestSubject;
+}
+
+export interface TestHelper {
+  generateAnonKeys(): Promise<AnonKeySet>;
+  generateAlicenBob(): Promise<TestUsers>;
+  generateSharedSecret(
+    yourPublicOneTimeKey: Buffer,
+    myPrivateOneTimeKey: Buffer,
+    myPrivateSigningKey: Buffer,
+  ): Promise<SignedSharedSecret>;
+}
+
+export const getTestHelper = (service: CryptographyService): TestHelper => {
+  const generateAnonKeys = async (): Promise<AnonKeySet> => {
     const signingPair = await service.generateSigningKeyPair();
     const oneTimePair = await service.generateOneUseKeyPair();
 
@@ -23,7 +44,7 @@ export const getTestHelper = (service: CryptographyService) => {
     };
   };
 
-  const generateAlicenBob = async (): Promise<{ alice: TestSubject; bob: TestSubject; trudy: TestSubject }> => {
+  const generateAlicenBob = async (): Promise<TestUsers> => {
     const alice = await generateAnonKeys();
     const bob = await generateAnonKeys();
     const trudy = await generateAnonKeys();
