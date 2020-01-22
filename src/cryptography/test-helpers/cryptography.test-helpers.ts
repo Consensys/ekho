@@ -4,7 +4,7 @@ import { CryptographyKeyPairDto } from '../dto/cryptography-keypair.dto';
 export interface TestSubject {
   signingPair: CryptographyKeyPairDto;
   oneTimePair: CryptographyKeyPairDto;
-  sharedSecret?: SignedSharedSecret;
+  sharedSecret?: Buffer;
 }
 
 export interface SignedSharedSecret {

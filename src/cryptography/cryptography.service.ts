@@ -33,7 +33,7 @@ export class CryptographyService {
    */
   async generateOneUseKeyPair(): Promise<CryptographyKeyPairDto> {
     const publicOneUseKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_scalarmult_BYTES);
-    const privateOneUseKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_scalarmult_SCALARBYTES);
+    const privateOneUseKey: Buffer = await this.getRandomisedBuffer(SodiumNative.crypto_scalarmult_SCALARBYTES);
 
     SodiumNative.crypto_scalarmult_base(publicOneUseKey, privateOneUseKey);
 
