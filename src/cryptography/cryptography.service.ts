@@ -11,6 +11,8 @@ export class CryptographyService {
   async generateSigningKeyPair(): Promise<CryptographyKeyPairDto> {
     const publicSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_PUBLICKEYBYTES);
     const privateSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_SECRETKEYBYTES);
+    SodiumNative.sodium_memzero(publicSigningKey);
+    SodiumNative.sodium_memzero(privateSigningKey);
 
     SodiumNative.crypto_sign_keypair(publicSigningKey, privateSigningKey);
 
@@ -30,7 +32,8 @@ export class CryptographyService {
    */
   async generateOneUseKeyPair(): Promise<CryptographyKeyPairDto> {
     const publicOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
-    const privateOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_SCALARBYTES);
+    const privateOneUseKey: Buffer = await this.generateRandomBytes();
+    SodiumNative.sodium_memzero(publicOneUseKey);
 
     SodiumNative.crypto_scalarmult_base(publicOneUseKey, privateOneUseKey);
 
@@ -50,6 +53,7 @@ export class CryptographyService {
    */
   async generateECDHSharedSecret(publicKey: Buffer, privateKey: Buffer): Promise<Buffer> {
     const sharedSecret: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
+    SodiumNative.sodium_memzero(sharedSecret);
 
     SodiumNative.crypto_scalarmult(sharedSecret, privateKey, publicKey);
 
@@ -64,6 +68,7 @@ export class CryptographyService {
    */
   async generateSignature(data: Buffer, privateSigningKey: Buffer): Promise<Buffer> {
     const signature: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_BYTES);
+    SodiumNative.sodium_memzero(signature);
 
     SodiumNative.crypto_sign_detached(signature, data, privateSigningKey);
 
