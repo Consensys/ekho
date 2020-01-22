@@ -1,4 +1,4 @@
-import { Contact } from 'src/users/entities/contacts.entity';
+import { Contact } from 'src/contacts/contacts.entity';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../users/entities/users.entity';
 import { ChannelMessage } from './channelmessages.entity';
