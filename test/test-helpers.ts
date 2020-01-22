@@ -9,6 +9,7 @@ export const mockRepository = jest.fn(() => {
       relations: [],
     },
     save: jest.fn(),
+    find: jest.fn(),
     findOne: jest.fn(),
     findOneOrFail: jest.fn(),
     delete: jest.fn(),
