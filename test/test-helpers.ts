@@ -15,3 +15,38 @@ export const mockRepository = jest.fn(() => {
     delete: jest.fn(),
   };
 });
+
+export const mockIpfsClient = jest.fn(() => {
+  return {
+    get: jest.fn(),
+    add: jest.fn(),
+  };
+});
+
+interface StringIndexedObject {
+  [name: string]: StringIndexedObject | string;
+}
+
+/**
+ *
+ * @param values A config object, or just the subset of the config object being used in this test.
+ * @returns object with a function 'get' which takes a dot-seperated path to a config property on 'values' and returns it.
+ */
+export const mockConfigService = (values: StringIndexedObject) => {
+  const mockedConfigServiceGetter = get(values);
+  return {
+    get: mockedConfigServiceGetter,
+  };
+};
+
+const get = (values: StringIndexedObject) => (dotSeperatedPath: string = '') => {
+  const path = dotSeperatedPath.split('.');
+  const [firstKey, ...childKeys] = path;
+  return getIn(values, firstKey, ...childKeys);
+};
+
+const getIn = (obj: StringIndexedObject, currentKey: string, ...deeperKeys: string[]): string => {
+  const [nextDeepestKey, ...rest] = deeperKeys;
+  const val = obj[currentKey];
+  return typeof val === 'object' ? getIn(val, nextDeepestKey, ...rest) : val;
+};
