@@ -1,17 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import IpfsClient from 'ipfs-http-client';
 import { IpfsMessageDto } from './dto/ipfs-message.dto';
 
 @Injectable()
 export class IpfsService {
-  private readonly ipfs;
-  constructor(private readonly configService: ConfigService) {
-    const host = this.configService.get<string>('ipfs.host');
-    const port = this.configService.get<number>('ipfs.port');
-    const protocol = 'https';
-    this.ipfs = IpfsClient({ host, port, protocol });
-  }
+  constructor(private readonly ipfs: IpfsClient) {}
 
   /**
    * Fetch a file from IPFS that is addressed by a valid IPFS Path.
