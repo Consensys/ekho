@@ -1,8 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, Generated, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { ChannelMember } from '../messages/entities/channelmembers.entity';
+import { User } from '../users/entities/users.entity';
 
 @Entity()
-@Unique('UQ_CONTACT_NAME', ['name'])
+@Unique('UQ_CONTACT_USER_NAME', ['user', 'name'])
 export class Contact {
   @PrimaryGeneratedColumn()
   id: number;
@@ -10,8 +11,9 @@ export class Contact {
   @Column({ length: 500 })
   name: string;
 
-  @Column({ type: 'bytea' })
-  identifier: Buffer;
+  @Column()
+  @Generated('uuid')
+  identifier: string;
 
   @Column({ type: 'bytea' })
   handshakePrivateKey: Buffer;
@@ -33,4 +35,10 @@ export class Contact {
     channelmember => channelmember.contact,
   )
   channelmembers: ChannelMember[];
+
+  @ManyToOne(
+    type => User,
+    user => user.contacts,
+  )
+  user: User;
 }
