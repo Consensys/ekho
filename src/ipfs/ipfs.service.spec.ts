@@ -1,9 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import IpfsClient from 'ipfs-http-client';
-import { mockConfigService, mockIpfsClient } from '../../test/test-helpers';
+import { mockConfigService } from '../../test/test-helpers';
 import { IpfsMessageDto } from './dto/ipfs-message.dto';
 import { IpfsService } from './ipfs.service';
+import { mockIpfsClient } from './test-helpers/mock-ipfs.client';
 
 describe('IpfsService', () => {
   let service: IpfsService;
