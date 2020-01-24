@@ -6,9 +6,10 @@ import { CryptographyModule } from '../cryptography/cryptography.module';
 import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
 import { Channel } from './entities/channels.entity';
+import { ChannelMember } from './entities/channelmembers.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Channel]), CryptographyModule, UsersModule, ContactsModule],
+  imports: [TypeOrmModule.forFeature([Channel, ChannelMember]), CryptographyModule, UsersModule, ContactsModule],
   exports: [ChannelsService],
   providers: [ChannelsService],
   controllers: [ChannelsController],

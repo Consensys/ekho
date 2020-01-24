@@ -14,6 +14,8 @@ export class ChannelsService {
   constructor(
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
+    @InjectRepository(ChannelMember)
+    private readonly channelMemberRepository: Repository<ChannelMember>,
     private readonly cryptoService: CryptographyService,
     private readonly userService: UsersService,
     private readonly contactService: ContactsService,
@@ -43,7 +45,7 @@ export class ChannelsService {
     newChannelMember.messageChainKey = channelMember.messageChainKey;
     newChannelMember.nonce = channelMember.nonce;
 
-    await this.channelRepository.save(newChannelMember);
+    await this.channelMemberRepository.save(newChannelMember);
     return newChannelMember;
   }
 
