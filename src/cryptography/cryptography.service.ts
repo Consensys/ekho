@@ -9,8 +9,11 @@ export class CryptographyService {
    * @returns dto containing public and private key buffers
    */
   async generateSigningKeyPair(): Promise<CryptographyKeyPairDto> {
-    const publicSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_PUBLICKEYBYTES);
-    const privateSigningKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_SECRETKEYBYTES);
+    const publicSigningKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_sign_PUBLICKEYBYTES);
+    const privateSigningKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_sign_SECRETKEYBYTES);
+
+    SodiumNative.sodium_memzero(publicSigningKey);
+    SodiumNative.sodium_memzero(privateSigningKey);
 
     SodiumNative.crypto_sign_keypair(publicSigningKey, privateSigningKey);
 
@@ -29,8 +32,8 @@ export class CryptographyService {
    * @returns dto containing public and private key buffers
    */
   async generateOneUseKeyPair(): Promise<CryptographyKeyPairDto> {
-    const publicOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
-    const privateOneUseKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_SCALARBYTES);
+    const publicOneUseKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_scalarmult_BYTES);
+    const privateOneUseKey: Buffer = await this.getRandomisedBuffer(SodiumNative.crypto_scalarmult_SCALARBYTES);
 
     SodiumNative.crypto_scalarmult_base(publicOneUseKey, privateOneUseKey);
 
@@ -49,7 +52,7 @@ export class CryptographyService {
    * @returns sharedSecret buffer containing ECDH shared secret
    */
   async generateECDHSharedSecret(publicKey: Buffer, privateKey: Buffer): Promise<Buffer> {
-    const sharedSecret: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_scalarmult_BYTES);
+    const sharedSecret: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_scalarmult_BYTES);
 
     SodiumNative.crypto_scalarmult(sharedSecret, privateKey, publicKey);
 
@@ -63,7 +66,7 @@ export class CryptographyService {
    * @returns buffer containing signature
    */
   async generateSignature(data: Buffer, privateSigningKey: Buffer): Promise<Buffer> {
-    const signature: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_sign_BYTES);
+    const signature: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_sign_BYTES);
 
     SodiumNative.crypto_sign_detached(signature, data, privateSigningKey);
 
@@ -89,7 +92,7 @@ export class CryptographyService {
    * @returns buffer containing the 32-byte SHA-256 hash
    */
   async generateSHA256Hash(data: Buffer): Promise<Buffer> {
-    const outputHash: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_hash_sha256_BYTES);
+    const outputHash: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_hash_sha256_BYTES);
 
     SodiumNative.crypto_hash_sha256(outputHash, data);
 
@@ -104,7 +107,7 @@ export class CryptographyService {
    * @returns buffer containing the derived 32-byte symmetric key
    */
   async deriveSymmetricKeyfromSecret(secret: Buffer, nonce: number, context: string): Promise<Buffer> {
-    const outputSymmetricKey: Buffer = SodiumNative.sodium_malloc(SodiumNative.crypto_kdf_KEYBYTES);
+    const outputSymmetricKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_kdf_KEYBYTES);
     const keyContext: Buffer = Buffer.from(context);
 
     SodiumNative.crypto_kdf_derive_from_key(outputSymmetricKey, nonce, keyContext, secret);
@@ -118,7 +121,7 @@ export class CryptographyService {
    * @returns nonceBuffer padded noncebuffer suitable for use in chacha20 encryption/decryption
    */
   async generateNonceBuffer(nonce: number): Promise<Buffer> {
-    const nonceBuffer = SodiumNative.sodium_malloc(SodiumNative.crypto_stream_chacha20_NONCEBYTES);
+    const nonceBuffer = await this.getZeroedBuffer(SodiumNative.crypto_stream_chacha20_NONCEBYTES);
 
     nonceBuffer.writeUInt32BE(nonce, 0);
 
@@ -133,7 +136,7 @@ export class CryptographyService {
    * @returns buffer containing encrypted data
    */
   async encrypt(data: Buffer, nonce: Buffer, key: Buffer): Promise<Buffer> {
-    const encryptedData: Buffer = SodiumNative.sodium_malloc(data.length);
+    const encryptedData: Buffer = await this.getZeroedBuffer(data.length);
 
     SodiumNative.crypto_stream_chacha20_xor(encryptedData, data, nonce, key);
 
@@ -148,7 +151,7 @@ export class CryptographyService {
    * @returns buffer containing decrypted data
    */
   async decrypt(data: Buffer, nonce: Buffer, key: Buffer): Promise<Buffer> {
-    const decryptedData: Buffer = SodiumNative.sodium_malloc(data.length);
+    const decryptedData: Buffer = await this.getZeroedBuffer(data.length);
 
     SodiumNative.crypto_stream_chacha20_xor(decryptedData, data, nonce, key);
 
@@ -171,5 +174,17 @@ export class CryptographyService {
     const retval = Buffer.alloc(32);
     SodiumNative.randombytes_buf(retval);
     return retval;
+  }
+
+  async getZeroedBuffer(size: number): Promise<Buffer> {
+    const buff = SodiumNative.sodium_malloc(size);
+    SodiumNative.sodium_memzero(buff);
+    return buff;
+  }
+
+  async getRandomisedBuffer(size: number): Promise<Buffer> {
+    const buff = await this.getZeroedBuffer(size);
+    SodiumNative.randombytes_buf(buff);
+    return buff;
   }
 }

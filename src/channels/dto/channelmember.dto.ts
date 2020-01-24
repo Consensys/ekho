@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Contact } from 'src/users/entities/contacts.entity';
+import { Contact } from 'src/contacts/contacts.entity';
 import { User } from 'src/users/entities/users.entity';
 import { Channel } from '../entities/channels.entity';
 

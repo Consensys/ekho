@@ -31,6 +31,14 @@ describe('CryptographyService', () => {
       expect(privateKey).toHaveProperty('length', SodiumNative.crypto_sign_SECRETKEYBYTES);
     });
 
+    it('sequentially generated signing pairs should not be the same', async () => {
+      const first: CryptographyKeyPairDto = await service.generateSigningKeyPair();
+      const second: CryptographyKeyPairDto = await service.generateSigningKeyPair();
+
+      expect(first.publicKey.toString('base64')).not.toEqual(second.publicKey.toString('base64'));
+      expect(first.privateKey.toString('base64')).not.toEqual(second.privateKey.toString('base64'));
+    });
+
     it('.generateOneUseKeyPair should generate a single use key pair', async () => {
       const { publicKey, privateKey }: CryptographyKeyPairDto = await service.generateOneUseKeyPair();
 
@@ -38,6 +46,14 @@ describe('CryptographyService', () => {
       expect(publicKey).toHaveProperty('length', SodiumNative.crypto_scalarmult_BYTES);
       expect(privateKey).toBeInstanceOf(Buffer);
       expect(privateKey).toHaveProperty('length', SodiumNative.crypto_scalarmult_SCALARBYTES);
+    });
+
+    it('sequentially generated one-time pairs should not be the same', async () => {
+      const first: CryptographyKeyPairDto = await service.generateOneUseKeyPair();
+      const second: CryptographyKeyPairDto = await service.generateOneUseKeyPair();
+
+      expect(first.publicKey.toString('base64')).not.toEqual(second.publicKey.toString('base64'));
+      expect(first.privateKey.toString('base64')).not.toEqual(second.privateKey.toString('base64'));
     });
   });
 
@@ -88,6 +104,34 @@ describe('CryptographyService', () => {
 
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', 32);
+    });
+
+    it('.getZeroedBuffer returns a Buffer of given size with all bits set to zero', async () => {
+      const anonLength = 4;
+      const expected = Buffer.alloc(anonLength)
+        .fill(0)
+        .toString('base64');
+
+      const actual = await service.getZeroedBuffer(anonLength);
+
+      expect(actual).toBeInstanceOf(Buffer);
+      expect(actual).toHaveProperty('length', anonLength);
+      expect(actual.toString('utf8')).toHaveLength(anonLength);
+      expect(actual.toString('base64')).toEqual(expected);
+    });
+
+    it('getRandomisedBuffer returns a Buffer of given size of random bytes', async () => {
+      const anonSize = 4;
+      const first = await service.getRandomisedBuffer(anonSize);
+      const second = await service.getRandomisedBuffer(anonSize);
+
+      expect(first).toBeInstanceOf(Buffer);
+      expect(first).toHaveLength(anonSize);
+
+      expect(second).toBeInstanceOf(Buffer);
+      expect(second).toHaveLength(anonSize);
+
+      expect(first.toString('base64')).not.toEqual(second.toString('base64'));
     });
   });
 
@@ -224,16 +268,14 @@ describe('CryptographyService', () => {
       alice = testSubjects.alice;
       bob = testSubjects.bob;
 
-      alice.sharedSecret = await helpers.generateSharedSecret(
+      alice.sharedSecret = await service.generateECDHSharedSecret(
         bob.oneTimePair.publicKey,
         alice.oneTimePair.privateKey,
-        alice.signingPair.privateKey,
       );
 
-      bob.sharedSecret = await helpers.generateSharedSecret(
+      bob.sharedSecret = await service.generateECDHSharedSecret(
         alice.oneTimePair.publicKey,
         bob.oneTimePair.privateKey,
-        bob.signingPair.privateKey,
       );
     });
 
@@ -242,11 +284,7 @@ describe('CryptographyService', () => {
       - context and
       - numeric chain id,
       a user can generate a symmetric key`, async () => {
-      const actual = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret.secret,
-        commonChainId,
-        commonContext,
-      );
+      const actual = await service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
 
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', 32);
@@ -254,27 +292,23 @@ describe('CryptographyService', () => {
 
     it('two users can independently generate the same symmetric key by using a shared secret', async () => {
       const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret.secret,
+        alice.sharedSecret,
         commonChainId,
         commonContext,
       );
-      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret.secret,
-        commonChainId,
-        commonContext,
-      );
+      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
 
       expect(aliceSymmetricKey.toString('base64')).toEqual(bobSymmeticKey.toString('base64'));
     });
 
     it('changing the context or nonce breaks the symmetry', async () => {
       const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret.secret,
+        alice.sharedSecret,
         commonChainId,
         commonContext,
       );
       const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret.secret,
+        bob.sharedSecret,
         commonChainId + 1,
         commonContext,
       );
@@ -340,30 +374,24 @@ describe('CryptographyService', () => {
       alice = testSubjects.alice;
       bob = testSubjects.bob;
 
-      alice.sharedSecret = await helpers.generateSharedSecret(
+      alice.sharedSecret = await service.generateECDHSharedSecret(
         bob.oneTimePair.publicKey,
         alice.oneTimePair.privateKey,
-        alice.signingPair.privateKey,
       );
 
-      bob.sharedSecret = await helpers.generateSharedSecret(
+      bob.sharedSecret = await service.generateECDHSharedSecret(
         alice.oneTimePair.publicKey,
         bob.oneTimePair.privateKey,
-        bob.signingPair.privateKey,
       );
     });
 
     it('symmetric key generated from shared secret can be used to encipher and decipher a message', async () => {
       const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret.secret,
+        alice.sharedSecret,
         commonChainId,
         commonContext,
       );
-      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret.secret,
-        commonChainId,
-        commonContext,
-      );
+      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
 
       const cipher = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
 
@@ -374,12 +402,12 @@ describe('CryptographyService', () => {
 
     it('the enciphered message cannot be read without knowing the nonce', async () => {
       const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret.secret,
+        alice.sharedSecret,
         commonChainId,
         commonContext,
       );
-      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret.secret,
+      const bobSymmetricKey = await service.deriveSymmetricKeyfromSecret(
+        bob.sharedSecret,
         commonChainId,
         commonContext,
       );
@@ -387,7 +415,105 @@ describe('CryptographyService', () => {
       const wrongNonce = await service.generateNonceBuffer(1);
       const cipher = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
 
-      const actual = await service.decrypt(cipher, wrongNonce, bobSymmeticKey);
+      const actual = await service.decrypt(cipher, wrongNonce, bobSymmetricKey);
+
+      expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
+    });
+  });
+
+  describe('cipher generated by one shared secret cannot be decrypted by another', () => {
+    let alice: TestSubject;
+    let bob: TestSubject;
+    let trudy: TestSubject;
+
+    let anonNonce: Buffer;
+
+    const commonContext = 'ANON_CONTEXT';
+    const commonChainId = 1;
+
+    let aliceSymmetricKeyWithBob: Buffer;
+    let bobSymmetricKeyWithAlice: Buffer;
+    let trudySymmetricKeyWithBob: Buffer;
+
+    const secretMessage = Buffer.from('I saw Trudy today. She looks fat.');
+
+    beforeAll(async () => {
+      anonNonce = await service.generateNonceBuffer(0);
+
+      const testSubjects = await helpers.generateAlicenBob();
+      alice = testSubjects.alice;
+      bob = testSubjects.bob;
+      trudy = testSubjects.trudy;
+
+      alice.sharedSecret = await service.generateECDHSharedSecret(
+        bob.oneTimePair.publicKey,
+        alice.oneTimePair.privateKey,
+      );
+
+      bob.sharedSecret = await service.generateECDHSharedSecret(
+        alice.oneTimePair.publicKey,
+        bob.oneTimePair.privateKey,
+      );
+
+      aliceSymmetricKeyWithBob = await service.deriveSymmetricKeyfromSecret(
+        alice.sharedSecret,
+        commonChainId,
+        commonContext,
+      );
+
+      bobSymmetricKeyWithAlice = await service.deriveSymmetricKeyfromSecret(
+        bob.sharedSecret,
+        commonChainId,
+        commonContext,
+      );
+    });
+
+    it('symmetric keys generating using different shared secrets do not collide', async () => {
+      const bobOneTimePairForTrudy = await service.generateOneUseKeyPair();
+      const trudySharedSecretWithBob = await service.generateECDHSharedSecret(
+        bobOneTimePairForTrudy.publicKey,
+        trudy.oneTimePair.privateKey,
+      );
+
+      trudySymmetricKeyWithBob = await service.deriveSymmetricKeyfromSecret(
+        trudySharedSecretWithBob,
+        commonChainId,
+        commonContext,
+      );
+
+      expect(aliceSymmetricKeyWithBob.toString('base64')).toEqual(bobSymmetricKeyWithAlice.toString('base64'));
+      expect(bobSymmetricKeyWithAlice.toString('base64')).not.toEqual(trudySymmetricKeyWithBob.toString('base64'));
+    });
+
+    it(`Bob has:
+        - a shared secret with alice,
+        - a shared secret generated from a different one-time pair with trudy.
+        - Trudy knows the context and nonce alice and bob used to send their message
+      Trudy cannot decrypt a message from alice to bob using her symmetric key with bob, even knowing the correct context and nonce`, async () => {
+      const aliceToBob = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKeyWithBob);
+
+      const actual = await service.decrypt(aliceToBob, anonNonce, trudySymmetricKeyWithBob);
+
+      expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
+    });
+
+    it(`Bob has also used the same one-time key to generate a shared secret with Trudy as with Alice.
+      Trudy know the context and message nonce Alice and Bob used to send the last message.
+      Trudy still cannot decrypt the message from Alice to Bob. `, async () => {
+      const weakestBobSharedSecretWithTrudy = await service.generateECDHSharedSecret(
+        trudy.oneTimePair.publicKey,
+        bob.oneTimePair.privateKey,
+      );
+
+      const trudySymmetricWithBobWeakest = await service.deriveSymmetricKeyfromSecret(
+        weakestBobSharedSecretWithTrudy,
+        commonChainId,
+        commonContext,
+      );
+
+      const aliceToBob = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKeyWithBob);
+
+      const actual = await service.decrypt(aliceToBob, anonNonce, trudySymmetricWithBobWeakest);
 
       expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
     });

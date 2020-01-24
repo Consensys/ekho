@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ContactsService } from 'src/contacts/contacts.service';
 import { CryptographyService } from 'src/cryptography/cryptography.service';
-import { Repository } from 'typeorm';
-import ChannelDto from './dto/channel.dto';
+import { UsersService } from 'src/users/users.service';
+import { FindOneOptions, Repository } from 'typeorm';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
+import { ChannelMember } from './entities/channelmembers.entity';
 import { Channel } from './entities/channels.entity';
 
 @Injectable()
@@ -13,12 +15,36 @@ export class ChannelsService {
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
     private readonly cryptoService: CryptographyService,
+    private readonly userService: UsersService,
+    private readonly contactService: ContactsService,
   ) {}
 
-  async add(channelMember: CreateChannelMemberDto) {
-    // const newChannelMember = new ChannelMember();
-    // validate user from dto
-    // validate contact from dto
+  async createChannelMember(channelMember: CreateChannelMemberDto): Promise<ChannelMember> {
+    const newChannelMember = new ChannelMember();
+
+    // validate user (might not be present)
+    if (channelMember.userId !== 0) {
+      const channelUser = await this.userService.findById(channelMember.userId);
+      newChannelMember.user = channelUser;
+    } else {
+      newChannelMember.user = null;
+    }
+
+    // validate contact (might not be present)
+    if (channelMember.contactId !== 0) {
+      const channelContact = await this.contactService.findOneById(channelMember.contactId);
+      newChannelMember.contact = channelContact;
+      newChannelMember.contact.id = channelMember.contactId;
+    } else {
+      newChannelMember.contact = null;
+    }
+
+    newChannelMember.channel = await this.findChannelById(channelMember.channelId);
+    newChannelMember.messageChainKey = channelMember.messageChainKey;
+    newChannelMember.nonce = channelMember.nonce;
+
+    await this.channelRepository.save(newChannelMember);
+    return newChannelMember;
   }
 
   async createChannel(channel: CreateChannelDto): Promise<number> {
@@ -30,19 +56,22 @@ export class ChannelsService {
     return newChannel.id;
   }
 
-  async findChannelByName(name: string): Promise<ChannelDto> {
-    return this.channelRepository.findOneOrFail({
+  async findOne(findClause: FindOneOptions<Channel>): Promise<Channel> {
+    return this.channelRepository.findOneOrFail(findClause);
+  }
+  async findChannelByName(name: string): Promise<Channel> {
+    return this.channelRepository.findOne({
       where: { name },
     });
   }
 
-  async findChannelById(id: number): Promise<ChannelDto> {
-    return this.channelRepository.findOneOrFail({
+  async findChannelById(id: number): Promise<Channel> {
+    return this.channelRepository.findOne({
       where: { id },
     });
   }
 
-  async ChannelTest(): Promise<ChannelDto> {
+  async testChannel(): Promise<Channel> {
     const newChannel = new Channel();
     newChannel.name = 'Test Channel';
     newChannel.channelKey = await this.cryptoService.generateRandomBytes();
