@@ -5,3 +5,11 @@ export const mockWeb3 = jest.fn(() => {
     },
   };
 });
+
+export const mockWeb3Service = jest.fn(() => {
+  return {
+    emitEvent: jest.fn(),
+    getTransactionCount: jest.fn(),
+    sendSignerTransaction: jest.fn(),
+  };
+});
