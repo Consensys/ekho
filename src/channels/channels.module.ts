@@ -5,8 +5,8 @@ import { UsersModule } from 'src/users/users.module';
 import { CryptographyModule } from '../cryptography/cryptography.module';
 import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
-import { Channel } from './entities/channels.entity';
 import { ChannelMember } from './entities/channelmembers.entity';
+import { Channel } from './entities/channels.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Channel, ChannelMember]), CryptographyModule, UsersModule, ContactsModule],

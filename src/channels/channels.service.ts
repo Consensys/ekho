@@ -49,6 +49,36 @@ export class ChannelsService {
     return newChannelMember;
   }
 
+  async deleteChannelMember(id: number): Promise<void> {
+    await this.channelMemberRepository.delete({ id });
+  }
+
+  async findOneChannelMember(findClause: FindOneOptions<ChannelMember>): Promise<ChannelMember> {
+    return this.channelMemberRepository.findOneOrFail(findClause);
+  }
+
+  async findChannelMemberByContactId(id: number): Promise<ChannelMember> {
+    return this.findOneChannelMember({
+      where: { contactId: id },
+    });
+  }
+
+  async findChannelMemberByUserId(id: number): Promise<ChannelMember> {
+    return this.findOneChannelMember({
+      where: { userid: id },
+    });
+  }
+
+  async getAllChannelMembersByChannelId(id: number): Promise<ChannelMember[]> {
+    return this.channelMemberRepository.find({
+      where: { channelId: id },
+    });
+  }
+
+  async getAllChannelMembers(id: number): Promise<ChannelMember[]> {
+    return this.channelMemberRepository.find({});
+  }
+
   async createChannel(channel: CreateChannelDto): Promise<number> {
     const newChannel = new Channel();
     newChannel.name = channel.name;
@@ -58,9 +88,14 @@ export class ChannelsService {
     return newChannel.id;
   }
 
-  async findOne(findClause: FindOneOptions<Channel>): Promise<Channel> {
+  async deleteChannel(id: number): Promise<void> {
+    await this.channelRepository.delete({ id });
+  }
+
+  async findOneChannel(findClause: FindOneOptions<Channel>): Promise<Channel> {
     return this.channelRepository.findOneOrFail(findClause);
   }
+
   async findChannelByName(name: string): Promise<Channel> {
     return this.channelRepository.findOne({
       where: { name },
