@@ -3,15 +3,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import IpfsClient from 'ipfs-http-client';
 import { mockConfigService } from '../../test/test-helpers';
 import { IpfsMessageDto } from './dto/ipfs-message.dto';
+import { mockIpfsConfigValues } from './ipfs.configuration';
 import { IpfsService } from './ipfs.service';
 import { mockIpfsClient } from './test-helpers/mock-ipfs.client';
-
 describe('IpfsService', () => {
   let service: IpfsService;
   let config: ConfigService;
   let client: IpfsClient;
 
-  const mockIpfsConfigValues = { ipfs: { host: '127.0.0.1', port: '8080' } };
   const mockIpfsContent = { from: 'from', to: 'to', content: 'foo' };
 
   beforeEach(async () => {

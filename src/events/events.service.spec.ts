@@ -4,20 +4,13 @@ import { Repository } from 'typeorm';
 import { mockRepository } from '../../test/test-helpers';
 import { EkhoEvent } from './events.entity';
 import { EventsService } from './events.service';
+import { fakeEvent } from './test-helpers/faker';
 
 describe('EventsService', () => {
+  const anonEvent = fakeEvent();
+
   let service: EventsService;
   let repository: Repository<EkhoEvent>;
-
-  const anonEvent: EkhoEvent = {
-    id: -1,
-    txHash: '0x123',
-    status: 'DERP',
-    createdDate: new Date(0),
-    channelId: 'ANON_CHANNELID',
-    content: 'lalala',
-    signature: 'Made in Ireland',
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
