@@ -8,6 +8,7 @@ import { ContactsService } from './contacts.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Contact]), UsersModule, CryptographyModule],
+  exports: [ContactsService],
   providers: [ContactsService],
   controllers: [ContactsController],
 })

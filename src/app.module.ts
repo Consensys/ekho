@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ChannelsModule } from './channels/channels.module';
 import { ContactsModule } from './contacts/contacts.module';
 import ipfsConfiguration from './ipfs/ipfs.configuration';
 import { MessagesModule } from './messages/messages.module';
@@ -17,8 +18,7 @@ import web3Configuration from './web3/web3.configuration';
     UsersModule,
     MessagesModule,
     ContactsModule,
+    ChannelsModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

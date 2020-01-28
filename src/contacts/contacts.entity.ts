@@ -1,5 +1,5 @@
+import { ChannelMember } from 'src/channels/entities/channelmembers.entity';
 import { Column, Entity, Generated, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { ChannelMember } from '../messages/entities/channelmembers.entity';
 import { User } from '../users/entities/users.entity';
 
 @Entity()

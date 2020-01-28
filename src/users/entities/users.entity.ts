@@ -1,4 +1,4 @@
-import { ChannelMember } from 'src/messages/entities/channelmembers.entity';
+import { ChannelMember } from 'src/channels/entities/channelmembers.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Contact } from '../../contacts/contacts.entity';
 
@@ -19,7 +19,7 @@ export class User {
 
   @OneToMany(
     type => ChannelMember,
-    channelmembers => channelmembers.user,
+    channelmember => channelmember.user,
   )
   channelmembers: ChannelMember[];
 

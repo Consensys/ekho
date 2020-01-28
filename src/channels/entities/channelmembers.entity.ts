@@ -1,7 +1,7 @@
 import { Contact } from 'src/contacts/contacts.entity';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../../users/entities/users.entity';
-import { ChannelMessage } from './channelmessages.entity';
+import { ChannelMessage } from 'src/messages/entities/channelmessages.entity';
+import { User } from 'src/users/entities/users.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Channel } from './channels.entity';
 
 @Entity()
@@ -11,20 +11,23 @@ export class ChannelMember {
 
   @ManyToOne(
     type => Channel,
-    channel => channel.channelMember,
+    channel => channel.channelmembers,
   )
+  @JoinColumn({ name: 'channelId' })
   channel: Channel;
 
   @ManyToOne(
     type => User,
     user => user.channelmembers,
   )
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @ManyToOne(
     type => Contact,
     contact => contact.channelmembers,
   )
+  @JoinColumn({ name: 'contactId' })
   contact: Contact;
 
   @OneToMany(
@@ -33,9 +36,9 @@ export class ChannelMember {
   )
   channelmessages: ChannelMessage[];
 
-  @Column({ type: 'bytea' })
-  messageChainKey: Buffer;
+  @Column()
+  messageChainKey: string;
 
-  @Column({ type: 'bytea' })
+  @Column()
   nonce: number;
 }

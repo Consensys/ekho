@@ -7,12 +7,15 @@ export class Channel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'bytea' })
-  channelKey: Buffer;
+  @Column()
+  name: string;
+
+  @Column()
+  channelKey: string;
 
   @OneToMany(
     type => ChannelMember,
-    channelMember => channelMember.channel,
+    channelmember => channelmember.channel,
   )
-  channelMember: ChannelMember;
+  channelmembers: ChannelMember[];
 }
