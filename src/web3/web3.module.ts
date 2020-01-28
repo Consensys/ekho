@@ -9,6 +9,6 @@ import { Web3Service } from './web3.service';
   imports: [EventsModule],
   controllers: [Web3Controller],
   providers: [Web3Service, Web3Factory, ConfigService],
-  exports: [Web3Service, ConfigService],
+  exports: [Web3Service],
 })
 export class Web3Module {}
