@@ -99,32 +99,22 @@ describe('MessagesService', () => {
     expect(actual).toBe(mockMessages);
   });
 
-  it(`findForUser:
-   - finds the first message for a given user on a given channelId
-   - If there is no such message on the local db, delegates EventsService to search for events with that channelId
-   - If such an events exists, delegates IpfsService to retrieve the event and store content as a Message`, async () => {
+  it('findForUser retrives the first message for given user from the Message repository, should it be present', async () => {
     // Case where message already retrieved and on local repo:
-    let mockMessage: Message = fakeMessage({ id: 0 });
+    const mockMessage: Message = fakeMessage({ id: 0 });
     jest.spyOn(repo, 'findOne').mockResolvedValueOnce(mockMessage);
 
     const expectStoredMessage = await service.findForUser('anon-user', 'no-such-channel');
 
     expect(repo.findOne).toBeCalledTimes(1);
     expect(expectStoredMessage).toBe(mockMessage);
-    jest.resetAllMocks();
+  });
 
-    // Case where message is not on local repo, and no transaction for this channel exists:
-    jest.spyOn(repo, 'findOne').mockResolvedValueOnce(null);
-    jest.spyOn(eventsService, 'getTransactionByChannelId').mockResolvedValueOnce(null);
-
-    const expectNoMessage = await service.findForUser('anon-user', 'no-such-channel');
-    expect(expectNoMessage).toBeNull();
-    jest.resetAllMocks();
-
+  it(`If such an events exists, delegates IpfsService to retrieve the event and store content as a Message`, async () => {
     // Case where message not stored locally, but there is a tx:
     const mockEkhoEvent: EkhoEvent = fakeEvent({ channelId: 'no-such-channel' });
     const mockIpfsMessage = fakeIpfsMessage({ content: mockEkhoEvent.content });
-    mockMessage = fakeMessage({ ...mockEkhoEvent, ...mockIpfsMessage });
+    const mockMessage = fakeMessage({ ...mockEkhoEvent, ...mockIpfsMessage });
 
     jest
       .spyOn(repo, 'findOne')
@@ -139,5 +129,14 @@ describe('MessagesService', () => {
     expect(eventsService.getTransactionByChannelId).toBeCalledTimes(1);
     expect(ipfsService.retrieve).toBeCalledTimes(1);
     expect(expectMessageOnIpfs).toBe(mockMessage);
+  });
+
+  it('If there is no such message on the local db, and no event, there is no message. findForUser returns null', async () => {
+    // Case where message is not on local repo, and no transaction for this channel exists:
+    jest.spyOn(repo, 'findOne').mockResolvedValueOnce(null);
+    jest.spyOn(eventsService, 'getTransactionByChannelId').mockResolvedValueOnce(null);
+
+    const expectNoMessage = await service.findForUser('anon-user', 'no-such-channel');
+    expect(expectNoMessage).toBeNull();
   });
 });
