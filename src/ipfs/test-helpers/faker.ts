@@ -1,3 +1,4 @@
+import { fakerFactory } from '../../../test/test-helpers';
 import { IpfsMessageDto } from '../dto/ipfs-message.dto';
 
 const anonIpfsMessage: IpfsMessageDto = {
@@ -6,7 +7,4 @@ const anonIpfsMessage: IpfsMessageDto = {
   content: 'no-such-content',
 };
 
-export const fakeIpfsMessage = (partial?: Partial<IpfsMessageDto>): IpfsMessageDto => {
-  const msg = partial ? partial : {};
-  return { ...anonIpfsMessage, ...msg };
-};
+export const fakeIpfsMessage = fakerFactory(anonIpfsMessage);

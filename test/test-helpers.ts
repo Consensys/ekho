@@ -44,3 +44,7 @@ const getIn = (obj: StringIndexedObject, currentKey: string, ...deeperKeys: stri
 
   return typeof val === 'object' ? getIn(val, nextDeepestKey, ...rest) : val;
 };
+
+export const fakerFactory = <T>(fixture: T) => (partial?: Partial<T>): T => {
+  return partial ? { ...fixture, ...partial } : fixture;
+};

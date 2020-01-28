@@ -1,3 +1,4 @@
+import { fakerFactory } from '../../../test/test-helpers';
 import { EkhoEvent } from '../events.entity';
 
 const anonEvent: EkhoEvent = {
@@ -10,7 +11,4 @@ const anonEvent: EkhoEvent = {
   signature: 'Made in Ireland',
 };
 
-export const fakeEvent = (partial?: Partial<EkhoEvent>): EkhoEvent => {
-  const evnt = partial ? partial : {};
-  return { ...anonEvent, ...evnt };
-};
+export const fakeEvent = fakerFactory<EkhoEvent>(anonEvent);
