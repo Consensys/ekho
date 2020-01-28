@@ -1,6 +1,7 @@
 import { fakerFactory } from '../../../test/test-helpers';
 import { fakeContact } from '../../contacts/test-helpers/faker';
 import { fakeUser } from '../../users/test-helpers/faker';
+import SendMessageDto from '../dto/send-message.dto';
 import { ChannelMember } from '../entities/channelmembers.entity';
 import { ChannelMessage } from '../entities/channelmessages.entity';
 import { Channel } from '../entities/channels.entity';
@@ -44,6 +45,13 @@ var anonChannel: Channel = {
   channelMember: anonChannelMember,
 };
 
+const anonSendMessageDto: SendMessageDto = {
+  from: 'me',
+  to: 'you',
+  content: 'anon-message-content',
+  channelId: 'no-such-channel',
+};
+
 export const fakeChannel = fakerFactory<Channel>(anonChannel);
 
 export const fakeChannelMember = fakerFactory<ChannelMember>(anonChannelMember);
@@ -51,3 +59,5 @@ export const fakeChannelMember = fakerFactory<ChannelMember>(anonChannelMember);
 export const fakeChannelMessage = fakerFactory<ChannelMessage>(anonChannelMessage);
 
 export const fakeMessage = fakerFactory<Message>(anonMessage);
+
+export const fakeSendMessageDto = fakerFactory<SendMessageDto>(anonSendMessageDto);
