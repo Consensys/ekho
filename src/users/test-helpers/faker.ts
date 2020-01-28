@@ -3,9 +3,9 @@ import { User } from '../entities/users.entity';
 
 const anonUser: User = {
   id: -1,
-  uuid: 'anon-uuid',
   name: 'anon-user',
   channelmembers: [],
+  contacts: [],
 };
 
 export const fakeUser = fakerFactory<User>(anonUser);

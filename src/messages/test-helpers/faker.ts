@@ -1,10 +1,10 @@
 import { fakerFactory } from '../../../test/test-helpers';
+import { ChannelMember } from '../../channels/entities/channelmembers.entity';
+import { Channel } from '../../channels/entities/channels.entity';
 import { fakeContact } from '../../contacts/test-helpers/faker';
 import { fakeUser } from '../../users/test-helpers/faker';
 import SendMessageDto from '../dto/send-message.dto';
-import { ChannelMember } from '../entities/channelmembers.entity';
 import { ChannelMessage } from '../entities/channelmessages.entity';
-import { Channel } from '../entities/channels.entity';
 import { Message } from '../entities/messages.entity';
 /* tslint:disable prefer-const no-var no-var-keyword */
 /*
@@ -26,7 +26,7 @@ var anonMessage: Message = {
 var anonChannelMember: ChannelMember = {
   id: -1,
   user: fakeUser(),
-  messageChainKey: Buffer.from('anon-chain-key'),
+  messageChainKey: 'anon-chain-key',
   nonce: 1,
   channel: anonChannel,
   contact: fakeContact(),
@@ -41,8 +41,9 @@ var anonChannelMessage: ChannelMessage = {
 
 var anonChannel: Channel = {
   id: -1,
-  channelKey: Buffer.from('no-such-key'),
-  channelMember: anonChannelMember,
+  name: 'anon-channel-name',
+  channelKey: 'no-such-key',
+  channelmembers: [anonChannelMember],
 };
 
 const anonSendMessageDto: SendMessageDto = {

@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
-import { Contact } from '../../contacts/contacts.entity';
 import { ChannelMember } from '../../channels/entities/channelmembers.entity';
+import { Contact } from '../../contacts/contacts.entity';
 
 @Entity()
 @Unique('UQ_NAME', ['name'])
