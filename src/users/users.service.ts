@@ -34,8 +34,12 @@ export class UsersService {
     return this.userRepository.findOne({ where: { name } });
   }
 
-  async findByUuid(uuid: string): Promise<User> {
-    return this.userRepository.findOneOrFail({ where: { uuid } });
+  async findById(id: number, orFail = false): Promise<User> {
+    if (orFail) {
+      return this.userRepository.findOne(id);
+    } else {
+      return this.userRepository.findOneOrFail(id);
+    }
   }
 
   async delete(name: string): Promise<void> {
