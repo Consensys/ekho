@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CryptographyService } from '../cryptography/cryptography.service';
 import { CryptographyKeyPairDto } from '../cryptography/dto/cryptography-keypair.dto';
 import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 import { Contact } from './contacts.entity';
 import ContactHandshakeDto from './dto/contact-handshake.dto';
+import ContactDto from './dto/contact.dto';
 
-const ENCODING = 'base64';
 @Injectable()
 export class ContactsService {
+  private readonly BASE_64 = 'base64';
+
   constructor(
     @InjectRepository(Contact)
     private readonly contactsRepository: Repository<Contact>,
@@ -18,32 +20,42 @@ export class ContactsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async createContact(to: string): Promise<Contact> {
-    const contact = await this.newContact();
-    contact.name = to;
-    contact.identifier = Buffer.from('random-uuid');
-
+  async createContact(userId: number, name: string): Promise<Contact> {
+    const user = await this.usersService.findById(userId, true);
+    const oneUseKeyPair: CryptographyKeyPairDto = await this.cryptographyService.generateOneUseKeyPair();
+    const contact = new Contact();
+    contact.name = name;
+    contact.user = user;
+    contact.handshakePrivateKey = oneUseKeyPair.privateKey;
+    contact.handshakePublicKey = oneUseKeyPair.publicKey;
     return this.contactsRepository.save(contact);
   }
 
-  async findOne(findClause: FindOneOptions<Contact>): Promise<Contact> {
-    return this.contactsRepository.findOneOrFail(findClause);
+  async getByUser(userId: number): Promise<ContactDto[]> {
+    return this.contactsRepository.find({
+      select: ['name'],
+      where: { user: { id: userId } },
+    });
   }
 
-  async findOneByName(name: string): Promise<Contact> {
-    return this.findOne({ where: { name } });
+  async findOne(userId: number, name: string, orFail = false): Promise<Contact> {
+    if (orFail) {
+      return this.contactsRepository.findOneOrFail({ where: { user: { id: userId }, name } });
+    } else {
+      return this.contactsRepository.findOne({ where: { user: { id: userId }, name } });
+    }
   }
 
-  async findOneById(id: number): Promise<Contact> {
-    return this.findOne({ where: { id } });
+  async findAll(): Promise<Contact[]> {
+    return this.contactsRepository.find();
   }
 
-  async findOneOrCreate(to: string): Promise<Contact> {
-    const contact = await this.contactsRepository.findOne({ where: { name: to } });
+  async findOneOrCreate(userId: number, name: string): Promise<Contact> {
+    const contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, name } });
     if (contact) {
       return contact;
     } else {
-      return this.createContact(to);
+      return this.createContact(userId, name);
     }
   }
 
@@ -51,72 +63,52 @@ export class ContactsService {
     await this.contactsRepository.delete({ name });
   }
 
-  async sendHandshake(from: string, to: string): Promise<void> {
-    const fromUser: User = await this.usersService.findByUuid(from);
-    const contact = await this.findOneOrCreate(to);
+  async initHandshake(userId: number, contactName: string): Promise<ContactHandshakeDto> {
+    const contact = await this.findOneOrCreate(userId, contactName);
+    return this.generateHandshake(userId, contact);
+  }
+
+  async acceptInitHandshake(userId: number, contactName: string, handshake: ContactHandshakeDto): Promise<void> {
+    const contact = await this.findOneOrCreate(userId, contactName);
+    await this.receiveHandshake(contact, handshake);
+  }
+
+  async replyHandshake(userId: number, name: string): Promise<ContactHandshakeDto> {
+    const contact = await this.contactsRepository.findOneOrFail({ where: { user: { id: userId }, name } });
+    return this.generateHandshake(userId, contact);
+  }
+
+  async acceptReplyHandshake(userId: number, name: string, handshake: ContactHandshakeDto): Promise<void> {
+    const contact = await this.contactsRepository.findOneOrFail({ where: { user: { id: userId }, name } });
+    await this.receiveHandshake(contact, handshake);
+  }
+
+  private async generateHandshake(fromID: number, contact: Contact): Promise<ContactHandshakeDto> {
+    const fromUser: User = await this.usersService.findById(fromID);
     const signature = await this.cryptographyService.generateSignature(
       contact.handshakePublicKey,
       fromUser.privateSigningKey,
     );
     const contactHandshake = new ContactHandshakeDto();
-    contactHandshake.from = from;
-    contactHandshake.to = to;
-    contactHandshake.identifier = contact.identifier.toString(ENCODING);
-    contactHandshake.oneuseKey = contact.handshakePublicKey.toString(ENCODING);
-    contactHandshake.signingKey = fromUser.publicSigningKey.toString(ENCODING);
-    contactHandshake.signature = signature.toString(ENCODING);
+    contactHandshake.identifier = contact.identifier;
+    contactHandshake.oneuseKey = contact.handshakePublicKey.toString(this.BASE_64);
+    contactHandshake.signingKey = fromUser.publicSigningKey.toString(this.BASE_64);
+    contactHandshake.signature = signature.toString(this.BASE_64);
 
-    // TODO: working on single node for now; needs to support multi-node
-    const handshakeResult = await this.receiveHandshake(contactHandshake);
-
-    // complete with handshake reply info
-    contact.oneuseKey = Buffer.from(handshakeResult.oneuseKey, ENCODING);
-    contact.signingKey = Buffer.from(handshakeResult.signingKey, ENCODING);
-    contact.signature = Buffer.from(handshakeResult.signature, ENCODING);
-
-    // validate signature
-    if (!(await this.cryptographyService.validateSignature(contact.signature, contact.oneuseKey, contact.signingKey))) {
-      throw Error('signature mismatch');
-    }
-
-    await this.contactsRepository.save(contact);
+    return contactHandshake;
   }
 
-  async receiveHandshake(handshake: ContactHandshakeDto): Promise<ContactHandshakeDto> {
-    const contact = await this.newContact();
-    contact.name = handshake.from;
-    contact.identifier = Buffer.from(handshake.identifier, ENCODING);
-    contact.signingKey = Buffer.from(handshake.signingKey, ENCODING);
-    contact.oneuseKey = Buffer.from(handshake.oneuseKey, ENCODING);
-    contact.signature = Buffer.from(handshake.signature, ENCODING);
+  private async receiveHandshake(contact: Contact, handshake: ContactHandshakeDto): Promise<void> {
+    contact.identifier = handshake.identifier;
+    contact.signingKey = Buffer.from(handshake.signingKey, this.BASE_64);
+    contact.oneuseKey = Buffer.from(handshake.oneuseKey, this.BASE_64);
+    contact.signature = Buffer.from(handshake.signature, this.BASE_64);
 
     // verify signature
     if (!(await this.cryptographyService.validateSignature(contact.signature, contact.oneuseKey, contact.signingKey))) {
       throw Error('signature mismatch');
     }
 
-    const to: User = await this.usersService.findByUuid(handshake.to);
     await this.contactsRepository.save(contact);
-
-    // reply handshake with the corresponding data
-    const signature = await this.cryptographyService.generateSignature(
-      contact.handshakePublicKey,
-      to.privateSigningKey,
-    );
-    const replyHandshake = new ContactHandshakeDto();
-    replyHandshake.identifier = handshake.identifier;
-    replyHandshake.oneuseKey = contact.handshakePublicKey.toString(ENCODING);
-    replyHandshake.signingKey = to.publicSigningKey.toString(ENCODING);
-    replyHandshake.signature = signature.toString(ENCODING);
-
-    return replyHandshake;
-  }
-
-  private async newContact(): Promise<Contact> {
-    const oneUseKeyPair: CryptographyKeyPairDto = await this.cryptographyService.generateOneUseKeyPair();
-    const contact = new Contact();
-    contact.handshakePrivateKey = oneUseKeyPair.privateKey;
-    contact.handshakePublicKey = oneUseKeyPair.publicKey;
-    return contact;
   }
 }

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export default class CreateChannelMemberDto {
   @ApiProperty({ description: 'Message Chain Key' })
-  messageChainKey: Buffer;
+  messageChainKey: string;
 
   @ApiProperty({ description: 'Nonce' })
   nonce: number;

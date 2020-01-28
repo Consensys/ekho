@@ -8,7 +8,7 @@ export default class ChannelMemberDto {
   id: number;
 
   @ApiProperty({ description: 'Message Chain Key' })
-  messageChainKey: Buffer;
+  messageChainKey: string;
 
   @ApiProperty({ description: 'Nonce' })
   nonce: number;

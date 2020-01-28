@@ -36,8 +36,8 @@ export class ChannelMember {
   )
   channelmessages: ChannelMessage[];
 
-  @Column({ type: 'bytea' })
-  messageChainKey: Buffer;
+  @Column()
+  messageChainKey: string;
 
   @Column()
   nonce: number;

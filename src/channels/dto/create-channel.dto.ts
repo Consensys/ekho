@@ -4,5 +4,5 @@ export default class CreateChannelDto {
   @ApiProperty({ description: 'Channel name' })
   name: string;
   @ApiProperty({ description: 'Channel key' })
-  channelKey: Buffer;
+  channelKey: string;
 }

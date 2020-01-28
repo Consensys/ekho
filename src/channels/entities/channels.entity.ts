@@ -10,8 +10,8 @@ export class Channel {
   @Column()
   name: string;
 
-  @Column({ type: 'bytea' })
-  channelKey: Buffer;
+  @Column()
+  channelKey: string;
 
   @OneToMany(
     type => ChannelMember,
