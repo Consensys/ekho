@@ -11,5 +11,6 @@ import { MessagesService } from './messages.service';
   imports: [TypeOrmModule.forFeature([Message]), IpfsModule, Web3Module, EventsModule],
   controllers: [MessagesController],
   providers: [MessagesService],
+  exports: [MessagesService],
 })
 export class MessagesModule {}

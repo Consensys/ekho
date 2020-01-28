@@ -6,7 +6,6 @@ import Web3 from 'web3';
 import { EkhoEvent } from '../events/events.entity';
 import { EventsService } from '../events/events.service';
 import { Web3Constants } from './web3.constants';
-import { Web3Factory } from './web3.factory';
 
 @Injectable()
 export class Web3Service {
@@ -34,12 +33,11 @@ export class Web3Service {
   private readonly address;
   private readonly privateKey;
   private readonly publicKey;
-  private readonly web3;
 
   constructor(
     private readonly eventsService: EventsService,
     private readonly configService: ConfigService,
-    web3Factory: Web3Factory,
+    private readonly web3: Web3,
   ) {
     this.chain = this.configService.get<string>('web3.chain');
     this.hardfork = this.configService.get<string>('web3.hardfork');
@@ -48,7 +46,6 @@ export class Web3Service {
     this.address = this.configService.get<string>('web3.broadcastAccount.address');
     this.publicKey = this.configService.get<string>('web3.broadcastAccount.publicKey');
     this.privateKey = this.configService.get<string>('web3.broadcastAccount.privateKey');
-    this.web3 = web3Factory.getWeb3(this.rpcUrl);
   }
 
   async onModuleInit(): Promise<void> {
@@ -93,7 +90,7 @@ export class Web3Service {
     const txCount = await this.getTransactionCount(this.address);
     Logger.debug(`TransactionCount: ${txCount}`);
     const bufferedPrivateKey = Buffer.from(this.privateKey, 'hex');
-    const contract = new this.web3.eth.Contract(Web3Constants.abi, this.contractAddress);
+    const contract = new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
     const data = contract.methods
       .notify(Web3.utils.fromAscii(channelId), Web3.utils.fromAscii(content), Web3.utils.fromAscii(signature))
       .encodeABI();
@@ -123,15 +120,27 @@ export class Web3Service {
     return txHash;
   }
 
-  async getTransactionCount(account: string) {
-    return new Promise(async (resolve, reject) => {
-      this.web3.eth.getTransactionCount(account, (err, txCount) => (err ? reject(`${err}`) : resolve(txCount)));
-    });
+  async getTransactionCount(account: string): Promise<number> {
+    try {
+      const txCount = await this.web3.eth.getTransactionCount(account);
+      return txCount;
+    } catch (e) {
+      return e;
+    }
+    // return new Promise(async (resolve, reject) => {
+    //   this.web3.eth.getTransactionCount(account, (err, txCount) => (err ? reject(`${err}`) : resolve(txCount)));
+    // });
   }
 
   async sendSignerTransaction(raw: string): Promise<string> {
-    return new Promise(async (resolve, reject) => {
-      this.web3.eth.sendSignedTransaction(raw, (err, txHash) => (err ? reject(`${err}`) : resolve(txHash)));
-    });
+    try {
+      const txHash = await this.web3.eth.sendSignedTransaction(raw);
+      return txHash as any;
+    } catch (e) {
+      return e;
+    }
+    // return new Promise(async (resolve, reject) => {
+    //   this.web3.eth.sendSignedTransaction(raw, (err, txHash) => (err ? reject(`${err}`) : resolve(txHash)));
+    // });
   }
 }

@@ -35,7 +35,7 @@ export class ContactsController {
     await this.contactsService.acceptInitHandshake(userId, contactName, initHandshake);
   }
 
-  @Post('generate-reply-handshake/:contactName')
+  @Post('generate-reply-handshake/:userId/:contactName')
   async generateReplyHandshake(
     @Param('userId') userId: number,
     @Param('contactName') contactName: string,
@@ -43,7 +43,7 @@ export class ContactsController {
     return this.contactsService.replyHandshake(userId, contactName);
   }
 
-  @Post('accept-reply-handshake/:contactName')
+  @Post('accept-reply-handshake/:userId/:contactName')
   async acceptReplyHandshake(
     @Param('userId') userId: number,
     @Param('contactName') contactName: string,

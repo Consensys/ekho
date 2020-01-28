@@ -12,9 +12,6 @@ export class CryptographyService {
     const publicSigningKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_sign_PUBLICKEYBYTES);
     const privateSigningKey: Buffer = await this.getZeroedBuffer(SodiumNative.crypto_sign_SECRETKEYBYTES);
 
-    SodiumNative.sodium_memzero(publicSigningKey);
-    SodiumNative.sodium_memzero(privateSigningKey);
-
     SodiumNative.crypto_sign_keypair(publicSigningKey, privateSigningKey);
 
     const keyPair: CryptographyKeyPairDto = {

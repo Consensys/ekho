@@ -1,41 +1,48 @@
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import Web3 from 'web3';
+import { mockConfigService, mockRepository } from '../../test/test-helpers';
 import { EkhoEvent } from '../events/events.entity';
+import { EventsService } from '../events/events.service';
+import { mockEventsService } from '../events/test-helpers/mock-events-service';
+import { mockWeb3Config } from './web3.configuration';
 import { Web3Factory } from './web3.factory';
 import { Web3Service } from './web3.service';
 
-xdescribe('Web3Service', () => {
+describe('Web3Service', () => {
   let service: Web3Service;
-  const transactionRepository = jest.fn(() => ({
-    metadata: {
-      columns: [],
-      relations: [],
-    },
-  }));
+  let web3: Web3;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule],
       providers: [
         Web3Service,
-        {
-          provide: getRepositoryToken(EkhoEvent),
-          useValue: transactionRepository,
-        },
-        ConfigService,
+        { provide: EventsService, useValue: mockEventsService },
+        { provide: ConfigService, useValue: mockConfigService(mockWeb3Config as any) },
+        { provide: getRepositoryToken(EkhoEvent), useValue: mockRepository },
         Web3Factory,
       ],
-    }).compile();
+    })
+      .overrideProvider(Web3)
+      .useValue(new Web3())
+      .compile();
 
     service = module.get<Web3Service>(Web3Service);
+    web3 = module.get(Web3);
+  });
+
+  it('web3 should be defined', () => {
+    expect(web3).toBeDefined();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should persist listened message', () => {
+  xit('should persist listened message', () => {
     const blockchainMessage = {
       removed: false,
       logIndex: 0,
@@ -50,5 +57,66 @@ xdescribe('Web3Service', () => {
       id: 'log_2d5620aa',
     };
     Logger.debug(blockchainMessage);
+  });
+
+  it('.getTransactionCount delegates Web3.eth.getTransactionCount to get the transaction count for a given account', async done => {
+    const anonAccount = '0xNoSuchAccount';
+    const expected = 42;
+
+    jest.spyOn(web3.eth, 'getTransactionCount').mockResolvedValueOnce(expected);
+
+    try {
+      const actual = await service.getTransactionCount(anonAccount);
+      expect(actual).toEqual(expected);
+      done();
+    } catch (e) {
+      expect(e).not.toBeDefined();
+      done();
+    }
+  });
+
+  it('.getTransactionCount delegates Web3.eth.getTransactionCount which rejects to whatever that throws', async done => {
+    const anonAccount = '0xNoSuchAccount';
+    const expected = new Error('whatever');
+
+    jest.spyOn(web3.eth, 'getTransactionCount').mockRejectedValueOnce(expected);
+
+    const actual = await service.getTransactionCount(anonAccount);
+    expect(actual).toBe(expected);
+    done();
+  });
+
+  it(`.sendSignerTransaction delegates to Web3.eth.sendSignedTransaction. Given string raw transaction resolves to txHash`, async done => {
+    const anonRawTx = 'whatever'; // Should be of type TransactionReceipt. Cannot be bothered mocking a tx which will be ignored.
+    const expected = '0xNoSuchTxHash';
+    jest.spyOn(web3.eth, 'sendSignedTransaction').mockResolvedValueOnce(expected as any);
+
+    service
+      .sendSignerTransaction(anonRawTx)
+      .then(actual => {
+        expect(actual).toEqual(expected);
+        done();
+      })
+      .catch(err => {
+        expect(err).toBeDefined();
+        done();
+      });
+  });
+
+  it(`.sendSignerTransaction delegates to Web3.eth.sendSignedTransaction, which may reject to whatever that throws`, async done => {
+    const anonRawTx = 'whatever'; // Should be of type TransactionReceipt. Cannot be bothered mocking a tx which will be ignored.
+    const expected = new Error('whatever');
+    jest.spyOn(web3.eth, 'sendSignedTransaction').mockRejectedValueOnce(expected);
+
+    service
+      .sendSignerTransaction(anonRawTx)
+      .then(actual => {
+        expect(actual).toEqual(expected);
+        done();
+      })
+      .catch(err => {
+        expect(err).toBeDefined();
+        done();
+      });
   });
 });
