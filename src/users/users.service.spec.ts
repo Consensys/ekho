@@ -53,15 +53,6 @@ describe('UsersService', () => {
     expect(actual).toEqual(anonUser);
   });
 
-  it('calls user repository to find a user by name', async () => {
-    jest.spyOn(repository, 'findOneOrFail').mockResolvedValueOnce(anonUser);
-
-    const actual = await service.findByName(anonUser.name);
-
-    expect(repository.findOneOrFail).lastCalledWith({ where: { uuid: anonUser.name } });
-    expect(actual).toEqual(anonUser);
-  });
-
   it('calls user repository to delete a user by name', async () => {
     await service.delete(anonName);
 

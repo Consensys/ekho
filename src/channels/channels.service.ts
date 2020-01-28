@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ContactsService } from 'src/contacts/contacts.service';
-import { CryptographyService } from 'src/cryptography/cryptography.service';
-import { UsersService } from 'src/users/users.service';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { ContactsService } from '../contacts/contacts.service';
+import { CryptographyService } from '../cryptography/cryptography.service';
+import { UsersService } from '../users/users.service';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
 import { ChannelMember } from './entities/channelmembers.entity';
