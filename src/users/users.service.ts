@@ -14,13 +14,17 @@ export class UsersService {
     private readonly cryptographyService: CryptographyService,
   ) {}
 
-  async create(user: CreateUserDto): Promise<void> {
+  async create(user: CreateUserDto): Promise<UserDto> {
     const newUser = new User();
     newUser.name = user.name;
     const keyPair = await this.cryptographyService.generateSigningKeyPair();
     newUser.privateSigningKey = keyPair.privateKey;
     newUser.publicSigningKey = keyPair.publicKey;
-    await this.userRepository.save(newUser);
+    const dbUser = await this.userRepository.save(newUser);
+    return {
+      id: dbUser.id,
+      name: dbUser.name,
+    };
   }
 
   async findByName(name: string): Promise<UserDto> {
