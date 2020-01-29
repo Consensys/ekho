@@ -29,6 +29,7 @@
     "@nestjs/typeorm": "^6.2.0",
     "ethereumjs-tx": "^2.1.2",
     "ipfs-http-client": "^40.2.1",
+    "moment": "^2.24.0",
     "pg": "^7.17.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",

@@ -83,16 +83,16 @@ export class ContactsService {
     await this.receiveHandshake(contact, handshake);
   }
 
-  private async generateHandshake(fromID: number, contact: Contact): Promise<ContactHandshakeDto> {
-    const fromUser: User = await this.usersService.findById(fromID);
+  private async generateHandshake(userId: number, contact: Contact): Promise<ContactHandshakeDto> {
+    const user: User = await this.usersService.findById(userId);
     const signature = await this.cryptographyService.generateSignature(
       contact.handshakePublicKey,
-      fromUser.privateSigningKey,
+      user.privateSigningKey,
     );
     const contactHandshake = new ContactHandshakeDto();
     contactHandshake.identifier = contact.identifier;
     contactHandshake.oneuseKey = contact.handshakePublicKey.toString(this.BASE_64);
-    contactHandshake.signingKey = fromUser.publicSigningKey.toString(this.BASE_64);
+    contactHandshake.signingKey = user.publicSigningKey.toString(this.BASE_64);
     contactHandshake.signature = signature.toString(this.BASE_64);
 
     return contactHandshake;

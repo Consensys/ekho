@@ -1,17 +1,11 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { CryptographyService } from '../cryptography/cryptography.service';
-import { UsersService } from '../users/users.service';
 import { ContactsService } from './contacts.service';
 import ContactHandshakeDto from './dto/contact-handshake.dto';
 import ContactDto from './dto/contact.dto';
 
 @Controller('contacts')
 export class ContactsController {
-  constructor(
-    private readonly contactsService: ContactsService,
-    private readonly usersService: UsersService,
-    private readonly cryptographyService: CryptographyService,
-  ) {}
+  constructor(private readonly contactsService: ContactsService) {}
 
   @Get(':userId')
   async getContactsForUser(@Param('userId') userId: number): Promise<ContactDto[]> {
