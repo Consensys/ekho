@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import ChannelDto from './dto/channel.dto';
-import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
-import { ChannelMessage } from './entities/channelmessages.entity';
+import { ChannelMember } from './entities/channelmembers.entity';
+import { Channel } from './entities/channels.entity';
 
 @Controller('channels')
 export class ChannelsController {
@@ -16,17 +16,17 @@ export class ChannelsController {
   }
 
   @Get('name')
-  async getChannelByName(@Query('name') name: string): Promise<ChannelDto> {
+  async getChannelByName(@Query('name') name: string): Promise<Channel> {
     return this.channelService.findChannelByName(name);
   }
 
   @Get()
-  async getChannelById(@Query('id') id: number): Promise<ChannelDto> {
+  async getChannelById(@Query('id') id: number): Promise<Channel> {
     return this.channelService.findChannelById(id);
   }
 
   @Get('message')
-  async getChannelMessagesByChannelId(@Query('id') id: number): Promise<ChannelMessage[]> {
+  async getChannelMessagesByChannelId(@Query('id') id: number): Promise<ChannelMember[]> {
     return this.channelService.findAllChannelMessagesByChannelId(id);
   }
 
@@ -36,7 +36,7 @@ export class ChannelsController {
   }
 
   @Post('member')
-  async createChannelMember(@Body() channelMember: CreateChannelMemberDto): Promise<ChannelMemberDto> {
+  async createChannelMember(@Body() channelMember: CreateChannelMemberDto): Promise<ChannelMember> {
     return this.channelService.createChannelMember(channelMember);
   }
 }

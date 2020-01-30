@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Contact } from 'src/contacts/contacts.entity';
 import { ContactsService } from 'src/contacts/contacts.service';
 import { CryptographyService } from 'src/cryptography/cryptography.service';
 import { User } from 'src/users/entities/users.entity';
@@ -24,6 +25,8 @@ export class ChannelsService {
     private readonly channelMessageRepository: Repository<ChannelMessage>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Contact)
+    private readonly contactRepository: Repository<Contact>,
     private readonly cryptoService: CryptographyService,
     private readonly userService: UsersService,
     private readonly contactService: ContactsService,
@@ -114,36 +117,50 @@ export class ChannelsService {
     });
   }
 
-  async findAllChannelMessagesByChannelId(id: number): Promise<ChannelMessage[]> {
+  async findAllChannelMessagesByChannelId(id: number): Promise<ChannelMember[]> {
+    return this.channelMemberRepository.find({
+      where: [{ channel: id }],
+      relations: ['channelmessages', 'channel', 'user', 'contact'],
+    });
+    /*
+    channel.channelmembers = await this.channelMemberRepository
+      .createQueryBuilder()
+      .relation(Channel, "channelmembers")
+      .of(channel)
+      .loadMany();
+    */
+
+    /*
     return this.channelMemberRepository
-      .createQueryBuilder('channelMember')
+    .createQueryBuilder("channelMember")
 
-      .select('channelmessage.id', 'message.Id')
+    .select("channelmessage.id", "message.Id")
 
-      .addSelect('channelmessage.messageContents', 'message.contents')
-      .addSelect('channelmessage.nonce', 'message.nonce')
+    .addSelect("channelmessage.messageContents", "message.contents")
+    .addSelect("channelmessage.nonce", "message.nonce")
 
-      .addSelect('contact.signingKey', 'message.contactPublicSigningKey')
-      .addSelect('contact.name', 'message.contactName')
-      .addSelect('contact.id', 'message.contactId')
+    .addSelect("contact.signingKey", "message.contactPublicSigningKey")
+    .addSelect("contact.name", "message.contactName")
+    .addSelect("contact.id", "message.contactId")
 
-      .addSelect('user.publicSigningKey', 'message.userPublicSigningKey')
-      .addSelect('user.name', 'messsage.userName')
-      .addSelect('user.id', 'message.userid')
+    .addSelect("user.publicSigningKey", "message.userPublicSigningKey")
+    .addSelect("user.name", "messsage.userName")
+    .addSelect("user.id", "message.userid")
 
-      .addSelect('channel.channelKey', 'message.channelKey')
-      .addSelect('channel.name', 'message.channelName')
-      .addSelect('channel.id', 'message.channelId')
+    .addSelect("channel.channelKey", "message.channelKey")
+    .addSelect("channel.name", "message.channelName")
+    .addSelect("channel.id", "message.channelId")
 
-      .addSelect('channelMember.messageChainKey', 'message.messageChainKey')
-      .addSelect('channelMember.id', 'message.channelMemberId')
+    .addSelect("channelMember.messageChainKey", "message.messageChainKey")
+    .addSelect("channelMember.id", "message.channelMemberId")
 
-      .leftJoin('channelMember.channelmessages', 'channelmessage')
-      .leftJoin('channelMember.channel', 'channel')
-      .leftJoin('channelMember.contact', 'contact')
-      .leftJoin('channelMember.user', 'user')
-      .where({ channelId: id })
-      .execute();
+    .leftJoin("channelMember.channelmessages", "channelmessage")
+    .leftJoin("channelMember.channel", "channel")
+    .leftJoin("channelMember.contact", "contact")
+    .leftJoin("channelMember.user", "user")
+    .where({ channelId: id })
+    .execute();
+    */
   }
 
   /**
@@ -194,9 +211,19 @@ export class ChannelsService {
   async testChannelMessages(): Promise<Channel> {
     const newUser = new User();
     newUser.name = 'eoin';
-    newUser.privateSigningKey = await this.cryptoService.generateRandomBytes();
-    newUser.publicSigningKey = await this.cryptoService.generateRandomBytes();
+    newUser.privateSigningKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    newUser.publicSigningKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
     await this.userRepository.save(newUser);
+
+    const newContact = new Contact();
+    newContact.name = 'Joao';
+    newContact.handshakePrivateKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    newContact.handshakePublicKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    newContact.signingKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    newContact.oneuseKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    newContact.signature = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    newContact.user = newUser;
+    await this.contactRepository.save(newContact);
 
     const newChannel = new Channel();
     newChannel.name = 'Test Channel';
@@ -209,18 +236,26 @@ export class ChannelsService {
     newChannelMember.messageChainKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
     await this.channelMemberRepository.save(newChannelMember);
 
-    const newChannelMessage = new ChannelMessage();
-    newChannelMessage.messageContents = 'hello world';
-    newChannelMessage.channelMember = newChannelMember;
-    newChannelMessage.nonce = 1;
-    await this.channelMessageRepository.save(newChannelMessage);
+    const newChannelMember2 = new ChannelMember();
+    newChannelMember2.channel = newChannel;
+    newChannelMember2.contact = newContact;
+    newChannelMember2.messageChainKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    await this.channelMemberRepository.save(newChannelMember2);
 
-    const newChannelMessage2 = new ChannelMessage();
-    newChannelMessage2.messageContents = 'hello world 2';
-    newChannelMessage2.channelMember = newChannelMember;
-    newChannelMessage2.nonce = 1;
-    await this.channelMessageRepository.save(newChannelMessage2);
+    await this.testCreateChannelMessage('hello', newChannelMember, 0);
+    await this.testCreateChannelMessage('hello to you too', newChannelMember2, 0);
+    await this.testCreateChannelMessage('how are you doing', newChannelMember, 1);
+    await this.testCreateChannelMessage('where is the game?', newChannelMember, 2);
+    await this.testCreateChannelMessage('stop talking', newChannelMember2, 1);
 
     return newChannel;
+  }
+
+  private async testCreateChannelMessage(contents: string, member: ChannelMember, nonce) {
+    const channelMessage = new ChannelMessage();
+    channelMessage.messageContents = contents;
+    channelMessage.nonce = nonce;
+    channelMessage.channelMember = member;
+    await this.channelMessageRepository.save(channelMessage);
   }
 }

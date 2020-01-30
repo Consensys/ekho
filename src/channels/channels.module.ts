@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Contact } from 'src/contacts/contacts.entity';
 import { ContactsModule } from 'src/contacts/contacts.module';
 import { User } from 'src/users/entities/users.entity';
 import { UsersModule } from 'src/users/users.module';
@@ -12,7 +13,7 @@ import { Channel } from './entities/channels.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, ChannelMember, ChannelMessage, User]),
+    TypeOrmModule.forFeature([Channel, ChannelMember, ChannelMessage, User, Contact]),
     CryptographyModule,
     UsersModule,
     ContactsModule,
