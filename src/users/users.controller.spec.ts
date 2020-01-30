@@ -13,6 +13,7 @@ describe('Users Controller', () => {
 
   const anonName = 'Farts McGubbins';
   const anonUser: User = new User();
+  anonUser.id = 1;
   anonUser.name = anonName;
   const anonUserDto: CreateUserDto = { name: anonName };
 
@@ -31,12 +32,13 @@ describe('Users Controller', () => {
   });
 
   it('calls UsersService.create to create a user', async () => {
-    jest.spyOn(service, 'create');
+    jest.spyOn(service, 'create').mockResolvedValueOnce(anonUser);
 
-    await controller.create(anonUserDto);
+    const actual = await controller.create(anonUserDto);
 
     expect(service.create).toBeCalledTimes(1);
     expect(service.create).lastCalledWith(anonUserDto);
+    expect(actual).toBe(anonUser);
   });
 
   it('calls UsersService.findByName to find a user', async () => {

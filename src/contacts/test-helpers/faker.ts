@@ -7,8 +7,8 @@ const anonContact: Contact = {
   name: 'anon-name',
   identifier: 'anon-identifier',
   user: fakeUser(),
-  handshakePublicKey: Buffer.from('anon-handshake-public-key'),
-  handshakePrivateKey: Buffer.from('anon-handshake-private-key'),
+  handshakePublicKey: 'anon-handshake-public-key',
+  handshakePrivateKey: 'anon-handshake-private-key',
   channelmembers: [],
 };
 
