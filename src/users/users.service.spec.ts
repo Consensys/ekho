@@ -30,9 +30,12 @@ describe('UsersService', () => {
   });
 
   it('calls user repository to save a user', async () => {
-    await service.create(anonUserDto);
+    jest.spyOn(repository, 'save').mockResolvedValueOnce(anonUser);
+
+    const actual = await service.create(anonUserDto);
 
     expect(repository.save).toBeCalledTimes(1);
+    expect(actual).toEqual(anonUser);
   });
 
   it('calls user repository to find a user', async () => {

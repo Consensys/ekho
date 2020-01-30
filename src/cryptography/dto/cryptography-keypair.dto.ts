@@ -1,4 +1,4 @@
 export class CryptographyKeyPairDto {
-  publicKey: Buffer;
-  privateKey: Buffer;
+  publicKey: string;
+  privateKey: string;
 }

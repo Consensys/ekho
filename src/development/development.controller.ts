@@ -18,9 +18,7 @@ export class DevelopmentController {
     const contact = await this.contactsService.findOne(user.id, contactName, true);
 
     // generate the master key
-    return (
-      await this.cryptographyService.generateECDHSharedSecret(contact.oneuseKey, contact.handshakePrivateKey)
-    ).toString('base64');
+    return await this.cryptographyService.generateECDHSharedSecret(contact.oneuseKey, contact.handshakePrivateKey);
   }
 
   @Get('contact/:userId/:contactName')
@@ -29,11 +27,11 @@ export class DevelopmentController {
     const contactHandshake = {
       name: contact.name,
       identifier: contact.identifier,
-      handshakePublicKey: contact.handshakePublicKey.toString('base64'),
-      handshakePrivateKey: contact.handshakePrivateKey.toString('base64'),
-      oneuseKey: contact.oneuseKey.toString('base64'),
-      signingKey: contact.signingKey.toString('base64'),
-      signature: contact.signature.toString('base64'),
+      handshakePublicKey: contact.handshakePublicKey,
+      handshakePrivateKey: contact.handshakePrivateKey,
+      oneuseKey: contact.oneuseKey,
+      signingKey: contact.signingKey,
+      signature: contact.signature,
     };
     Logger.debug(contactHandshake, `[dev] getContact(${userId}, ${contactName})`);
     return contactHandshake;
@@ -45,11 +43,7 @@ export class DevelopmentController {
     @Param('oneUseKey') oneuseKey: string,
     @Param('signingKey') signingKey: string,
   ): Promise<any> {
-    const result = await this.cryptographyService.validateSignature(
-      Buffer.from(signature, 'base64'),
-      Buffer.from(oneuseKey, 'base64'),
-      Buffer.from(signingKey, 'base64'),
-    );
+    const result = await this.cryptographyService.validateSignature(signature, oneuseKey, signingKey);
     return { result };
   }
 }

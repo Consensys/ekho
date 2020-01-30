@@ -23,52 +23,52 @@ describe('CryptographyService', () => {
 
   describe('can generate cryptographic keys:', () => {
     it('.generateSigningKeyPair should generate a CryptographyKeyPair', async () => {
-      const { publicKey, privateKey }: CryptographyKeyPairDto = await service.generateSigningKeyPair();
+      const { publicKey, privateKey }: CryptographyKeyPairDto = service.generateSigningKeyPair();
 
-      expect(publicKey).toBeInstanceOf(Buffer);
-      expect(publicKey).toHaveProperty('length', SodiumNative.crypto_sign_PUBLICKEYBYTES);
-      expect(privateKey).toBeInstanceOf(Buffer);
-      expect(privateKey).toHaveProperty('length', SodiumNative.crypto_sign_SECRETKEYBYTES);
+      expect(typeof publicKey).toBe('string');
+      expect(Buffer.from(publicKey, 'base64')).toHaveProperty('length', SodiumNative.crypto_sign_PUBLICKEYBYTES);
+      expect(typeof privateKey).toBe('string');
+      expect(Buffer.from(privateKey, 'base64')).toHaveProperty('length', SodiumNative.crypto_sign_SECRETKEYBYTES);
     });
 
     it('sequentially generated signing pairs should not be the same', async () => {
-      const first: CryptographyKeyPairDto = await service.generateSigningKeyPair();
-      const second: CryptographyKeyPairDto = await service.generateSigningKeyPair();
+      const first: CryptographyKeyPairDto = service.generateSigningKeyPair();
+      const second: CryptographyKeyPairDto = service.generateSigningKeyPair();
 
-      expect(first.publicKey.toString('base64')).not.toEqual(second.publicKey.toString('base64'));
-      expect(first.privateKey.toString('base64')).not.toEqual(second.privateKey.toString('base64'));
+      expect(first.publicKey).not.toEqual(second.publicKey);
+      expect(first.privateKey).not.toEqual(second.privateKey);
     });
 
     it('.generateOneUseKeyPair should generate a single use key pair', async () => {
-      const { publicKey, privateKey }: CryptographyKeyPairDto = await service.generateOneUseKeyPair();
+      const { publicKey, privateKey }: CryptographyKeyPairDto = service.generateOneUseKeyPair();
 
-      expect(publicKey).toBeInstanceOf(Buffer);
-      expect(publicKey).toHaveProperty('length', SodiumNative.crypto_scalarmult_BYTES);
-      expect(privateKey).toBeInstanceOf(Buffer);
-      expect(privateKey).toHaveProperty('length', SodiumNative.crypto_scalarmult_SCALARBYTES);
+      expect(typeof publicKey).toBe('string');
+      expect(Buffer.from(publicKey, 'base64')).toHaveProperty('length', SodiumNative.crypto_scalarmult_BYTES);
+      expect(typeof privateKey).toBe('string');
+      expect(Buffer.from(privateKey, 'base64')).toHaveProperty('length', SodiumNative.crypto_scalarmult_SCALARBYTES);
     });
 
     it('sequentially generated one-time pairs should not be the same', async () => {
-      const first: CryptographyKeyPairDto = await service.generateOneUseKeyPair();
-      const second: CryptographyKeyPairDto = await service.generateOneUseKeyPair();
+      const first: CryptographyKeyPairDto = service.generateOneUseKeyPair();
+      const second: CryptographyKeyPairDto = service.generateOneUseKeyPair();
 
-      expect(first.publicKey.toString('base64')).not.toEqual(second.publicKey.toString('base64'));
-      expect(first.privateKey.toString('base64')).not.toEqual(second.privateKey.toString('base64'));
+      expect(first.publicKey).not.toEqual(second.publicKey);
+      expect(first.privateKey).not.toEqual(second.privateKey);
     });
   });
 
   describe('generateSHA256Hash', () => {
     it('should be able to hash shit', async () => {
-      const anon = Buffer.from(`durrr I'm a bunch of data, lalala.`);
-      const actual = await service.generateSHA256Hash(anon);
+      const anon = `durrr I'm a bunch of data, lalala.`;
+      const actual = service.generateSHA256Hash(anon);
 
-      expect(actual).toBeInstanceOf(Buffer);
-      expect(actual).toHaveProperty('length', SodiumNative.crypto_hash_sha256_BYTES);
+      expect(typeof actual).toBe('string');
+      expect(Buffer.from(actual, 'hex')).toHaveProperty('length', SodiumNative.crypto_hash_sha256_BYTES);
     });
 
     it('hashes should be deterministic', async () => {
-      const one = Buffer.from('the truth shall make ye fret');
-      const other = Buffer.from(String('the truth shall make ye fret'));
+      const one = 'the truth shall make ye fret';
+      const other = 'the truth shall make ye fret';
 
       const expected = service.generateSHA256Hash(one);
       const actual = service.generateSHA256Hash(other);
@@ -80,7 +80,7 @@ describe('CryptographyService', () => {
   describe('generateNonceBuffer', () => {
     it('should return a number as an 8 byte buffer', async () => {
       const anon = 1234;
-      const actual = await service.generateNonceBuffer(anon);
+      const actual = service.generateNonceBuffer(anon);
       const expected = Buffer.alloc(8);
       expected.writeUInt32BE(anon, 0);
 
@@ -92,7 +92,7 @@ describe('CryptographyService', () => {
 
   describe('cryptography service utility functions', () => {
     it('.generateRandomNumber generates a random number between 0 and 0xffffffff', async () => {
-      const actual = await service.generateRandomNumber();
+      const actual = service.generateRandomNumber();
 
       expect(typeof actual).toEqual(typeof 1234);
       expect(actual >= 0).toBe(true);
@@ -100,7 +100,7 @@ describe('CryptographyService', () => {
     });
 
     it('.generateRandomBytes generates a 32 byte Buffer of unpredictable bytes', async () => {
-      const actual = await service.generateRandomBytes();
+      const actual = service.generateRandomBytes();
 
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', 32);
@@ -112,7 +112,7 @@ describe('CryptographyService', () => {
         .fill(0)
         .toString('base64');
 
-      const actual = await service.getZeroedBuffer(anonLength);
+      const actual = service.getZeroedBuffer(anonLength);
 
       expect(actual).toBeInstanceOf(Buffer);
       expect(actual).toHaveProperty('length', anonLength);
@@ -122,8 +122,8 @@ describe('CryptographyService', () => {
 
     it('getRandomisedBuffer returns a Buffer of given size of random bytes', async () => {
       const anonSize = 4;
-      const first = await service.getRandomisedBuffer(anonSize);
-      const second = await service.getRandomisedBuffer(anonSize);
+      const first = service.getRandomisedBuffer(anonSize);
+      const second = service.getRandomisedBuffer(anonSize);
 
       expect(first).toBeInstanceOf(Buffer);
       expect(first).toHaveLength(anonSize);
@@ -140,46 +140,46 @@ describe('CryptographyService', () => {
     let bob: CryptographyKeyPairDto;
 
     beforeAll(async () => {
-      alice = await service.generateSigningKeyPair();
-      bob = await service.generateSigningKeyPair();
+      alice = service.generateSigningKeyPair();
+      bob = service.generateSigningKeyPair();
     });
 
     it('given a data buffer and private signing key,generateSignature generates signature', async () => {
-      const anonData = Buffer.from(`I'm totally Alice.`);
+      const anonData = `I'm totally Alice.`;
 
-      const actual = await service.generateSignature(anonData, alice.privateKey);
+      const actual = service.generateSignature(anonData, alice.privateKey);
 
-      expect(actual).toBeInstanceOf(Buffer);
-      expect(actual).toHaveProperty('length', SodiumNative.crypto_sign_BYTES);
+      expect(typeof actual).toBe('string');
+      expect(Buffer.from(actual, 'base64')).toHaveProperty('length', SodiumNative.crypto_sign_BYTES);
     });
 
     it('can validate a signature against expected public key and the expected data', async () => {
-      const anonData = Buffer.from(`I'm totally Alice.`);
+      const anonData = `I'm totally Alice.`;
 
-      const signature = await service.generateSignature(anonData, alice.privateKey);
+      const signature = service.generateSignature(anonData, alice.privateKey);
 
-      const actual = await service.validateSignature(signature, anonData, alice.publicKey);
+      const actual = service.validateSignature(signature, anonData, alice.publicKey);
 
       expect(actual).toBe(true);
     });
 
     it('can refuse to validate a signature against expected public key and the wrong data', async () => {
-      const expectedData = Buffer.from(`I'm totally Alice.`);
-      const incorrectData = Buffer.from('Fascist lies!');
+      const expectedData = `I'm totally Alice.`;
+      const incorrectData = 'Fascist lies!';
 
-      const signature = await service.generateSignature(expectedData, alice.privateKey);
+      const signature = service.generateSignature(expectedData, alice.privateKey);
 
-      const actual = await service.validateSignature(signature, incorrectData, alice.publicKey);
+      const actual = service.validateSignature(signature, incorrectData, alice.publicKey);
 
       expect(actual).toBe(false);
     });
 
     it('can refuse to validate a signature against wrong public key and the expected data', async () => {
-      const expectedData = Buffer.from(`I'm totally Alice.`);
+      const expectedData = `I'm totally Alice.`;
 
-      const signature = await service.generateSignature(expectedData, alice.privateKey);
+      const signature = service.generateSignature(expectedData, alice.privateKey);
 
-      const actual = await service.validateSignature(signature, expectedData, bob.publicKey);
+      const actual = service.validateSignature(signature, expectedData, bob.publicKey);
 
       expect(actual).toBe(false);
     });
@@ -196,31 +196,28 @@ describe('CryptographyService', () => {
     });
 
     it('generate a shared secret from your public and my private one-time keys', async () => {
-      const actual = await service.generateECDHSharedSecret(bob.oneTimePair.publicKey, alice.oneTimePair.privateKey);
+      const actual = service.generateECDHSharedSecret(bob.oneTimePair.publicKey, alice.oneTimePair.privateKey);
 
-      expect(actual).toBeInstanceOf(Buffer);
-      expect(actual).toHaveProperty('length', SodiumNative.crypto_scalarmult_BYTES);
+      expect(typeof actual).toBe('string');
+      expect(Buffer.from(actual, 'base64')).toHaveProperty('length', SodiumNative.crypto_scalarmult_BYTES);
     });
 
     it('independently generated shared secret should be common when two users exchanged public one-time keys', async () => {
-      const aliceSharedSecret = await service.generateECDHSharedSecret(
+      const aliceSharedSecret = service.generateECDHSharedSecret(
         bob.oneTimePair.publicKey,
         alice.oneTimePair.privateKey,
       );
-      const bobSharedSecret = await service.generateECDHSharedSecret(
-        alice.oneTimePair.publicKey,
-        bob.oneTimePair.privateKey,
-      );
+      const bobSharedSecret = service.generateECDHSharedSecret(alice.oneTimePair.publicKey, bob.oneTimePair.privateKey);
 
-      expect(aliceSharedSecret.toString('base64')).toEqual(bobSharedSecret.toString('base64'));
+      expect(aliceSharedSecret).toEqual(bobSharedSecret);
     });
 
     it('should be able to verify signature of a one-time public key', async () => {
-      const aliceOneTimePubKeySignature = await service.generateSignature(
+      const aliceOneTimePubKeySignature = service.generateSignature(
         alice.oneTimePair.publicKey,
         alice.signingPair.privateKey,
       );
-      const actual = await service.validateSignature(
+      const actual = service.validateSignature(
         aliceOneTimePubKeySignature,
         alice.oneTimePair.publicKey,
         alice.signingPair.publicKey,
@@ -230,22 +227,22 @@ describe('CryptographyService', () => {
     });
 
     it('two users independently generating signed shared secret should be able to verify each others signature', async () => {
-      const aliceOneTimePubKeySignature = await service.generateSignature(
+      const aliceOneTimePubKeySignature = service.generateSignature(
         alice.oneTimePair.publicKey,
         alice.signingPair.privateKey,
       );
 
-      const bobOneTimePubKeySignature = await service.generateSignature(
+      const bobOneTimePubKeySignature = service.generateSignature(
         bob.oneTimePair.publicKey,
         bob.signingPair.privateKey,
       );
-      const bobValidates = await service.validateSignature(
+      const bobValidates = service.validateSignature(
         aliceOneTimePubKeySignature,
         alice.oneTimePair.publicKey,
         alice.signingPair.publicKey,
       );
 
-      const aliceValidates = await service.validateSignature(
+      const aliceValidates = service.validateSignature(
         bobOneTimePubKeySignature,
         bob.oneTimePair.publicKey,
         bob.signingPair.publicKey,
@@ -268,15 +265,9 @@ describe('CryptographyService', () => {
       alice = testSubjects.alice;
       bob = testSubjects.bob;
 
-      alice.sharedSecret = await service.generateECDHSharedSecret(
-        bob.oneTimePair.publicKey,
-        alice.oneTimePair.privateKey,
-      );
+      alice.sharedSecret = service.generateECDHSharedSecret(bob.oneTimePair.publicKey, alice.oneTimePair.privateKey);
 
-      bob.sharedSecret = await service.generateECDHSharedSecret(
-        alice.oneTimePair.publicKey,
-        bob.oneTimePair.privateKey,
-      );
+      bob.sharedSecret = service.generateECDHSharedSecret(alice.oneTimePair.publicKey, bob.oneTimePair.privateKey);
     });
 
     it(`given
@@ -284,36 +275,24 @@ describe('CryptographyService', () => {
       - context and
       - numeric chain id,
       a user can generate a symmetric key`, async () => {
-      const actual = await service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
+      const actual = service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
 
-      expect(actual).toBeInstanceOf(Buffer);
-      expect(actual).toHaveProperty('length', 32);
+      expect(typeof actual).toBe('string');
+      expect(Buffer.from(actual, 'base64')).toHaveProperty('length', 32);
     });
 
     it('two users can independently generate the same symmetric key by using a shared secret', async () => {
-      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
-      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
+      const aliceSymmetricKey = service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
+      const bobSymmeticKey = service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
 
-      expect(aliceSymmetricKey.toString('base64')).toEqual(bobSymmeticKey.toString('base64'));
+      expect(aliceSymmetricKey).toEqual(bobSymmeticKey);
     });
 
     it('changing the context or nonce breaks the symmetry', async () => {
-      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
-      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret,
-        commonChainId + 1,
-        commonContext,
-      );
+      const aliceSymmetricKey = service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
+      const bobSymmeticKey = service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId + 1, commonContext);
 
-      expect(aliceSymmetricKey.toString('base64')).not.toEqual(bobSymmeticKey.toString('base64'));
+      expect(aliceSymmetricKey).not.toEqual(bobSymmeticKey);
     });
   });
 
@@ -321,38 +300,36 @@ describe('CryptographyService', () => {
     let alice: TestSubject;
     let bob: TestSubject;
 
-    let symmetricKey: Buffer;
+    let symmetricKey: string;
 
     const secretMessage = 'Up yours, Bob.';
-    const plain = Buffer.from(secretMessage);
 
     beforeAll(async () => {
       const testSubjects = await helpers.generateAlicenBob();
       alice = testSubjects.alice;
       bob = testSubjects.bob;
 
-      symmetricKey = await service.generateRandomBytes();
+      symmetricKey = service.getZeroedBuffer(32).toString();
     });
 
     it('.encrypt, given data, a nonce and a key, returns Buffer of data encrypted using chacha20_xor', async () => {
-      const anonNonce = await service.generateNonceBuffer(0);
+      const anonNonce = 0;
 
-      const actual = await service.encrypt(plain, anonNonce, symmetricKey);
+      const actual = service.encrypt(secretMessage, anonNonce, symmetricKey);
 
-      expect(actual).toBeInstanceOf(Buffer);
-      expect(actual).toHaveProperty('length', plain.length);
+      expect(typeof actual).toBe('string');
+      expect(actual).toHaveProperty('length', 28);
     });
 
     it('.decrypt, given corresponding ciphertext and nonce returns Buffer of decrypted data', async () => {
-      const anonNonce = await service.generateNonceBuffer(1);
-      const cipher = await service.encrypt(plain, anonNonce, symmetricKey);
+      const anonNonce = 1;
+      const cipher = service.encrypt(secretMessage, anonNonce, symmetricKey);
 
-      const actual = await service.decrypt(cipher, anonNonce, symmetricKey);
+      const actual = service.decrypt(cipher, anonNonce, symmetricKey);
 
-      expect(actual).toBeInstanceOf(Buffer);
-      expect(actual).toHaveProperty('length', cipher.length);
-      expect(actual.toString('utf8')).toEqual(Buffer.from(secretMessage).toString('utf8'));
-      expect(actual.toString('utf8')).toEqual(plain.toString('utf8'));
+      expect(typeof actual).toBe('string');
+      expect(cipher).toHaveProperty('length', 28);
+      expect(actual).toEqual(secretMessage);
     });
   });
 
@@ -360,64 +337,46 @@ describe('CryptographyService', () => {
     let alice: TestSubject;
     let bob: TestSubject;
 
-    let anonNonce: Buffer;
+    let anonNonce: number;
 
     const commonContext = 'ANON_CONTEXT';
     const commonChainId = 1;
 
-    const secretMessage = Buffer.from('I saw Trudy today. She looks fat.');
+    const secretMessage = 'I saw Trudy today. She looks fat.';
 
     beforeAll(async () => {
-      anonNonce = await service.generateNonceBuffer(0);
+      anonNonce = 0;
 
       const testSubjects = await helpers.generateAlicenBob();
       alice = testSubjects.alice;
       bob = testSubjects.bob;
 
-      alice.sharedSecret = await service.generateECDHSharedSecret(
-        bob.oneTimePair.publicKey,
-        alice.oneTimePair.privateKey,
-      );
+      alice.sharedSecret = service.generateECDHSharedSecret(bob.oneTimePair.publicKey, alice.oneTimePair.privateKey);
 
-      bob.sharedSecret = await service.generateECDHSharedSecret(
-        alice.oneTimePair.publicKey,
-        bob.oneTimePair.privateKey,
-      );
+      bob.sharedSecret = service.generateECDHSharedSecret(alice.oneTimePair.publicKey, bob.oneTimePair.privateKey);
     });
 
     it('symmetric key generated from shared secret can be used to encipher and decipher a message', async () => {
-      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
-      const bobSymmeticKey = await service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
+      const aliceSymmetricKey = service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
+      const bobSymmeticKey = service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
 
-      const cipher = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
+      const cipher = service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
 
-      const actual = await service.decrypt(cipher, anonNonce, bobSymmeticKey);
+      const actual = service.decrypt(cipher, anonNonce, bobSymmeticKey);
 
-      expect(actual.toString('utf8')).toEqual(secretMessage.toString('utf8'));
+      expect(actual).toEqual(secretMessage);
     });
 
     it('the enciphered message cannot be read without knowing the nonce', async () => {
-      const aliceSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
-      const bobSymmetricKey = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
+      const aliceSymmetricKey = service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
+      const bobSymmetricKey = service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
 
-      const wrongNonce = await service.generateNonceBuffer(1);
-      const cipher = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
+      const wrongNonce = 1;
+      const cipher = service.encrypt(secretMessage, anonNonce, aliceSymmetricKey);
 
-      const actual = await service.decrypt(cipher, wrongNonce, bobSymmetricKey);
+      const actual = service.decrypt(cipher, wrongNonce, bobSymmetricKey);
 
-      expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
+      expect(actual).not.toEqual(secretMessage);
     });
   });
 
@@ -426,63 +385,49 @@ describe('CryptographyService', () => {
     let bob: TestSubject;
     let trudy: TestSubject;
 
-    let anonNonce: Buffer;
+    let anonNonce: number;
 
     const commonContext = 'ANON_CONTEXT';
     const commonChainId = 1;
 
-    let aliceSymmetricKeyWithBob: Buffer;
-    let bobSymmetricKeyWithAlice: Buffer;
-    let trudySymmetricKeyWithBob: Buffer;
+    let aliceSymmetricKeyWithBob: string;
+    let bobSymmetricKeyWithAlice: string;
+    let trudySymmetricKeyWithBob: string;
 
-    const secretMessage = Buffer.from('I saw Trudy today. She looks fat.');
+    const secretMessage = 'I saw Trudy today. She looks fat.';
 
     beforeAll(async () => {
-      anonNonce = await service.generateNonceBuffer(0);
+      anonNonce = 0;
 
       const testSubjects = await helpers.generateAlicenBob();
       alice = testSubjects.alice;
       bob = testSubjects.bob;
       trudy = testSubjects.trudy;
 
-      alice.sharedSecret = await service.generateECDHSharedSecret(
-        bob.oneTimePair.publicKey,
-        alice.oneTimePair.privateKey,
-      );
+      alice.sharedSecret = service.generateECDHSharedSecret(bob.oneTimePair.publicKey, alice.oneTimePair.privateKey);
 
-      bob.sharedSecret = await service.generateECDHSharedSecret(
-        alice.oneTimePair.publicKey,
-        bob.oneTimePair.privateKey,
-      );
+      bob.sharedSecret = service.generateECDHSharedSecret(alice.oneTimePair.publicKey, bob.oneTimePair.privateKey);
 
-      aliceSymmetricKeyWithBob = await service.deriveSymmetricKeyfromSecret(
-        alice.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
+      aliceSymmetricKeyWithBob = service.deriveSymmetricKeyfromSecret(alice.sharedSecret, commonChainId, commonContext);
 
-      bobSymmetricKeyWithAlice = await service.deriveSymmetricKeyfromSecret(
-        bob.sharedSecret,
-        commonChainId,
-        commonContext,
-      );
+      bobSymmetricKeyWithAlice = service.deriveSymmetricKeyfromSecret(bob.sharedSecret, commonChainId, commonContext);
     });
 
     it('symmetric keys generating using different shared secrets do not collide', async () => {
-      const bobOneTimePairForTrudy = await service.generateOneUseKeyPair();
-      const trudySharedSecretWithBob = await service.generateECDHSharedSecret(
+      const bobOneTimePairForTrudy = service.generateOneUseKeyPair();
+      const trudySharedSecretWithBob = service.generateECDHSharedSecret(
         bobOneTimePairForTrudy.publicKey,
         trudy.oneTimePair.privateKey,
       );
 
-      trudySymmetricKeyWithBob = await service.deriveSymmetricKeyfromSecret(
+      trudySymmetricKeyWithBob = service.deriveSymmetricKeyfromSecret(
         trudySharedSecretWithBob,
         commonChainId,
         commonContext,
       );
 
-      expect(aliceSymmetricKeyWithBob.toString('base64')).toEqual(bobSymmetricKeyWithAlice.toString('base64'));
-      expect(bobSymmetricKeyWithAlice.toString('base64')).not.toEqual(trudySymmetricKeyWithBob.toString('base64'));
+      expect(aliceSymmetricKeyWithBob).toEqual(bobSymmetricKeyWithAlice);
+      expect(bobSymmetricKeyWithAlice).not.toEqual(trudySymmetricKeyWithBob);
     });
 
     it(`Bob has:
@@ -490,32 +435,32 @@ describe('CryptographyService', () => {
         - a shared secret generated from a different one-time pair with trudy.
         - Trudy knows the context and nonce alice and bob used to send their message
       Trudy cannot decrypt a message from alice to bob using her symmetric key with bob, even knowing the correct context and nonce`, async () => {
-      const aliceToBob = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKeyWithBob);
+      const aliceToBob = service.encrypt(secretMessage, anonNonce, aliceSymmetricKeyWithBob);
 
-      const actual = await service.decrypt(aliceToBob, anonNonce, trudySymmetricKeyWithBob);
+      const actual = service.decrypt(aliceToBob, anonNonce, trudySymmetricKeyWithBob);
 
-      expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
+      expect(actual).not.toEqual(secretMessage);
     });
 
     it(`Bob has also used the same one-time key to generate a shared secret with Trudy as with Alice.
       Trudy know the context and message nonce Alice and Bob used to send the last message.
       Trudy still cannot decrypt the message from Alice to Bob. `, async () => {
-      const weakestBobSharedSecretWithTrudy = await service.generateECDHSharedSecret(
+      const weakestBobSharedSecretWithTrudy = service.generateECDHSharedSecret(
         trudy.oneTimePair.publicKey,
         bob.oneTimePair.privateKey,
       );
 
-      const trudySymmetricWithBobWeakest = await service.deriveSymmetricKeyfromSecret(
+      const trudySymmetricWithBobWeakest = service.deriveSymmetricKeyfromSecret(
         weakestBobSharedSecretWithTrudy,
         commonChainId,
         commonContext,
       );
 
-      const aliceToBob = await service.encrypt(secretMessage, anonNonce, aliceSymmetricKeyWithBob);
+      const aliceToBob = service.encrypt(secretMessage, anonNonce, aliceSymmetricKeyWithBob);
 
-      const actual = await service.decrypt(aliceToBob, anonNonce, trudySymmetricWithBobWeakest);
+      const actual = service.decrypt(aliceToBob, anonNonce, trudySymmetricWithBobWeakest);
 
-      expect(actual.toString('utf8')).not.toEqual(secretMessage.toString('utf8'));
+      expect(actual).not.toEqual(secretMessage);
     });
   });
 });

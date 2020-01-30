@@ -9,12 +9,12 @@ export interface AnonKeySet {
 export interface TestSubject extends AnonKeySet {
   signingPair: CryptographyKeyPairDto;
   oneTimePair: CryptographyKeyPairDto;
-  sharedSecret?: Buffer;
+  sharedSecret?: string;
 }
 
 export interface SignedSharedSecret {
-  secret: Buffer;
-  signature: Buffer;
+  secret: string;
+  signature: string;
 }
 
 export interface TestUsers {
@@ -27,9 +27,9 @@ export interface TestHelper {
   generateAnonKeys(): Promise<AnonKeySet>;
   generateAlicenBob(): Promise<TestUsers>;
   generateSharedSecret(
-    yourPublicOneTimeKey: Buffer,
-    myPrivateOneTimeKey: Buffer,
-    myPrivateSigningKey: Buffer,
+    yourPublicOneTimeKey: string,
+    myPrivateOneTimeKey: string,
+    myPrivateSigningKey: string,
   ): Promise<SignedSharedSecret>;
 }
 
@@ -44,8 +44,8 @@ export const getTestHelper = (service: CryptographyService): TestHelper => {
    * @returns Object with signingPair and oneTimePair. Each being a CryptographyPairDto
    */
   const generateAnonKeys = async (): Promise<AnonKeySet> => {
-    const signingPair = await service.generateSigningKeyPair();
-    const oneTimePair = await service.generateOneUseKeyPair();
+    const signingPair = service.generateSigningKeyPair();
+    const oneTimePair = service.generateOneUseKeyPair();
 
     return {
       signingPair,
@@ -76,12 +76,12 @@ export const getTestHelper = (service: CryptographyService): TestHelper => {
    * @returns Object with properties secret, and signature, being 'my' shared secret with 'you' and my signature of that secret. Each a Buffer.
    */
   const generateSharedSecret = async (
-    yourPublic1time: Buffer,
-    myPriv1time: Buffer,
-    myPrivSigning: Buffer,
+    yourPublic1time: string,
+    myPriv1time: string,
+    myPrivSigning: string,
   ): Promise<SignedSharedSecret> => {
-    const secret = await service.generateECDHSharedSecret(yourPublic1time, myPriv1time);
-    const signature = await service.generateSignature(secret, myPrivSigning);
+    const secret = service.generateECDHSharedSecret(yourPublic1time, myPriv1time);
+    const signature = service.generateSignature(secret, myPrivSigning);
 
     return { signature, secret };
   };

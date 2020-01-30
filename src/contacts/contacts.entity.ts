@@ -15,20 +15,20 @@ export class Contact {
   @Generated('uuid')
   identifier: string;
 
-  @Column({ type: 'bytea' })
-  handshakePrivateKey: Buffer;
+  @Column()
+  handshakePrivateKey: string;
 
-  @Column({ type: 'bytea' })
-  handshakePublicKey: Buffer;
+  @Column()
+  handshakePublicKey: string;
 
-  @Column({ type: 'bytea', nullable: true })
-  signingKey?: Buffer;
+  @Column({ nullable: true })
+  signingKey?: string;
 
-  @Column({ type: 'bytea', nullable: true })
-  oneuseKey?: Buffer;
+  @Column({ nullable: true })
+  oneuseKey?: string;
 
-  @Column({ type: 'bytea', nullable: true })
-  signature?: Buffer;
+  @Column({ nullable: true })
+  signature?: string;
 
   @OneToMany(
     type => ChannelMember,
