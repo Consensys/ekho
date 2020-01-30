@@ -38,7 +38,4 @@ export class ChannelMember {
 
   @Column()
   messageChainKey: string;
-
-  @Column()
-  nonce: number;
 }

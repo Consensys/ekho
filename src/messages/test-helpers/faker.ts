@@ -27,7 +27,6 @@ var anonChannelMember: ChannelMember = {
   id: -1,
   user: fakeUser(),
   messageChainKey: 'anon-chain-key',
-  nonce: 1,
   channel: anonChannel,
   contact: fakeContact(),
   channelmessages: [anonChannelMessage],

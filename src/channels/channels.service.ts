@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ContactsService } from 'src/contacts/contacts.service';
+import { CryptographyService } from 'src/cryptography/cryptography.service';
+import { User } from 'src/users/entities/users.entity';
+import { UsersService } from 'src/users/users.service';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { ContactsService } from '../contacts/contacts.service';
-import { CryptographyService } from '../cryptography/cryptography.service';
-import { UsersService } from '../users/users.service';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
 import { ChannelMember } from './entities/channelmembers.entity';
+import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
 
 @Injectable()
@@ -18,6 +20,10 @@ export class ChannelsService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(ChannelMember)
     private readonly channelMemberRepository: Repository<ChannelMember>,
+    @InjectRepository(ChannelMessage)
+    private readonly channelMessageRepository: Repository<ChannelMessage>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly cryptoService: CryptographyService,
     private readonly userService: UsersService,
     private readonly contactService: ContactsService,
@@ -49,7 +55,6 @@ export class ChannelsService {
 
     newChannelMember.channel = await this.findChannelById(channelMember.channelId);
     newChannelMember.messageChainKey = channelMember.messageChainKey;
-    newChannelMember.nonce = channelMember.nonce;
 
     await this.channelMemberRepository.save(newChannelMember);
     return newChannelMember;
@@ -109,6 +114,38 @@ export class ChannelsService {
     });
   }
 
+  async findAllChannelMessagesByChannelId(id: number): Promise<ChannelMessage[]> {
+    return this.channelMemberRepository
+      .createQueryBuilder('channelMember')
+
+      .select('channelmessage.id', 'message.Id')
+
+      .addSelect('channelmessage.messageContents', 'message.contents')
+      .addSelect('channelmessage.nonce', 'message.nonce')
+
+      .addSelect('contact.signingKey', 'message.contactPublicSigningKey')
+      .addSelect('contact.name', 'message.contactName')
+      .addSelect('contact.id', 'message.contactId')
+
+      .addSelect('user.publicSigningKey', 'message.userPublicSigningKey')
+      .addSelect('user.name', 'messsage.userName')
+      .addSelect('user.id', 'message.userid')
+
+      .addSelect('channel.channelKey', 'message.channelKey')
+      .addSelect('channel.name', 'message.channelName')
+      .addSelect('channel.id', 'message.channelId')
+
+      .addSelect('channelMember.messageChainKey', 'message.messageChainKey')
+      .addSelect('channelMember.id', 'message.channelMemberId')
+
+      .leftJoin('channelMember.channelmessages', 'channelmessage')
+      .leftJoin('channelMember.channel', 'channel')
+      .leftJoin('channelMember.contact', 'contact')
+      .leftJoin('channelMember.user', 'user')
+      .where({ channelId: id })
+      .execute();
+  }
+
   /**
    * Creates a channel
    * @param channel channel object
@@ -154,12 +191,36 @@ export class ChannelsService {
     });
   }
 
-  async testChannel(): Promise<Channel> {
+  async testChannelMessages(): Promise<Channel> {
+    const newUser = new User();
+    newUser.name = 'eoin';
+    newUser.privateSigningKey = await this.cryptoService.generateRandomBytes();
+    newUser.publicSigningKey = await this.cryptoService.generateRandomBytes();
+    await this.userRepository.save(newUser);
+
     const newChannel = new Channel();
     newChannel.name = 'Test Channel';
     newChannel.channelKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
-
     await this.channelRepository.save(newChannel);
+
+    const newChannelMember = new ChannelMember();
+    newChannelMember.channel = newChannel;
+    newChannelMember.user = newUser;
+    newChannelMember.messageChainKey = await (await this.cryptoService.generateRandomBytes()).toString(this.BASE_64);
+    await this.channelMemberRepository.save(newChannelMember);
+
+    const newChannelMessage = new ChannelMessage();
+    newChannelMessage.messageContents = 'hello world';
+    newChannelMessage.channelMember = newChannelMember;
+    newChannelMessage.nonce = 1;
+    await this.channelMessageRepository.save(newChannelMessage);
+
+    const newChannelMessage2 = new ChannelMessage();
+    newChannelMessage2.messageContents = 'hello world 2';
+    newChannelMessage2.channelMember = newChannelMember;
+    newChannelMessage2.nonce = 1;
+    await this.channelMessageRepository.save(newChannelMessage2);
+
     return newChannel;
   }
 }

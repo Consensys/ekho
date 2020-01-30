@@ -4,6 +4,7 @@ import ChannelDto from './dto/channel.dto';
 import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
+import { ChannelMessage } from './entities/channelmessages.entity';
 
 @Controller('channels')
 export class ChannelsController {
@@ -24,9 +25,14 @@ export class ChannelsController {
     return this.channelService.findChannelById(id);
   }
 
+  @Get('message')
+  async getChannelMessagesByChannelId(@Query('id') id: number): Promise<ChannelMessage[]> {
+    return this.channelService.findAllChannelMessagesByChannelId(id);
+  }
+
   @Get('test')
   async testChannel(): Promise<ChannelDto> {
-    return this.channelService.testChannel();
+    return this.channelService.testChannelMessages();
   }
 
   @Post('member')
