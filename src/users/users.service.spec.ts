@@ -5,6 +5,7 @@ import { mockRepository } from '../../test/test-helpers';
 import { CryptographyService } from '../cryptography/cryptography.service';
 import CreateUserDto from './dto/create-user.dto';
 import { User } from './entities/users.entity';
+import { fakeUser } from './test-helpers/faker';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -13,8 +14,7 @@ describe('UsersService', () => {
 
   const anonName = 'anon';
   const anonUserDto: CreateUserDto = { name: anonName };
-  const anonUser = new User();
-  anonUser.name = anonName;
+  const anonUser = fakeUser({ name: anonName });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
