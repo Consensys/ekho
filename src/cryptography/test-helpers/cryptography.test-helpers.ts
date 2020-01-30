@@ -31,6 +31,7 @@ export interface TestHelper {
     myPrivateOneTimeKey: string,
     myPrivateSigningKey: string,
   ): Promise<SignedSharedSecret>;
+  sign(secret: Buffer, signingKey: Buffer): Promise<Buffer>;
 }
 
 /**
@@ -86,9 +87,15 @@ export const getTestHelper = (service: CryptographyService): TestHelper => {
     return { signature, secret };
   };
 
+  const sign = async (secret: Buffer, signingKey: Buffer): Promise<Buffer> => {
+    const signature: Buffer = await service.generateSignature(secret, signingKey);
+    return signature;
+  };
+
   return {
     generateAnonKeys,
     generateAlicenBob,
     generateSharedSecret,
+    sign,
   };
 };
