@@ -35,7 +35,7 @@ describe('UsersService', () => {
     const actual = await service.create(anonUserDto);
 
     expect(repository.save).toBeCalledTimes(1);
-    expect(actual).toEqual(anonUser);
+    expect(actual).toEqual({ id: -1, name: anonName });
   });
 
   it('calls user repository to find a user', async () => {

@@ -22,7 +22,7 @@ describe('ContactsService', () => {
   let userKeySet;
   let contactKeySet;
 
-  let expectedSignature: Buffer;
+  let expectedSignature: string;
   let expectedHandShake: ContactHandshakeDto;
 
   let anonUser;
@@ -60,9 +60,9 @@ describe('ContactsService', () => {
 
     expectedHandShake = fakeContactHandshake({
       identifier: anonContact.identifier,
-      oneuseKey: anonContact.handshakePublicKey.toString('base64'),
-      signingKey: anonUser.publicSigningKey.toString('base64'),
-      signature: expectedSignature.toString('base64'),
+      oneuseKey: anonContact.handshakePublicKey,
+      signingKey: anonUser.publicSigningKey,
+      signature: expectedSignature,
     });
   });
 
@@ -85,7 +85,7 @@ describe('ContactsService', () => {
     expected.handshakePrivateKey = oneTimePair.privateKey;
 
     jest.spyOn(usersService, 'findById').mockResolvedValueOnce(anonUser);
-    jest.spyOn(cryptoService, 'generateOneUseKeyPair').mockResolvedValueOnce(oneTimePair);
+    jest.spyOn(cryptoService, 'generateOneUseKeyPair').mockReturnValueOnce(oneTimePair);
     jest.spyOn(repository, 'save').mockResolvedValueOnce(expected);
 
     const actual = await service.createContact(anonUser.id, anonUser.name);
