@@ -11,11 +11,11 @@ export class User {
   @Column({ length: 500 })
   name: string;
 
-  @Column({ type: 'bytea' })
-  privateSigningKey?: Buffer;
+  @Column()
+  privateSigningKey?: string;
 
-  @Column({ type: 'bytea' })
-  publicSigningKey?: Buffer;
+  @Column()
+  publicSigningKey?: string;
 
   @OneToMany(
     type => ChannelMember,

@@ -11,8 +11,6 @@ import ContactDto from './dto/contact.dto';
 
 @Injectable()
 export class ContactsService {
-  private readonly BASE_64 = 'base64';
-
   constructor(
     @InjectRepository(Contact)
     private readonly contactsRepository: Repository<Contact>,
@@ -22,7 +20,7 @@ export class ContactsService {
 
   async createContact(userId: number, name: string): Promise<Contact> {
     const user = await this.usersService.findById(userId, true);
-    const oneUseKeyPair: CryptographyKeyPairDto = await this.cryptographyService.generateOneUseKeyPair();
+    const oneUseKeyPair: CryptographyKeyPairDto = this.cryptographyService.generateOneUseKeyPair();
     const contact = new Contact();
     contact.name = name;
     contact.user = user;
@@ -85,27 +83,24 @@ export class ContactsService {
 
   private async generateHandshake(userId: number, contact: Contact): Promise<ContactHandshakeDto> {
     const user: User = await this.usersService.findById(userId);
-    const signature = await this.cryptographyService.generateSignature(
-      contact.handshakePublicKey,
-      user.privateSigningKey,
-    );
+    const signature = this.cryptographyService.generateSignature(contact.handshakePublicKey, user.privateSigningKey);
     const contactHandshake = new ContactHandshakeDto();
     contactHandshake.identifier = contact.identifier;
-    contactHandshake.oneuseKey = contact.handshakePublicKey.toString(this.BASE_64);
-    contactHandshake.signingKey = user.publicSigningKey.toString(this.BASE_64);
-    contactHandshake.signature = signature.toString(this.BASE_64);
+    contactHandshake.oneuseKey = contact.handshakePublicKey;
+    contactHandshake.signingKey = user.publicSigningKey;
+    contactHandshake.signature = signature;
 
     return contactHandshake;
   }
 
   private async receiveHandshake(contact: Contact, handshake: ContactHandshakeDto): Promise<void> {
     contact.identifier = handshake.identifier;
-    contact.signingKey = Buffer.from(handshake.signingKey, this.BASE_64);
-    contact.oneuseKey = Buffer.from(handshake.oneuseKey, this.BASE_64);
-    contact.signature = Buffer.from(handshake.signature, this.BASE_64);
+    contact.signingKey = handshake.signingKey;
+    contact.oneuseKey = handshake.oneuseKey;
+    contact.signature = handshake.signature;
 
     // verify signature
-    if (!(await this.cryptographyService.validateSignature(contact.signature, contact.oneuseKey, contact.signingKey))) {
+    if (!this.cryptographyService.validateSignature(contact.signature, contact.oneuseKey, contact.signingKey)) {
       throw Error('signature mismatch');
     }
 

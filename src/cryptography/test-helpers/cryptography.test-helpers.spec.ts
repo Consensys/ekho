@@ -48,18 +48,18 @@ describe('Cryptography test-helpers', () => {
     const { alice, bob, trudy } = await helper.generateAlicenBob();
 
     const setOfKeysAsStrings = new Set<string>([
-      alice.signingPair.publicKey.toString('base64'),
-      alice.signingPair.privateKey.toString('base64'),
-      alice.oneTimePair.publicKey.toString('base64'),
-      alice.oneTimePair.privateKey.toString('base64'),
-      bob.signingPair.publicKey.toString('base64'),
-      bob.signingPair.privateKey.toString('base64'),
-      bob.oneTimePair.publicKey.toString('base64'),
-      bob.oneTimePair.privateKey.toString('base64'),
-      trudy.signingPair.publicKey.toString('base64'),
-      trudy.signingPair.privateKey.toString('base64'),
-      trudy.oneTimePair.publicKey.toString('base64'),
-      trudy.oneTimePair.privateKey.toString('base64'),
+      alice.signingPair.publicKey,
+      alice.signingPair.privateKey,
+      alice.oneTimePair.publicKey,
+      alice.oneTimePair.privateKey,
+      bob.signingPair.publicKey,
+      bob.signingPair.privateKey,
+      bob.oneTimePair.publicKey,
+      bob.oneTimePair.privateKey,
+      trudy.signingPair.publicKey,
+      trudy.signingPair.privateKey,
+      trudy.oneTimePair.publicKey,
+      trudy.oneTimePair.privateKey,
     ]);
 
     expect(setOfKeysAsStrings).toHaveProperty('size', 12);
@@ -78,9 +78,9 @@ describe('Cryptography test-helpers', () => {
     );
 
     expect(actual).toHaveProperty('secret');
-    expect(actual.secret).toBeInstanceOf(Buffer);
+    expect(typeof actual.secret).toBe('string');
     expect(actual).toHaveProperty('signature');
-    expect(actual.signature).toBeInstanceOf(Buffer);
+    expect(typeof actual.signature).toBe('string');
   });
 
   it('shared secrets so generated should be common to two users concerned', async () => {
@@ -96,6 +96,6 @@ describe('Cryptography test-helpers', () => {
       bob.signingPair.privateKey,
     );
 
-    expect(aliceSignedSharedSecret.secret.toString('base64')).toEqual(bobSignedSharedSecret.secret.toString('base64'));
+    expect(aliceSignedSharedSecret.secret).toEqual(bobSignedSharedSecret.secret);
   });
 });
