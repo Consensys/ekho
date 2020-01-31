@@ -19,6 +19,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
     - run: npm run build --if-present
-    - run: npm test
+    
+    - name: unit test
+    - run: npm test:cov
+      continue-on-error: false
+      
+    - name: e2e
+    - run: npm run test:e2e
+      continue-on-error: false
+      
+    - name: upload coverage
+      uses: actions/upload-artifact@v1
+      with:
+        name: code-coverage-report
+        path: coverage/lcon-report/index.html
       env:
         CI: true
