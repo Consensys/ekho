@@ -1,6 +1,8 @@
 name: Node.js CI
 
-on: [push]
+on: 
+  pull_request:
+    branches: master
 
 jobs:
   build:
@@ -24,11 +26,11 @@ jobs:
         run: npm run test:cov
         continue-on-error: false
 
-      - name: upload coverage
-        uses: actions/upload-artifact@v1
-        with:
-          name: code-coverage-report
-          path: coverage/lcov-report/index.html
+#       - name: upload coverage
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: code-coverage-report
+#           path: coverage/lcov-report/index.html
       
 #       - name: e2e
 #         run: npm run test:e2e
