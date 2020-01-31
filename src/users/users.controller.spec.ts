@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { mockRepository } from '../../test/test-helpers';
 import { CryptographyService } from '../cryptography/cryptography.service';
 import CreateUserDto from './dto/create-user.dto';
-import { User } from './entities/users.entity';
+import { fakeUser } from './test-helpers/faker';
+import { mockUsersService } from './test-helpers/mock-users-service';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
@@ -12,14 +11,13 @@ describe('Users Controller', () => {
   let service: UsersService;
 
   const anonName = 'Farts McGubbins';
-  const anonUser: User = new User();
-  anonUser.id = 1;
-  anonUser.name = anonName;
+
+  const anonUser = fakeUser({ name: anonName });
   const anonUserDto: CreateUserDto = { name: anonName };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [{ provide: getRepositoryToken(User), useClass: mockRepository }, CryptographyService, UsersService],
+      providers: [CryptographyService, { provide: UsersService, useValue: mockUsersService() }],
       controllers: [UsersController],
     }).compile();
 
