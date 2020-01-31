@@ -24,14 +24,15 @@ jobs:
         run: npm run test:cov
         continue-on-error: false
 
-      - name: e2e
-        run: npm run test:e2e
-        continue-on-error: false
-
       - name: upload coverage
         uses: actions/upload-artifact@v1
         with:
           name: code-coverage-report
           path: coverage/lcon-report/index.html
+      
+#       - name: e2e
+#         run: npm run test:e2e
+#         continue-on-error: false
+        
         env:
           CI: true
