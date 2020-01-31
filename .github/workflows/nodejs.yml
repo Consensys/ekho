@@ -12,26 +12,26 @@ jobs:
         node-version: [10.x, 11.x, 12.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build --if-present
-    
-    - name: unit test
-    - run: npm test:cov
-      continue-on-error: false
-      
-    - name: e2e
-    - run: npm run test:e2e
-      continue-on-error: false
-      
-    - name: upload coverage
-      uses: actions/upload-artifact@v1
-      with:
-        name: code-coverage-report
-        path: coverage/lcon-report/index.html
-      env:
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run build --if-present
+
+      - name: unit test
+        run: npm test:cov
+        continue-on-error: false
+
+      - name: e2e
+        run: npm run test:e2e
+        continue-on-error: false
+
+      - name: upload coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage-report
+          path: coverage/lcon-report/index.html
+        env:
+          CI: true
