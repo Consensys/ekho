@@ -100,6 +100,9 @@ $ npm run test
 $ npm run test:e2e
 
 # test coverage
+# write coverage reports to <rootDir>/coverage
+# open <rootDir>/coverage/lcov-report/index.html to view locally.
+# CI prefer <rootDir>/coverage/coverage-final.json
 $ npm run test:cov
 ```
 
