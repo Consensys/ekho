@@ -14,17 +14,30 @@ jobs:
         node-version: [11.x]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm run build --if-present
+    - uses: actions/checkout@v2
 
-      - name: unit test
-        run: npm run test:cov
-        continue-on-error: false
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        CI: true
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build --if-present
+
+    - name: Unit test
+      run: npm run test:cov
+      continue-on-error: false
 
 #       - name: upload coverage
 #         uses: actions/upload-artifact@v1
@@ -35,6 +48,3 @@ jobs:
 #       - name: e2e
 #         run: npm run test:e2e
 #         continue-on-error: false
-        
-        env:
-          CI: true
