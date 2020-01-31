@@ -6,8 +6,10 @@ import { CryptographyService } from 'src/cryptography/cryptography.service';
 import { User } from 'src/users/entities/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
+import CreateChannelMessageDto from './dto/create-channelmessage.dto';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
@@ -35,6 +37,7 @@ export class ChannelsService {
   /**
    * Creates a Channel Member
    * @param channelMember channel member to be created
+   * @returns ChannelMember created ChannelMember entity
    */
   async createChannelMember(channelMember: CreateChannelMemberDto): Promise<ChannelMember> {
     const newChannelMember = new ChannelMember();
@@ -64,6 +67,18 @@ export class ChannelsService {
   }
 
   /**
+   * Updates Channel Member (specifically *just* the Message Chain Key)
+   * @param channelMember channel Member to update
+   * @returns ChannelMember updated Channel Member entity
+   */
+  async updateChannelMember(channelMember: ChannelMemberDto): Promise<ChannelMember> {
+    const updatedChannelMember = new ChannelMember();
+    updatedChannelMember.messageChainKey = channelMember.messageChainKey;
+    await this.channelMemberRepository.save(updatedChannelMember);
+    return updatedChannelMember;
+  }
+
+  /**
    * Deletes a Channel Member
    * @param id Channel Member to delete
    */
@@ -77,6 +92,18 @@ export class ChannelsService {
    */
   async findOneChannelMember(findClause: FindOneOptions<ChannelMember>): Promise<ChannelMember> {
     return this.channelMemberRepository.findOneOrFail(findClause);
+  }
+
+  /**
+   * Finds one channel member by id
+   * @param id Channel member id to find
+   * @returns ChannelMember channelmember entity returned
+   */
+  async findChannelMemberById(id: number): Promise<ChannelMember> {
+    return this.findOneChannelMember({
+      relations: ['channel', 'contact', 'user'],
+      where: { id },
+    });
   }
 
   /**
@@ -117,63 +144,31 @@ export class ChannelsService {
     });
   }
 
-  async findAllChannelMessagesByChannelId(id: number): Promise<ChannelMember[]> {
-    return this.channelMemberRepository.find({
-      where: [{ channel: id }],
-      relations: ['channelmessages', 'channel', 'user', 'contact'],
+  /**
+   * Returns all channel messages by channel id
+   * @param id Channel id
+   * @returns ChannelMessage[] list of channel messages (includes all child relationships)
+   */
+  async findAllChannelMessagesByChannelId(id: number): Promise<ChannelMessage[]> {
+    const channelMessages = this.channelMessageRepository.find({
+      relations: ['channelMember', 'channelMember.channel', 'channelMember.user', 'channelMember.contact'],
+      where: { 'channelMember.channel.channelid': id },
     });
-    /*
-    channel.channelmembers = await this.channelMemberRepository
-      .createQueryBuilder()
-      .relation(Channel, "channelmembers")
-      .of(channel)
-      .loadMany();
-    */
-
-    /*
-    return this.channelMemberRepository
-    .createQueryBuilder("channelMember")
-
-    .select("channelmessage.id", "message.Id")
-
-    .addSelect("channelmessage.messageContents", "message.contents")
-    .addSelect("channelmessage.nonce", "message.nonce")
-
-    .addSelect("contact.signingKey", "message.contactPublicSigningKey")
-    .addSelect("contact.name", "message.contactName")
-    .addSelect("contact.id", "message.contactId")
-
-    .addSelect("user.publicSigningKey", "message.userPublicSigningKey")
-    .addSelect("user.name", "messsage.userName")
-    .addSelect("user.id", "message.userid")
-
-    .addSelect("channel.channelKey", "message.channelKey")
-    .addSelect("channel.name", "message.channelName")
-    .addSelect("channel.id", "message.channelId")
-
-    .addSelect("channelMember.messageChainKey", "message.messageChainKey")
-    .addSelect("channelMember.id", "message.channelMemberId")
-
-    .leftJoin("channelMember.channelmessages", "channelmessage")
-    .leftJoin("channelMember.channel", "channel")
-    .leftJoin("channelMember.contact", "contact")
-    .leftJoin("channelMember.user", "user")
-    .where({ channelId: id })
-    .execute();
-    */
+    return channelMessages;
   }
 
   /**
    * Creates a channel
-   * @param channel channel object
+   * @param channel channel to be created
+   * @returns Channel - created channel entity
    */
-  async createChannel(channel: CreateChannelDto): Promise<number> {
+  async createChannel(channel: CreateChannelDto): Promise<Channel> {
     const newChannel = new Channel();
     newChannel.name = channel.name;
     newChannel.channelKey = channel.channelKey;
 
     await this.channelRepository.save(newChannel);
-    return newChannel.id;
+    return newChannel;
   }
 
   /**
@@ -185,16 +180,18 @@ export class ChannelsService {
   }
 
   /**
-   * Finds one channel
+   * Finds one channel using flexible where clause
    * @param findClause JSON find clause to return one channel record
+   * @returns Channel entity containing channel information
    */
   async findOneChannel(findClause: FindOneOptions<Channel>): Promise<Channel> {
     return this.channelRepository.findOneOrFail(findClause);
   }
 
   /**
-   *
-   * @param name
+   * Finds a channel by exact name match
+   * @param name Name of channel to be retrieved
+   * @returns Channel entity containing channel information
    */
   async findChannelByName(name: string): Promise<Channel> {
     return this.channelRepository.findOne({
@@ -202,12 +199,54 @@ export class ChannelsService {
     });
   }
 
+  /**
+   * Finds a channel by its channel id
+   * @param id channel Id to be retrieved
+   * @returns Channel entity containing channel information
+   */
   async findChannelById(id: number): Promise<Channel> {
     return this.channelRepository.findOne({
       where: { id },
     });
   }
 
+  /**
+   * Finds one channel message using flexible where clause
+   * @param findClause JSON find clause to return one channel message record
+   * @returns Channel message entity containing channel message information
+   */
+  async findOneChannelMessage(findClause: FindOneOptions<ChannelMessage>): Promise<ChannelMessage> {
+    return this.channelMessageRepository.findOneOrFail(findClause);
+  }
+
+  /**
+   * Finds a channelmessage  by its channel message id
+   * @param id channel message Id to be retrieved
+   * @returns Channel message entity containing channel message information
+   */
+  async findChannelMessageById(id: number): Promise<ChannelMessage> {
+    return this.channelMessageRepository.findOne({
+      where: { id },
+    });
+  }
+
+  /**
+   * Creates a channel message
+   * @param channelMessage message to create
+   * @returns ChannelMessage created entity
+   */
+  async createChannelMessage(channelMessage: CreateChannelMessageDto): Promise<ChannelMessage> {
+    const newChannelMessage = new ChannelMessage();
+    newChannelMessage.channelMember = await this.findChannelMemberById(channelMessage.channelMemberId);
+    newChannelMessage.messageContents = channelMessage.messageContents;
+    newChannelMessage.nonce = channelMessage.nonce; // TODO: some check to ensure this nonce doesn't already exist for that channelmember
+    return this.channelMessageRepository.save(newChannelMessage);
+  }
+
+  /**
+   * test method to populate the database with sample data
+   * @returns Channel channel created
+   */
   async testChannelMessages(): Promise<Channel> {
     const newUser = new User();
     newUser.name = 'eoin';
@@ -251,6 +290,12 @@ export class ChannelsService {
     return newChannel;
   }
 
+  /**
+   * test method to populate the database with sample data
+   * @param contents message contents
+   * @param member channel member object writing message
+   * @param nonce message nonce
+   */
   private async testCreateChannelMessage(contents: string, member: ChannelMember, nonce) {
     const channelMessage = new ChannelMessage();
     channelMessage.messageContents = contents;
