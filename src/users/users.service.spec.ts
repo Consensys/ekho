@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { mockRepository } from '../../test/test-helpers';
+import { mockQueryRunner, mockRepository } from '../../test/test-helpers';
 import { CryptographyService } from '../cryptography/cryptography.service';
+import { VaultService } from '../vault/vault.service';
 import CreateUserDto from './dto/create-user.dto';
 import { User } from './entities/users.entity';
 import { fakeUser } from './test-helpers/faker';
@@ -15,10 +16,22 @@ describe('UsersService', () => {
   const anonName = 'anon';
   const anonUserDto: CreateUserDto = { name: anonName };
   const anonUser = fakeUser({ name: anonName });
+  const vaultServiceMock = {
+    userWritePrivateKey: jest.fn(),
+    userReadPrivateKey: jest.fn().mockReturnValue('this-is-private-key'),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService, CryptographyService, { provide: getRepositoryToken(User), useClass: mockRepository }],
+      providers: [
+        UsersService,
+        CryptographyService,
+        {
+          provide: VaultService,
+          useValue: vaultServiceMock,
+        },
+        { provide: getRepositoryToken(User), useClass: mockRepository },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -36,11 +49,17 @@ describe('UsersService', () => {
   });
 
   it('calls user repository to save a user', async () => {
-    jest.spyOn(repository, 'save').mockResolvedValueOnce(anonUser);
-
+    mockQueryRunner.manager.save.mockReturnValue(anonUser);
     const actual = await service.create(anonUserDto);
 
-    expect(repository.save).toBeCalledTimes(1);
+    // make sure regular save call are not used in a transaction context
+    expect(repository.save).toBeCalledTimes(0);
+    // assert save via transactions
+    expect(mockQueryRunner.manager.save).toBeCalledTimes(1);
+    expect(mockQueryRunner.startTransaction).toBeCalledTimes(1);
+    expect(mockQueryRunner.commitTransaction).toBeCalledTimes(1);
+    expect(mockQueryRunner.rollbackTransaction).toBeCalledTimes(0);
+    expect(mockQueryRunner.release).toBeCalledTimes(1);
     expect(actual).toEqual({ id: -1, name: anonName });
   });
 

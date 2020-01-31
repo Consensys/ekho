@@ -1,16 +1,29 @@
 ---
-version: "3.7"
+version: '3.7'
 services:
-    db:
-        image: docker.io/postgres:11.6-alpine
-        restart: always
-        ports: 
-            - 5432:5432
-        environment:
-            - POSTGRES_USER=ekho
-            - POSTGRES_PASSWORD=ekho
-            - POSTGRES_DB=ekho
-        volumes:
-            - ekho-db:/var/lib/postgresql/data
-volumes: 
-    ekho-db:
+  db:
+    image: docker.io/postgres:11.6-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=ekho
+      - POSTGRES_PASSWORD=ekho
+      - POSTGRES_DB=ekho
+    volumes:
+      - ekho-db:/var/lib/postgresql/data
+  vault:
+    image: vault:1.3.2
+    restart: always
+    ports:
+      - 8200:8200
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=ekho-vault-token
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./conf/vault-dev.json:/config.json
+      - ekho-vault:/vault/file
+volumes:
+  ekho-db:
+  ekho-vault:
