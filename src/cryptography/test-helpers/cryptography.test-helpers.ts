@@ -31,6 +31,7 @@ export interface TestHelper {
     myPrivateOneTimeKey: string,
     myPrivateSigningKey: string,
   ): Promise<SignedSharedSecret>;
+  sign(secret: string, signingKey: string): Promise<string>;
 }
 
 /**
@@ -80,15 +81,21 @@ export const getTestHelper = (service: CryptographyService): TestHelper => {
     myPriv1time: string,
     myPrivSigning: string,
   ): Promise<SignedSharedSecret> => {
-    const secret = service.generateECDHSharedSecret(yourPublic1time, myPriv1time);
-    const signature = service.generateSignature(secret, myPrivSigning);
+    const secret = await service.generateECDHSharedSecret(yourPublic1time, myPriv1time);
+    const signature = await service.generateSignature(secret, myPrivSigning);
 
     return { signature, secret };
+  };
+
+  const sign = async (secret: string, signingKey: string): Promise<string> => {
+    const signature = service.generateSignature(secret, signingKey);
+    return signature;
   };
 
   return {
     generateAnonKeys,
     generateAlicenBob,
     generateSharedSecret,
+    sign,
   };
 };
