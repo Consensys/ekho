@@ -40,9 +40,9 @@ export class UsersService {
 
   async findById(id: number, orFail = false): Promise<User> {
     if (orFail) {
-      return this.userRepository.findOne(id);
-    } else {
       return this.userRepository.findOneOrFail(id);
+    } else {
+      return this.userRepository.findOne(id);
     }
   }
 
