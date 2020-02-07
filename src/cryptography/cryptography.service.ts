@@ -67,7 +67,7 @@ export class CryptographyService {
   generateSignature(data: string, privateSigningKey: string): string {
     const signature: Buffer = this.getZeroedBuffer(SodiumNative.crypto_sign_BYTES);
 
-    SodiumNative.crypto_sign_detached(signature, Buffer.from(data), Buffer.from(privateSigningKey, BASE64));
+    SodiumNative.crypto_sign_detached(signature, Buffer.from(data, BASE64), Buffer.from(privateSigningKey, BASE64));
 
     return signature.toString(BASE64);
   }

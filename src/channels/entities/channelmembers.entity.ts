@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Contact } from '../../contacts/contacts.entity';
-import { ChannelMessage } from '../../messages/entities/channelmessages.entity';
 import { User } from '../../users/entities/users.entity';
+import { ChannelMessage } from './channelmessages.entity';
 import { Channel } from './channels.entity';
 
 @Entity()

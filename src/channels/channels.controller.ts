@@ -4,6 +4,7 @@ import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import CreateChannelMemberDto from './dto/create-channelmember.dto';
 import CreateChannelMessageDto from './dto/create-channelmessage.dto';
+import SentMessageDto from './dto/sentmessage.dto';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
@@ -104,7 +105,7 @@ export class ChannelsController {
    * @returns ChannelMessaage channel message created
    */
   @Post('message')
-  async createChannelMessage(@Body() channelMessage: CreateChannelMessageDto): Promise<ChannelMessage> {
+  async createChannelMessage(@Body() channelMessage: CreateChannelMessageDto): Promise<SentMessageDto> {
     return this.channelService.createChannelMessage(channelMessage);
   }
 
@@ -123,7 +124,7 @@ export class ChannelsController {
    * @returns Channel
    */
   @Get('test')
-  async testChannel(): Promise<Channel> {
-    return this.channelService.testChannelMessages();
+  async testChannel(): Promise<void> {
+    return this.channelService.testCreateUserAndContact();
   }
 }
