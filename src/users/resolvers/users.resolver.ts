@@ -13,7 +13,7 @@ export class UsersResolver {
 
   @Query(returns => [User])
   public async Users(): Promise<User[]> {
-    return this.usersService.find('anon');
+    return this.usersService.findAll();
   }
 
   // @Mutation(returns => User)
