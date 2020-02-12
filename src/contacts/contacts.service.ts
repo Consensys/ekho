@@ -7,7 +7,6 @@ import { CryptographyService } from '../cryptography/cryptography.service';
 import { UsersService } from '../users/users.service';
 import { Contact } from './contacts.entity';
 import ContactHandshakeDto from './dto/contact-handshake.dto';
-import ContactDto from './dto/contact.dto';
 
 @Injectable()
 export class ContactsService {
@@ -29,7 +28,7 @@ export class ContactsService {
     return this.contactsRepository.save(contact);
   }
 
-  async getByUser(userId: number): Promise<ContactDto[]> {
+  async getByUser(userId: number): Promise<Contact[]> {
     return this.contactsRepository.find({
       select: ['name'],
       where: { user: { id: userId } },

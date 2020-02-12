@@ -110,4 +110,15 @@ describe('UsersService', () => {
     expect(repository.findOneOrFail).lastCalledWith(anonUser.id);
     expect(actual).toBe(anonUser);
   });
+
+  it('findAll just barfs back all the users', async () => {
+    const expected = [anonUser];
+    jest.spyOn(repository, 'find').mockResolvedValueOnce(expected);
+
+    const actual = await service.findAll();
+
+    expect(repository.find).toBeCalledTimes(1);
+    expect(repository.find).lastCalledWith();
+    expect(actual).toBe(expected);
+  });
 });
