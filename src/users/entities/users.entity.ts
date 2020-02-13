@@ -1,11 +1,11 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { ChannelMember } from '../../channels/entities/channelmembers.entity';
 import { Contact } from '../../contacts/contacts.entity';
 
 @Entity()
 @ObjectType()
-// @Unique('UQ_NAME', ['name'])
+@Unique('UQ_NAME', ['name'])
 export class User {
   @Field(type => ID)
   @PrimaryGeneratedColumn()
