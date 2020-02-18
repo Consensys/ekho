@@ -30,6 +30,7 @@ var anonChannelMember: ChannelMember = {
   channel: anonChannel,
   contact: fakeContact(),
   channelmessages: [anonChannelMessage],
+  nextChannelIdentifier: 'xxx',
 };
 
 var anonChannelMessage: ChannelMessage = {

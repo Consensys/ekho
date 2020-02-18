@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { mockRepository } from '../../test/test-helpers';
+import { Block } from './entities/blocks.entity';
+import { EkhoEvent } from './entities/events.entity';
 import { EventsController } from './events.controller';
-import { EkhoEvent } from './events.entity';
 import { EventsService } from './events.service';
 
 describe('Events Controller', () => {
@@ -17,6 +18,14 @@ describe('Events Controller', () => {
     channelId: 'ANON_CHANNELID',
     content: 'lalala',
     signature: 'Made in Ireland',
+    block: anonBlock,
+    processed: false,
+  };
+
+  const anonBlock: Block = {
+    id: -1,
+    blockNumber: 0,
+    blockevents: [anonEvent],
   };
 
   beforeEach(async () => {

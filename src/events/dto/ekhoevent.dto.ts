@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export default class SentMessageDto {
+export default class EkhoEventDto {
+  @ApiProperty({ description: 'Event ID' })
+  eventIdentifier: number;
+
   @ApiProperty({ description: 'Channel Identifier' })
   channelIdentifier: string;
 

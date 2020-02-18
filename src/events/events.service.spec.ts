@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { mockRepository } from '../../test/test-helpers';
-import { EkhoEvent } from './events.entity';
+import { EkhoEvent } from './entities/events.entity';
 import { EventsService } from './events.service';
 import { fakeEvent } from './test-helpers/faker';
 

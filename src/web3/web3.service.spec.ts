@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import Web3 from 'web3';
 import { mockConfigService, mockRepository } from '../../test/test-helpers';
-import { EkhoEvent } from '../events/events.entity';
+import { EkhoEvent } from '../events/entities/events.entity';
 import { EventsService } from '../events/events.service';
 import { mockEventsService } from '../events/test-helpers/mock-events-service';
 import { mockWeb3Config } from './web3.configuration';

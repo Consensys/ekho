@@ -2,8 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Transaction as Tx } from 'ethereumjs-tx';
 import { bufferToHex } from 'ethereumjs-util';
+import { Block } from 'src/events/entities/blocks.entity';
 import Web3 from 'web3';
-import { EkhoEvent } from '../events/events.entity';
+import { EkhoEvent } from '../events/entities/events.entity';
 import { EventsService } from '../events/events.service';
 import { Web3Constants } from './web3.constants';
 
@@ -11,7 +12,7 @@ import { Web3Constants } from './web3.constants';
 export class Web3Service {
   /**
    * Probably need to create a deploy contract method or check with the gurus whats the best way to deal with it.
-   * For now, this was deployed in Ropsen: 0x5b821362887db76980399bf4206ba747bef7ad95
+   * For now, this was deployed in Ropsten: 0x5b821362887db76980399bf4206ba747bef7ad95
    *
    *   pragma solidity >=0.4.22 <0.6.0;
    *   contract MessageNotifier {
@@ -49,10 +50,17 @@ export class Web3Service {
   }
 
   async onModuleInit(): Promise<void> {
+    await this.Refresh();
+  }
+
+  async Refresh(): Promise<void> {
+    Logger.debug('Polling blockchain for new log events.');
+    let transactionsFound: number = 0;
     const options = {
-      fromBlock: 0,
+      fromBlock: await this.eventsService.getLatestBlock(),
       address: this.contractAddress,
     };
+    let lastSavedBlock: number = options.fromBlock;
     this.web3.eth
       .subscribe('logs', options, (error, result) => {
         if (error) {
@@ -60,40 +68,59 @@ export class Web3Service {
         }
       })
       .on('data', async log => {
+        const blockNumber = log.blockNumber;
         const transactionHash = log.transactionHash;
-        Logger.debug(`Received raw event: '${JSON.stringify(log, null, 2)}'`, transactionHash);
+
         const decoded = this.web3.eth.abi.decodeParameters(['string', 'string', 'string'], log.data);
         const channelId = Web3.utils.toUtf8(decoded[0]);
         const content = Web3.utils.toUtf8(decoded[1]);
         const signature = Web3.utils.toUtf8(decoded[2]);
-        Logger.debug(`parsed channelId='${channelId}'`, transactionHash);
-        Logger.debug(`parsed   content='${content}'`, transactionHash);
-        Logger.debug(`parsed signature='${signature}'`, transactionHash);
+
         let tx = await this.eventsService.getByTransactionHash(transactionHash);
         if (!tx) {
           tx = new EkhoEvent();
         }
+
+        const currentBlock = new Block();
+        currentBlock.blockNumber = blockNumber;
+
         tx.txHash = transactionHash;
         tx.channelId = channelId;
         tx.content = content;
         tx.signature = signature;
-        tx.status = 'confirmed';
-        await this.eventsService.save(tx);
+        tx.status = 'mined'; // TODO: change to ENUM
+        tx.block = currentBlock;
+        tx.processed = false;
+        // TODO: wrap these saves in a transaction
+        if (blockNumber > lastSavedBlock) {
+          lastSavedBlock = await this.eventsService.saveBlockInfo(currentBlock);
+        }
+        const dbEvent = await this.eventsService.getByTransactionHash(tx.txHash);
+        if (!dbEvent) {
+          Logger.debug('Saving new transaction', tx.txHash);
+          await this.eventsService.save(tx);
+          transactionsFound++;
+        }
       })
       .on('changed', log => {
         Logger.debug(log);
       });
-    Logger.debug(`Subcribed logs from ${this.contractAddress} via ${this.rpcUrl}`);
+    Logger.debug(
+      `Subscribed and retrieved ${transactionsFound} new transactions from contract ${this.contractAddress} via ${this.rpcUrl}`,
+    );
   }
 
   async emitEvent(channelId: string, content: string, signature: string): Promise<string> {
+    Logger.debug('Preparing transaction for chain');
     const txCount = await this.getTransactionCount(this.address);
-    Logger.debug(`TransactionCount: ${txCount}`);
+    Logger.debug(`Account Nonce: ${txCount}`);
     const bufferedPrivateKey = Buffer.from(this.privateKey, 'hex');
     const contract = new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
+
     const data = contract.methods
       .notify(Web3.utils.fromAscii(channelId), Web3.utils.fromAscii(content), Web3.utils.fromAscii(signature))
       .encodeABI();
+
     const txObject = {
       nonce: this.web3.utils.toHex(txCount),
       gasLimit: this.web3.utils.toHex(800000),
@@ -110,14 +137,22 @@ export class Web3Service {
 
     tx.sign(bufferedPrivateKey);
 
-    Logger.debug(tx);
-
     const serializedTx = tx.serialize();
     const raw = '0x' + serializedTx.toString('hex');
 
-    const txHash = await this.sendSignerTransaction(raw);
-    await this.eventsService.save({ txHash, status: 'pending' });
-    return txHash;
+    try {
+      Logger.debug('Writing transaction to chain');
+      const txHash = await this.sendSignerTransaction(raw);
+      if (txHash) {
+        Logger.debug('transaction successful: ', txHash);
+        return txHash;
+      } else {
+        throw new Error('Error writing to chain');
+      }
+    } catch (e) {
+      Logger.debug('transaction failed: ', (e as Error).message);
+      throw e;
+    }
   }
 
   async getTransactionCount(account: string): Promise<number> {
@@ -135,9 +170,9 @@ export class Web3Service {
   async sendSignerTransaction(raw: string): Promise<string> {
     try {
       const txHash = await this.web3.eth.sendSignedTransaction(raw);
-      return txHash as any;
+      return txHash.transactionHash;
     } catch (e) {
-      return e;
+      throw e;
     }
     // return new Promise(async (resolve, reject) => {
     //   this.web3.eth.sendSignedTransaction(raw, (err, txHash) => (err ? reject(`${err}`) : resolve(txHash)));

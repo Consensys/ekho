@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Contact } from 'src/contacts/contacts.entity';
 import { ContactsModule } from 'src/contacts/contacts.module';
+import { EventsModule } from 'src/events/events.module';
 import { IpfsModule } from 'src/ipfs/ipfs.module';
 import { User } from 'src/users/entities/users.entity';
 import { UsersModule } from 'src/users/users.module';
@@ -21,6 +22,7 @@ import { Channel } from './entities/channels.entity';
     ContactsModule,
     IpfsModule,
     Web3Module,
+    EventsModule,
   ],
   exports: [ChannelsService],
   providers: [ChannelsService],

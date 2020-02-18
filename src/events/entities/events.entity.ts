@@ -1,7 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Block } from './blocks.entity';
 
 @Entity()
-@Unique('UQ_TX_HASH', ['txHash'])
 export class EkhoEvent {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,4 +23,14 @@ export class EkhoEvent {
 
   @CreateDateColumn()
   createdDate: Date;
+
+  @ManyToOne(
+    type => Block,
+    block => block.blockevents,
+  )
+  @JoinColumn({ name: 'blockId' })
+  block: Block;
+
+  @Column({ nullable: false })
+  processed: boolean;
 }

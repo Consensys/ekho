@@ -48,6 +48,12 @@ export class ContactsService {
     return this.contactsRepository.find();
   }
 
+  async findOneContact(userId: number, contactId: number): Promise<Contact> {
+    return this.contactsRepository.findOneOrFail({
+      where: { id: contactId, user: userId },
+    });
+  }
+
   async findOneOrCreate(userId: number, name: string): Promise<Contact> {
     const contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, name } });
     if (contact) {

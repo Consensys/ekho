@@ -8,7 +8,7 @@ describe('Ipfs Controller', () => {
   let service: IpfsService;
 
   const mockPath = 'https://127.0.0.1:8080/no-such-path';
-  const mockIpfsContent: IpfsMessageDto = { from: 'from', to: 'to', content: 'foo' };
+  const mockIpfsContent: IpfsMessageDto = { content: 'foo' };
 
   const mockIpfsService = () => ({
     store: jest.fn(async (message: IpfsMessageDto) => mockPath),

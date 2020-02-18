@@ -38,4 +38,7 @@ export class ChannelMember {
 
   @Column()
   messageChainKey: string;
+
+  @Column()
+  nextChannelIdentifier: string;
 }

@@ -82,7 +82,7 @@ export class CryptographyService {
   validateSignature(signature: string, data: string, publicSigningKey: string): boolean {
     const retval: boolean = SodiumNative.crypto_sign_verify_detached(
       Buffer.from(signature, BASE64),
-      Buffer.from(data),
+      Buffer.from(data, BASE64),
       Buffer.from(publicSigningKey, BASE64),
     );
 
