@@ -1,6 +1,5 @@
-import { Injectable, Logger, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { throwError } from 'rxjs';
 import { Contact } from 'src/contacts/contacts.entity';
 import { ContactsService } from 'src/contacts/contacts.service';
 import { CryptographyService } from 'src/cryptography/cryptography.service';
@@ -27,6 +26,7 @@ export class ChannelsService {
   private readonly CHAIN_KEY_CONTEXT = 'ChainKey';
   private readonly MESSAGE_KEY_RATCHET = 1;
   private readonly CHAIN_KEY_RATCHET = 2;
+  private readonly INITIAL_NONCE = 1;
 
   constructor(
     @InjectRepository(Channel)
@@ -191,9 +191,8 @@ export class ChannelsService {
     return this.cryptoService.generateECDHSharedSecret(channelContact.oneuseKey, channelContact.handshakePrivateKey);
   }
 
-  private async createNextChannelIdentifier(signingKey: string, channelKey: string): Promise<string> {
-    const initialNonce = 1;
-    return this.cryptoService.generateSHA256Hash(signingKey + channelKey + initialNonce);
+  private async getChannelIdentifier(signingKey: string, channelKey: string, nonce: number): Promise<string> {
+    return this.cryptoService.generateSHA256Hash(signingKey + channelKey + nonce);
   }
 
   private async createChannelMember(
@@ -207,18 +206,20 @@ export class ChannelsService {
     newChannelMember.channel = channel;
 
     if (user) {
-      newChannelMember.nextChannelIdentifier = await this.createNextChannelIdentifier(
+      newChannelMember.nextChannelIdentifier = await this.getChannelIdentifier(
         user.publicSigningKey,
         channel.channelKey,
+        this.INITIAL_NONCE,
       );
       newChannelMember.user = user;
       newChannelMember.contact = null;
     }
 
     if (contact) {
-      newChannelMember.nextChannelIdentifier = await this.createNextChannelIdentifier(
+      newChannelMember.nextChannelIdentifier = await this.getChannelIdentifier(
         contact.signingKey,
         channel.channelKey,
+        this.INITIAL_NONCE,
       );
       newChannelMember.user = null;
       newChannelMember.contact = contact;
@@ -233,6 +234,7 @@ export class ChannelsService {
     newChannel.channelKey = await this.createChannelKey(secret);
     return newChannel;
   }
+
   /**
    * Creates a channel
    * @param channel channel to be created
@@ -334,11 +336,11 @@ export class ChannelsService {
   }
 
   /**
-   * Gets the current highest nonce for a channel member
+   * Gets the current expected nonce for a channel member
    * @param id channel member id
-   * @returns number current highest nonce for that channel member
+   * @returns number current expected nonce for that channel member
    */
-  private async getLatestMessageNonceByChannelMemberId(id: number): Promise<number> {
+  private async getExpectedMessageNonceByChannelMemberId(id: number): Promise<number> {
     const latestChannelMessage = await getRepository(ChannelMessage)
       .createQueryBuilder('ChannelMessage')
       .select('MAX(ChannelMessage.nonce)', 'maxnonce')
@@ -347,9 +349,10 @@ export class ChannelsService {
       .getRawOne();
 
     if (latestChannelMessage) {
-      return latestChannelMessage.maxnonce;
+      return latestChannelMessage.maxnonce + 1;
     } else {
-      return 0;
+      // we have no messages, no next message will be nonce 1
+      return 1;
     }
   }
 
@@ -357,11 +360,141 @@ export class ChannelsService {
     return this.findChannelMemberbyNextChannelIdentifier(channelIdentifier);
   }
 
-  async findChannelMemberbyNextChannelIdentifier(identifier: string): Promise<ChannelMember> {
-    return this.channelMemberRepository.findOne({
+  private async findChannelMemberbyNextChannelIdentifier(identifier: string): Promise<ChannelMember> {
+    return this.channelMemberRepository.findOneOrFail({
       relations: ['user', 'contact', 'channel'],
       where: { contactId: !IsNull(), userId: IsNull(), nextChannelIdentifier: identifier },
     });
+  }
+
+  private async getMessageKey(messageChainKey: string): Promise<string> {
+    return this.cryptoService.generateSHA256Hash(messageChainKey + this.MESSAGE_KEY_RATCHET);
+  }
+
+  private async getRawMessage(encryptedLink: string, nonce: number, key: string): Promise<string> {
+    const rawMessageLink = this.cryptoService.decrypt(encryptedLink, nonce, key);
+    const rawMessageEncrypted = (await this.ipfsService.retrieve(rawMessageLink)).content;
+    const rawMessage = this.cryptoService.decrypt(rawMessageEncrypted, nonce, key);
+    return rawMessage;
+  }
+
+  private async ratchetChainKey(chainKey: string): Promise<string> {
+    return this.cryptoService.generateSHA256Hash(chainKey + this.CHAIN_KEY_RATCHET);
+  }
+
+  private async updateChannelMemberDetails(member: ChannelMember, nonce: number): Promise<ChannelMember> {
+    member.messageChainKey = await this.ratchetChainKey(member.messageChainKey);
+    member.nextChannelIdentifier = await this.getChannelIdentifier(
+      member.contact.signingKey,
+      member.channel.channelKey,
+      nonce + 1,
+    );
+    return member;
+  }
+
+  private async createMessage(member: ChannelMember, message: string, nonce: number): Promise<ChannelMessage> {
+    const channelMessage = new ChannelMessage();
+    channelMessage.channelMember = member;
+    channelMessage.messageContents = message;
+    channelMessage.nonce = nonce;
+    return channelMessage;
+  }
+
+  private async sendToIpfs(message): Promise<string> {
+    try {
+      // Send the encrypted message to IPFS - get back the IPFS hash
+      const ipfsMessage = new IpfsMessageDto();
+      ipfsMessage.content = message;
+
+      Logger.debug('saving message to IPFS');
+      const messageLink = await this.ipfsService.store(ipfsMessage);
+      return messageLink;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private async sendToChain(channelId: string, link: string, signature: string): Promise<boolean> {
+    try {
+      await this.web3Service.emitEvent(channelId, link, signature);
+      return true;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  /**
+   * Creates a channel message
+   * @param channelMessage message to create
+   * @returns ChannelMessage created entity
+   */
+  async createChannelMessage(channelMessage: RawMessageDto): Promise<EncodedMessageDto> {
+    // get the channel member
+    const channelMember = await this.findChannelMemberById(channelMessage.channelMemberId);
+
+    // get the user - fail if they don't exist
+    // TODO change this to a user & channel passed in aand get the channelmemberid from that
+    const messageSender = this.userService.findById(channelMember.user.id, true);
+
+    // get next expected message nonce
+    const nonce = await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
+
+    // the message is coming from the user, so it's an outgoing message
+    const newChannelMessage = await this.createMessage(channelMember, channelMessage.messageContents, nonce);
+
+    // Get the Channel Identifier for the message
+    const channelIdentifier = await this.getChannelIdentifier(
+      (await messageSender).publicSigningKey,
+      channelMember.channel.channelKey,
+      nonce,
+    );
+
+    // Get the message key
+    const messageKey = await this.getMessageKey(channelMember.messageChainKey);
+
+    // encrypt the message
+    const newEncryptedMessage = this.cryptoService.encrypt(newChannelMessage.messageContents, nonce, messageKey);
+
+    // send the message to IPFS
+    const messageLink = await this.sendToIpfs(newEncryptedMessage);
+
+    // encrypt the IPFS hash with the message key
+    const encryptedMessageLink = this.cryptoService.encrypt(messageLink, nonce, messageKey);
+
+    // sign the encrypted IPFS hash with the user signing key
+    const encryptedMessageLinkSignature = this.cryptoService.generateSignature(
+      encryptedMessageLink,
+      (await messageSender).privateSigningKey,
+    );
+
+    // send the blockchain transaction
+    const mined = await this.sendToChain(channelIdentifier, encryptedMessageLink, encryptedMessageLinkSignature);
+
+    // sacrifice a chicken in the hope that this has been successful
+    if (mined) {
+      // Update the member message chain key
+      channelMember.messageChainKey = await this.ratchetChainKey(channelMember.messageChainKey);
+
+      // Update the member next channel identifier
+      channelMember.nextChannelIdentifier = await this.getChannelIdentifier(
+        (await messageSender).publicSigningKey,
+        channelMember.channel.channelKey,
+        nonce + 1,
+      );
+
+      // save the channel member & message details
+      await getManager().transaction(async transactionalEntityManager => {
+        await transactionalEntityManager.save(newChannelMessage);
+        await transactionalEntityManager.save(channelMember);
+      });
+
+      // return the encoded message
+      const encodedMessage = new EncodedMessageDto();
+      encodedMessage.channelIdentifier = channelIdentifier;
+      encodedMessage.encryptedMessageLink = encryptedMessageLink;
+      encodedMessage.encryptedMessageLinkSignature = encryptedMessageLinkSignature;
+      return encodedMessage;
+    }
   }
 
   async decodeChannelMessage(channelMessage: EncodedMessageDto): Promise<RawMessageDto> {
@@ -375,14 +508,6 @@ export class ChannelsService {
 
     // find the channel member
     const channelMember = await this.findChannelMemberbyNextChannelIdentifier(channelIdentifier);
-    if (!channelMember) {
-      throw new Error('Channel identifier unknown');
-    }
-
-    // get existing nonce
-    const previousNonce = await this.getLatestMessageNonceByChannelMemberId(channelMember.id);
-    const currentNonce = previousNonce + 1;
-    const nextNonce = currentNonce + 1;
 
     // check the signature
     const signed = this.cryptoService.validateSignature(
@@ -391,37 +516,23 @@ export class ChannelsService {
       channelMember.contact.signingKey,
     );
 
-    if (signed) {
-      // ratchet the message key
-      const messageKey = this.cryptoService.generateSHA256Hash(
-        channelMember.messageChainKey + this.MESSAGE_KEY_RATCHET,
-      );
+    if (!signed) {
+      throw new BadRequestException('Message not correctly signed');
+    } else {
+      // get the message key
+      const messageKey = await this.getMessageKey(channelMember.messageChainKey);
 
-      // decrypt the message (using next nonce)
-      const rawMessageLink = this.cryptoService.decrypt(encryptedMessageLink, currentNonce, messageKey);
-      const rawMessageEncrypted = (await this.ipfsService.retrieve(rawMessageLink)).content;
-      const rawMessage = this.cryptoService.decrypt(rawMessageEncrypted, currentNonce, messageKey);
+      // get next expected message nonce
+      const nonce = await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
+
+      // get the raw message
+      const rawMessage = await this.getRawMessage(encryptedMessageLink, nonce, messageKey);
 
       // the message is an incoming message, so set up the Channel Message object
-      const newChannelMessage = new ChannelMessage();
-      newChannelMessage.channelMember = channelMember;
-      newChannelMessage.messageContents = rawMessage;
-
-      // increment the nonce so it's right for the current message
-      newChannelMessage.nonce = currentNonce;
+      const newChannelMessage = await this.createMessage(channelMember, rawMessage, nonce);
 
       // update the channel member
-      const updatedChannelMember = channelMember;
-
-      // ratchet the chain key
-      updatedChannelMember.messageChainKey = this.cryptoService.generateSHA256Hash(
-        updatedChannelMember.messageChainKey + this.CHAIN_KEY_RATCHET,
-      );
-
-      // update the next channel identifier expected
-      updatedChannelMember.nextChannelIdentifier = this.cryptoService.generateSHA256Hash(
-        channelMember.contact.signingKey + channelMember.channel.channelKey + nextNonce,
-      );
+      const updatedChannelMember = await this.updateChannelMemberDetails(channelMember, nonce);
 
       // update the db
       await getManager().transaction(async transactionalEntityManager => {
@@ -433,106 +544,8 @@ export class ChannelsService {
       const rawMessageContents = new RawMessageDto();
       rawMessageContents.messageContents = newChannelMessage.messageContents;
       rawMessageContents.channelMemberId = channelMember.id;
+
       return rawMessageContents;
-    } else {
-      throw NotAcceptableException;
-    }
-
-    return null;
-  }
-
-  /**
-   * Creates a channel message
-   * @param channelMessage message to create
-   * @returns ChannelMessage created entity
-   */
-  async createChannelMessage(channelMessage: RawMessageDto): Promise<EncodedMessageDto> {
-    // Get highest nonce for this channel member
-    const previousNonce = await this.getLatestMessageNonceByChannelMemberId(channelMessage.channelMemberId);
-    const currentNonce = previousNonce + 1;
-    const nextNonce = currentNonce + 1;
-
-    // get the channel member
-    const channelMember = await this.findChannelMemberById(channelMessage.channelMemberId);
-    if (!channelMember) {
-      throw NotFoundException;
-    }
-
-    // get the user - fail if they don't exist
-    // TODO change this to a user & channel passed in aand get the channelmemberid from that
-    const messageSender = this.userService.findById(channelMember.user.id, true);
-    if (!messageSender) {
-      throw NotFoundException;
-    }
-
-    // the message is coming from the user, so it's an outgoing message
-    const newChannelMessage = new ChannelMessage();
-    newChannelMessage.channelMember = channelMember;
-    newChannelMessage.messageContents = channelMessage.messageContents;
-    newChannelMessage.nonce = currentNonce;
-
-    // Get the message key
-    const newMessageKey = this.cryptoService.generateSHA256Hash(
-      channelMember.messageChainKey + this.MESSAGE_KEY_RATCHET,
-    );
-
-    const newEncryptedMessage = this.cryptoService.encrypt(
-      newChannelMessage.messageContents,
-      currentNonce,
-      newMessageKey,
-    );
-
-    // Get the Channel Identifier for the message
-    const userPublicSigningKey = (await messageSender).publicSigningKey;
-    const channelKey = channelMember.channel.channelKey;
-    const newChannelIdentifier = this.cryptoService.generateSHA256Hash(
-      userPublicSigningKey + channelKey + currentNonce,
-    );
-
-    // Get the next channel identifier
-    channelMember.nextChannelIdentifier = this.cryptoService.generateSHA256Hash(
-      userPublicSigningKey + channelKey + nextNonce,
-    );
-
-    // 5. Send the encrypted message to IPFS - get back the IPFS hash
-    const ipfsMessage = new IpfsMessageDto();
-    ipfsMessage.content = newEncryptedMessage;
-
-    Logger.debug('saving message to IPFS');
-    const messageLink = await this.ipfsService.store(ipfsMessage);
-
-    // encrypt the IPFS hash with the message key
-    const encryptedMessageLink = this.cryptoService.encrypt(messageLink, currentNonce, newMessageKey);
-
-    // sign the encrypted IPFS hash with the user signing key
-    const encryptedMessageLinkSignature = this.cryptoService.generateSignature(
-      encryptedMessageLink,
-      (await messageSender).privateSigningKey,
-    );
-
-    try {
-      // send the blockchain transaction
-      await this.web3Service.emitEvent(newChannelIdentifier, encryptedMessageLink, encryptedMessageLinkSignature);
-      // Update the message chain key
-      channelMember.messageChainKey = this.cryptoService.generateSHA256Hash(
-        channelMember.messageChainKey + this.CHAIN_KEY_RATCHET,
-      );
-
-      // save the channel member & message details
-      await getManager().transaction(async transactionalEntityManager => {
-        await transactionalEntityManager.save(newChannelMessage);
-        await transactionalEntityManager.save(channelMember);
-      });
-
-      // return the encoded message
-      const encodedMessage = new EncodedMessageDto();
-      encodedMessage.channelIdentifier = newChannelIdentifier;
-      encodedMessage.encryptedMessageLink = encryptedMessageLink;
-      encodedMessage.encryptedMessageLinkSignature = encryptedMessageLinkSignature;
-      return encodedMessage;
-    } catch (e) {
-      Logger.debug('transaction failed!', (e as Error).message);
-      throwError('blockchain fail!');
     }
   }
 }
