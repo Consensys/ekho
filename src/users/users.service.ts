@@ -26,7 +26,7 @@ export class UsersService {
     queryRunner.startTransaction();
     try {
       const dbUser = await queryRunner.manager.save(newUser);
-      await this.vaultService.userWritePrivateKey(dbUser.id, keyPair.privateKey);
+      await this.vaultService.createSigningKey(dbUser.id);
       await queryRunner.commitTransaction();
       return {
         id: dbUser.id,
@@ -44,7 +44,15 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findByName(name: string): Promise<User> {
+  async getPublicKey(id: number): Promise<string> {
+    return this.vaultService.readPublicSigningKey(id);
+  }
+
+  async sign(id: number, data: string): Promise<string> {
+    return this.vaultService.sign(id, data);
+  }
+
+  async findByName(name: string): Promise<UserDto> {
     return this.userRepository.findOne({
       select: ['name'],
       where: { name },
@@ -71,8 +79,8 @@ export class UsersService {
   }
 
   private async populatePrivateKey(user: User): Promise<User> {
-    const privateKey = await this.vaultService.userReadPrivateKey(user.id);
-    user.privateSigningKey = privateKey;
+    const publicSigningKey = await this.vaultService.readPublicSigningKey(user.id);
+    user.publicSigningKey = publicSigningKey;
     return user;
   }
 }

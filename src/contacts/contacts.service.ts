@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CryptographyKeyPairDto } from 'src/cryptography/dto/cryptography-keypair.dto';
-import { User } from 'src/users/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CryptographyService } from '../cryptography/cryptography.service';
 import { UsersService } from '../users/users.service';
@@ -87,12 +86,12 @@ export class ContactsService {
   }
 
   private async generateHandshake(userId: number, contact: Contact): Promise<ContactHandshakeDto> {
-    const user: User = await this.usersService.findById(userId);
-    const signature = this.cryptographyService.generateSignature(contact.handshakePublicKey, user.privateSigningKey);
+    const publicSigningKey = await this.usersService.getPublicKey(userId);
+    const signature = await this.usersService.sign(userId, contact.handshakePublicKey);
     const contactHandshake = new ContactHandshakeDto();
     contactHandshake.identifier = contact.identifier;
     contactHandshake.oneuseKey = contact.handshakePublicKey;
-    contactHandshake.signingKey = user.publicSigningKey;
+    contactHandshake.signingKey = publicSigningKey;
     contactHandshake.signature = signature;
 
     return contactHandshake;
@@ -105,7 +104,13 @@ export class ContactsService {
     contact.signature = handshake.signature;
 
     // verify signature
-    if (!this.cryptographyService.validateSignature(contact.signature, contact.oneuseKey, contact.signingKey)) {
+    if (
+      !this.cryptographyService.validateSignature(
+        contact.signature,
+        Buffer.from(contact.oneuseKey).toString('BASE64'),
+        contact.signingKey,
+      )
+    ) {
       throw Error('signature mismatch');
     }
 

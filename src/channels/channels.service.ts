@@ -10,6 +10,7 @@ import { IpfsMessageDto } from '../ipfs/dto/ipfs-message.dto';
 import { IpfsService } from '../ipfs/ipfs.service';
 import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
+import { VaultService } from '../vault/vault.service';
 import { Web3Service } from '../web3/web3.service';
 import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
@@ -42,6 +43,7 @@ export class ChannelsService {
     private readonly userService: UsersService,
     private readonly contactService: ContactsService,
     private readonly cryptoService: CryptographyService,
+    private readonly vaultService: VaultService,
     private readonly ipfsService: IpfsService,
     private readonly web3Service: Web3Service,
     private readonly eventService: EventsService,
@@ -93,7 +95,7 @@ export class ChannelsService {
 
     // get the user - fail if they don't exist
     // TODO change this to a user & channel passed in aand get the channelmemberid from that
-    const messageSender = this.userService.findById(channelMember.user.id, true);
+    const messageSender = await this.userService.findById(channelMember.user.id, true);
 
     // get next expected message nonce
     const nonce = await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
@@ -103,7 +105,7 @@ export class ChannelsService {
 
     // Get the Channel Identifier for the message
     const channelIdentifier = await this.createChannelIdentifier(
-      (await messageSender).publicSigningKey,
+      messageSender.publicSigningKey,
       channelMember.channel.channelKey,
       nonce,
     );
@@ -121,10 +123,7 @@ export class ChannelsService {
     const encryptedMessageLink = this.cryptoService.encrypt(messageLink, nonce, messageKey);
 
     // sign the encrypted IPFS hash with the user signing key
-    const encryptedMessageLinkSignature = this.cryptoService.generateSignature(
-      encryptedMessageLink,
-      (await messageSender).privateSigningKey,
-    );
+    const encryptedMessageLinkSignature = await this.vaultService.sign(messageSender.id, encryptedMessageLink);
 
     // send the blockchain transaction
     const mined = await this.sendToChain(channelIdentifier, encryptedMessageLink, encryptedMessageLinkSignature);
@@ -136,7 +135,7 @@ export class ChannelsService {
 
       // Update the member next channel identifier
       channelMember.nextChannelIdentifier = await this.createChannelIdentifier(
-        (await messageSender).publicSigningKey,
+        messageSender.publicSigningKey,
         channelMember.channel.channelKey,
         nonce + 1,
       );

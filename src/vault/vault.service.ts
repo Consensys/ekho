@@ -5,28 +5,37 @@ import { AxiosInstance, AxiosResponse } from 'axios';
 export class VaultService {
   constructor(@Inject('VAULT_CLIENT') private readonly client: AxiosInstance) {}
 
-  async userWritePrivateKey(userId: number, privateKey: string): Promise<void> {
+  async createSigningKey(userId: number): Promise<void> {
     const payload = {
-      data: {
-        privateKey,
-      },
+      type: 'ed25519',
+      derived: false,
     };
-    const response: AxiosResponse = await this.client.post(`/v1/secret/data/user/${userId}`, payload);
-    this.checkResponse(response, `Failed to write private key for user ${userId}`);
+    const response: AxiosResponse = await this.client.post(`/v1/users-signing-keys/keys/${userId}`, payload);
+    this.checkResponse(response, `Failed to create private signing keys for user ${userId}`, 204);
   }
 
-  async userReadPrivateKey(userId: number): Promise<string> {
-    const response: AxiosResponse = await this.client.get(`/v1/secret/data/user/${userId}`);
-    this.checkResponse(response, `Failed to read private key for user ${userId}`);
-
-    return response.data.data.data.privateKey;
+  async readPublicSigningKey(userId: number): Promise<string> {
+    const response: AxiosResponse = await this.client.get(`/v1/users-signing-keys/keys/${userId}`);
+    this.checkResponse(response, `Failed to create private signing keys for user ${userId}`);
+    return response.data.data.keys['1'].public_key;
   }
 
-  private checkResponse(response: AxiosResponse, context: string) {
+  async sign(userId: number, data: string): Promise<string> {
+    const payload = {
+      input: Buffer.from(data).toString('base64'),
+    };
+    const response: AxiosResponse = await this.client.post(`/v1/users-signing-keys/sign/${userId}`, payload);
+    this.checkResponse(response, `Failed to create private signing keys for user ${userId}`);
+    const fullSignature: string = response.data.data.signature;
+    const signature = fullSignature.split(':')[2];
+    return signature;
+  }
+
+  private checkResponse(response: AxiosResponse, context: string, expectedStatus = 200) {
     if (!response) {
       throw Error(`${context}: no response`);
     }
-    if (response.status !== 200) {
+    if (response.status !== expectedStatus) {
       throw Error(`${context}: server responded ${response.status}`);
     }
   }
