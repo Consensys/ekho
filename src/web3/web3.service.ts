@@ -54,7 +54,7 @@ export class Web3Service {
   }
 
   async Refresh(): Promise<void> {
-    Logger.debug('Polling blockchain for new log events.');
+    Logger.debug('eventlog subscriber: polling blockchain for new log events.');
     let transactionsFound: number = 0;
     const options = {
       fromBlock: await this.eventsService.getLatestBlock(),
@@ -68,6 +68,7 @@ export class Web3Service {
         }
       })
       .on('data', async log => {
+        Logger.debug('eventlog subscriber: new blockchain event found');
         const blockNumber = log.blockNumber;
         const transactionHash = log.transactionHash;
 
@@ -97,7 +98,7 @@ export class Web3Service {
         }
         const dbEvent = await this.eventsService.getByTransactionHash(tx.txHash);
         if (!dbEvent) {
-          Logger.debug('Saving new transaction', tx.txHash);
+          Logger.debug('eventlog subscriber: saving new event to db', tx.txHash);
           await this.eventsService.save(tx);
           transactionsFound++;
         }
@@ -106,14 +107,14 @@ export class Web3Service {
         Logger.debug(log);
       });
     Logger.debug(
-      `Subscribed and retrieved ${transactionsFound} new transactions from contract ${this.contractAddress} via ${this.rpcUrl}`,
+      `eventlog subscriber: subscribed and retrieved ${transactionsFound} new transactions from contract ${this.contractAddress} via ${this.rpcUrl}`,
     );
   }
 
   async emitEvent(channelId: string, content: string, signature: string): Promise<string> {
-    Logger.debug('Preparing transaction for chain');
+    Logger.debug('... getting nonce');
     const txCount = await this.getTransactionCount(this.address);
-    Logger.debug(`Account Nonce: ${txCount}`);
+    Logger.debug(`nonce: ${txCount}`);
     const bufferedPrivateKey = Buffer.from(this.privateKey, 'hex');
     const contract = new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
 
@@ -141,13 +142,13 @@ export class Web3Service {
     const raw = '0x' + serializedTx.toString('hex');
 
     try {
-      Logger.debug('Writing transaction to chain');
+      Logger.debug('broadcasting transaction to chain');
       const txHash = await this.sendSignerTransaction(raw);
       if (txHash) {
-        Logger.debug('transaction successful: ', txHash);
+        Logger.debug('...transaction mined on chain: ', txHash);
         return txHash;
       } else {
-        throw new Error('Error writing to chain');
+        throw new Error('error writing to chain');
       }
     } catch (e) {
       Logger.debug('transaction failed: ', (e as Error).message);

@@ -52,7 +52,7 @@ export class EventsService {
   }
 
   async markEventAsProcessed(id: number): Promise<boolean> {
-    Logger.debug('Marking event as processed.  id: ', id.toString());
+    Logger.debug('marking event as processed.  id: ', id.toString());
 
     const myEvent = await this.getOneById(id);
     myEvent.processed = true;
@@ -61,7 +61,7 @@ export class EventsService {
   }
 
   async getFirstUnprocessedEvent(): Promise<EkhoEventDto> {
-    Logger.debug('Looking for unprocessed blockchain event.');
+    Logger.debug('looking for unprocessed blockchain event.');
 
     const firstUnprocessedEvent = await getRepository(EkhoEvent)
       .createQueryBuilder('EkhoEvent')
@@ -73,10 +73,9 @@ export class EventsService {
       .getRawOne();
 
     if (!firstUnprocessedEvent) {
-      Logger.debug('Completed processing events.');
       return null;
     } else {
-      Logger.debug('Processing event id: ', firstUnprocessedEvent.id);
+      Logger.debug('one event found, eventid: ', firstUnprocessedEvent.id);
       const newEvent = new EkhoEventDto();
       newEvent.eventIdentifier = firstUnprocessedEvent.id;
       newEvent.channelIdentifier = firstUnprocessedEvent.channelId;

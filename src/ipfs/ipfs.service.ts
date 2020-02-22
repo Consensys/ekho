@@ -12,8 +12,9 @@ export class IpfsService {
    * @param ipfsPath IPFS Path
    */
   async retrieve(ipfsPath: string): Promise<IpfsMessageDto> {
-    Logger.debug('Retrieving file %s from IPFS', ipfsPath);
+    Logger.debug('getting file from IPFS', ipfsPath);
     const [file] = await this.ipfs.get(ipfsPath);
+    Logger.debug('IPFS file retrieved');
     return JSON.parse(file.content.toString('utf8'));
   }
 
@@ -25,15 +26,14 @@ export class IpfsService {
   async store(data: IpfsMessageDto): Promise<string> {
     // this will perform badly with huge messages
     // check later how to use streams
-    Logger.debug('Length of file saved to IPFS', data.content.length.toString());
     const stringData = JSON.stringify(data);
     const bufferedData = Buffer.from(stringData, 'utf-8');
     const [result] = await this.ipfs.add(bufferedData);
     if (result) {
-      Logger.debug('File stored in IPFS, path: ', result.path);
+      Logger.debug('file shared via IPFS, path: ', result.path);
       return result.path;
     } else {
-      throw new Error('Error saving to IPFS');
+      throw new Error('error saving to IPFS');
     }
   }
 }

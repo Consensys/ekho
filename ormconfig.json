@@ -7,5 +7,5 @@
   "database": "ekho",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "synchronize": true,
-  "logging": ["query", "error"]
+  "logging": ["queryXXX", "error"]
 }
