@@ -2,6 +2,16 @@
  * A jest.Mock of a repository so Providers or modules which depend on them can be unit-tested.
  * Implementation of methods exposed here can be mocked in place.
  */
+export const mockQueryRunner = {
+  startTransaction: jest.fn(),
+  commitTransaction: jest.fn(),
+  rollbackTransaction: jest.fn(),
+  release: jest.fn(),
+  manager: {
+    save: jest.fn(),
+  },
+};
+
 export const mockRepository = jest.fn(() => {
   return {
     metadata: {
@@ -13,6 +23,11 @@ export const mockRepository = jest.fn(() => {
     findOne: jest.fn(),
     findOneOrFail: jest.fn(),
     delete: jest.fn(),
+    manager: {
+      connection: {
+        createQueryRunner: jest.fn(() => mockQueryRunner),
+      },
+    },
   };
 });
 

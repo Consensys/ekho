@@ -1,4 +1,5 @@
 import { INestApplication, Logger } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import moment from 'moment';
@@ -7,6 +8,7 @@ import { ContactsModule } from '../src/contacts/contacts.module';
 import ContactHandshakeDto from '../src/contacts/dto/contact-handshake.dto';
 import { DevelopmentModule } from '../src/development/development.module';
 import UserDto from '../src/users/dto/user.dto';
+import vaultConfiguration from '../src/vault/vault.configuration';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -20,7 +22,15 @@ describe('AppController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [DevelopmentModule, ContactsModule, TypeOrmModule.forRoot()],
+      imports: [
+        DevelopmentModule,
+        ContactsModule,
+        TypeOrmModule.forRoot(),
+        ConfigModule.forRoot({
+          isGlobal: true,
+          load: [vaultConfiguration],
+        }),
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
