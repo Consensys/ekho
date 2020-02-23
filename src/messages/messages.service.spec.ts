@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { mockRepository } from '../../test/test-helpers';
-import { EkhoEvent } from '../events/events.entity';
+import { EkhoEvent } from '../events/entities/events.entity';
 import { EventsService } from '../events/events.service';
 import { fakeEvent } from '../events/test-helpers/faker';
 import { mockEventsService } from '../events/test-helpers/mock-events-service';
@@ -77,7 +77,7 @@ describe('MessagesService', () => {
     await service.sendMessage(from, to, channelId, content);
 
     expect(ipfsService.store).toBeCalledTimes(1);
-    expect(ipfsService.store).lastCalledWith({ to, from, content });
+    expect(ipfsService.store).lastCalledWith({ content });
     // expect(ipfsService.store).lastReturnedWith(anonIpfsPath);
 
     expect(web3Service.emitEvent).toBeCalledTimes(1);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import IpfsClient from 'ipfs-http-client';
 import { IpfsMessageDto } from './dto/ipfs-message.dto';
 
@@ -12,7 +12,9 @@ export class IpfsService {
    * @param ipfsPath IPFS Path
    */
   async retrieve(ipfsPath: string): Promise<IpfsMessageDto> {
+    Logger.debug('getting file from IPFS', ipfsPath);
     const [file] = await this.ipfs.get(ipfsPath);
+    Logger.debug('IPFS file retrieved');
     return JSON.parse(file.content.toString('utf8'));
   }
 
@@ -27,6 +29,11 @@ export class IpfsService {
     const stringData = JSON.stringify(data);
     const bufferedData = Buffer.from(stringData, 'utf-8');
     const [result] = await this.ipfs.add(bufferedData);
-    return result.path;
+    if (result) {
+      Logger.debug('file shared via IPFS, path: ', result.path);
+      return result.path;
+    } else {
+      throw new Error('error saving to IPFS');
+    }
   }
 }

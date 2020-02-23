@@ -4,7 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import Web3 from 'web3';
 import { mockConfigService, mockRepository } from '../../test/test-helpers';
-import { EkhoEvent } from '../events/events.entity';
+import { Block } from '../events/entities/blocks.entity';
+import { EkhoEvent } from '../events/entities/events.entity';
 import { EventsService } from '../events/events.service';
 import { mockEventsService } from '../events/test-helpers/mock-events-service';
 import { mockWeb3Config } from './web3.configuration';
@@ -20,9 +21,10 @@ describe('Web3Service', () => {
       imports: [ConfigModule],
       providers: [
         Web3Service,
-        { provide: EventsService, useValue: mockEventsService },
+        { provide: EventsService, useValue: mockEventsService() },
         { provide: ConfigService, useValue: mockConfigService(mockWeb3Config as any) },
         { provide: getRepositoryToken(EkhoEvent), useValue: mockRepository },
+        { provide: getRepositoryToken(Block), useValue: mockRepository },
         Web3Factory,
       ],
     })

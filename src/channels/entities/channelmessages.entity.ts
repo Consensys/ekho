@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ChannelMember } from '../../channels/entities/channelmembers.entity';
+import { ChannelMember } from './channelmembers.entity';
 
 @Entity()
 export class ChannelMessage {
@@ -14,4 +14,7 @@ export class ChannelMessage {
 
   @Column()
   messageContents: string;
+
+  @Column({ default: 0 })
+  nonce: number;
 }

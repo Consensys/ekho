@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Contact } from './contacts.entity';
 import { ContactsService } from './contacts.service';
 import ContactHandshakeDto from './dto/contact-handshake.dto';
 import ContactDto from './dto/contact.dto';
@@ -10,6 +11,10 @@ export class ContactsController {
   @Get(':userId')
   async getContactsForUser(@Param('userId') userId: number): Promise<ContactDto[]> {
     return this.contactsService.getByUser(userId);
+  }
+  @Get(':userId/:contactId')
+  async findContactByUser(@Param('userId') userId: number, @Param('contactId') contactId: number): Promise<Contact> {
+    return this.contactsService.findOneContact(userId, contactId);
   }
 
   @Post('generate-init-handshake/:userId/:contactName')

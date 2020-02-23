@@ -10,9 +10,6 @@ export default class ChannelMemberDto {
   @ApiProperty({ description: 'Message Chain Key' })
   messageChainKey: string;
 
-  @ApiProperty({ description: 'Nonce' })
-  nonce: number;
-
   @ApiProperty({ description: 'Channel identifier' })
   channel: Channel;
 

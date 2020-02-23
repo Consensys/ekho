@@ -18,8 +18,6 @@ export class MessagesService {
 
   async sendMessage(from: string, to: string, channelId: string, content: string): Promise<void> {
     const ipfsPath: string = await this.ipfsService.store({
-      to,
-      from,
       content,
     });
     Logger.debug(ipfsPath);
@@ -64,8 +62,6 @@ export class MessagesService {
 
     const storedMessage = await this.ipfsService.retrieve(tx.content);
     message = new Message();
-    message.from = storedMessage.from;
-    message.to = storedMessage.to;
     message.content = storedMessage.content;
     message.ipfsPath = tx.content;
     message.txHash = tx.txHash;

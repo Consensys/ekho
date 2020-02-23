@@ -15,5 +15,6 @@ export const mockContactsService: jest.Mock<Omit<
     acceptInitHandshake: jest.fn(),
     replyHandshake: jest.fn(),
     acceptReplyHandshake: jest.fn(),
+    findOneContact: jest.fn(),
   };
 });
