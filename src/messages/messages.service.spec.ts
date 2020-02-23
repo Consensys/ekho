@@ -77,7 +77,7 @@ describe('MessagesService', () => {
     await service.sendMessage(from, to, channelId, content);
 
     expect(ipfsService.store).toBeCalledTimes(1);
-    expect(ipfsService.store).lastCalledWith({ to, from, content });
+    expect(ipfsService.store).lastCalledWith({ content });
     // expect(ipfsService.store).lastReturnedWith(anonIpfsPath);
 
     expect(web3Service.emitEvent).toBeCalledTimes(1);

@@ -6,7 +6,7 @@ import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
 
 @Module({
-  imports: [EventsModule, TypeOrmModule.forFeature([EkhoEvent, Block])],
+  imports: [TypeOrmModule.forFeature([EkhoEvent, Block])],
   providers: [EventsService],
   controllers: [EventsController],
   exports: [EventsService],

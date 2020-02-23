@@ -1,4 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ContactsService } from '../contacts/contacts.service';
+import { mockContactsService } from '../contacts/test-helpers/mock-contacts-service';
+import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
 
 xdescribe('ChannelsService', () => {
@@ -6,7 +9,8 @@ xdescribe('ChannelsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ChannelsService],
+      controllers: [ChannelsController],
+      providers: [ChannelsService, { provide: ContactsService, useValue: mockContactsService() }],
     }).compile();
 
     service = module.get<ChannelsService>(ChannelsService);

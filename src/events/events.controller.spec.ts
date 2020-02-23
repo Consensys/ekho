@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { mockRepository } from '../../test/test-helpers';
+import { Block } from './entities/blocks.entity';
 import { EkhoEvent } from './entities/events.entity';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
@@ -29,7 +30,11 @@ describe('Events Controller', () => {
 */
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [{ provide: getRepositoryToken(EkhoEvent), useClass: mockRepository }, EventsService],
+      providers: [
+        { provide: getRepositoryToken(EkhoEvent), useClass: mockRepository },
+        { provide: getRepositoryToken(Block), useClass: mockRepository },
+        EventsService,
+      ],
       controllers: [EventsController],
     }).compile();
     // const service: EventsService = module.get<EventsService>(EventsService);

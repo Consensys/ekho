@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CryptographyKeyPairDto } from 'src/cryptography/dto/cryptography-keypair.dto';
+import { User } from 'src/users/entities/users.entity';
 import { Repository } from 'typeorm';
 import { CryptographyService } from '../cryptography/cryptography.service';
-import { CryptographyKeyPairDto } from '../cryptography/dto/cryptography-keypair.dto';
-import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 import { Contact } from './contacts.entity';
 import ContactHandshakeDto from './dto/contact-handshake.dto';
