@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CryptographyService } from '../cryptography/cryptography.service';
-import { VaultService } from '../vault/vault.service';
+import { KeyManager } from '../key-manager/key-manager.interface';
 import CreateUserDto from './dto/create-user.dto';
 import UserDto from './dto/user.dto';
 import { User } from './entities/users.entity';
@@ -13,7 +13,8 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly cryptographyService: CryptographyService,
-    private readonly vaultService: VaultService,
+    @Inject('KeyManager')
+    private readonly keyManagerService: KeyManager,
   ) {}
 
   async create(user: CreateUserDto): Promise<UserDto> {
@@ -26,7 +27,7 @@ export class UsersService {
     queryRunner.startTransaction();
     try {
       const dbUser = await queryRunner.manager.save(newUser);
-      await this.vaultService.createSigningKey(dbUser.id);
+      await this.keyManagerService.createSigningKey(dbUser.id);
       await queryRunner.commitTransaction();
       return {
         id: dbUser.id,
@@ -45,11 +46,11 @@ export class UsersService {
   }
 
   async getPublicKey(id: number): Promise<string> {
-    return this.vaultService.readPublicSigningKey(id);
+    return this.keyManagerService.readPublicSigningKey(id);
   }
 
   async sign(id: number, data: string): Promise<string> {
-    return this.vaultService.sign(id, data);
+    return this.keyManagerService.sign(id, data);
   }
 
   async findByName(name: string): Promise<UserDto> {
@@ -79,7 +80,7 @@ export class UsersService {
   }
 
   private async populatePrivateKey(user: User): Promise<User> {
-    const publicSigningKey = await this.vaultService.readPublicSigningKey(user.id);
+    const publicSigningKey = await this.keyManagerService.readPublicSigningKey(user.id);
     user.publicSigningKey = publicSigningKey;
     return user;
   }

@@ -8,7 +8,7 @@ import { User } from 'src/users/entities/users.entity';
 import { UsersModule } from 'src/users/users.module';
 import { Web3Module } from 'src/web3/web3.module';
 import { CryptographyModule } from '../cryptography/cryptography.module';
-import { VaultModule } from '../vault/vault.module';
+import { KeyManagerModule } from '../key-manager/key-manager.module';
 import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
 import { ChannelMember } from './entities/channelmembers.entity';
@@ -26,7 +26,7 @@ import { ChannelMembersResolver } from './resolvers/channelmembers.resolver';
     IpfsModule,
     Web3Module,
     EventsModule,
-    VaultModule,
+    KeyManagerModule,
   ],
   exports: [ChannelsService],
   providers: [ChannelsService, ChannelResolver, ChannelMembersResolver],

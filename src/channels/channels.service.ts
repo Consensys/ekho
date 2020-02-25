@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, getRepository, IsNull, Repository } from 'typeorm';
 import { Contact } from '../contacts/contacts.entity';
@@ -8,9 +8,9 @@ import EkhoEventDto from '../events/dto/ekhoevent.dto';
 import { EventsService } from '../events/events.service';
 import { IpfsMessageDto } from '../ipfs/dto/ipfs-message.dto';
 import { IpfsService } from '../ipfs/ipfs.service';
+import { KeyManager } from '../key-manager/key-manager.interface';
 import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
-import { VaultService } from '../vault/vault.service';
 import { Web3Service } from '../web3/web3.service';
 import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
@@ -43,7 +43,8 @@ export class ChannelsService {
     private readonly userService: UsersService,
     private readonly contactService: ContactsService,
     private readonly cryptoService: CryptographyService,
-    private readonly vaultService: VaultService,
+    @Inject('KeyManager')
+    private readonly vaultService: KeyManager,
     private readonly ipfsService: IpfsService,
     private readonly web3Service: Web3Service,
     private readonly eventService: EventsService,
