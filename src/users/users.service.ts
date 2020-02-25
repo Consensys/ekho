@@ -40,7 +40,11 @@ export class UsersService {
     }
   }
 
-  async findByName(name: string): Promise<UserDto> {
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+  async findByName(name: string): Promise<User> {
     return this.userRepository.findOne({
       select: ['name'],
       where: { name },

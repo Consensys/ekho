@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChannelsModule } from './channels/channels.module';
 import { ContactsModule } from './contacts/contacts.module';
@@ -13,6 +14,11 @@ import web3Configuration from './web3/web3.configuration';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot({
+      include: [UsersModule, ContactsModule],
+      playground: true,
+      autoSchemaFile: 'schema.gql',
+    }),
     TypeOrmModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,

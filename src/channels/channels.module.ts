@@ -13,6 +13,8 @@ import { ChannelsService } from './channels.service';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
+import { ChannelResolver } from './resolvers/channel.resolver';
+import { ChannelMembersResolver } from './resolvers/channelmembers.resolver';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { Channel } from './entities/channels.entity';
     EventsModule,
   ],
   exports: [ChannelsService],
-  providers: [ChannelsService],
+  providers: [ChannelsService, ChannelResolver, ChannelMembersResolver],
   controllers: [ChannelsController],
 })
 export class ChannelsModule {}
