@@ -10,13 +10,14 @@ import { Web3Module } from 'src/web3/web3.module';
 import { CryptographyModule } from '../cryptography/cryptography.module';
 import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
+import { BroadcastChannel } from './entities/broadcastchannels.entity';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, ChannelMember, ChannelMessage, User, Contact]),
+    TypeOrmModule.forFeature([BroadcastChannel, Channel, ChannelMember, ChannelMessage, User, Contact]),
     CryptographyModule,
     UsersModule,
     ContactsModule,

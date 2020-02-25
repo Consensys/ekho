@@ -1,8 +1,12 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
+import BroadcastChannelDto from './dto/broadcastchannel.dto';
+import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
+import CreateBroadcastChannelListenerDto from './dto/create-broadcastchannellistener.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
 import RawMessageDto from './dto/rawmessage.dto';
+import { BroadcastChannel } from './entities/broadcastchannels.entity';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
@@ -19,6 +23,22 @@ export class ChannelsController {
     return this.channelService.createChannelAndMembers(channel);
   }
 
+  // creates a broadcast channel listener
+  @Post('broadcast/listener')
+  async createBroadcastChannelListener(@Body() channel: CreateBroadcastChannelListenerDto): Promise<Channel> {
+    return this.channelService.createBroadcastChannelListener(channel);
+  }
+
+  @Post('broadcast')
+  async createBroadcastChannel(@Body() channel: CreateBroadcastChannelDto): Promise<BroadcastChannelDto> {
+    return this.channelService.createBroadcastChannel(channel);
+  }
+
+  @Get('broadcast')
+  async findBroadcastChannels(@Query('userid') userId: number): Promise<BroadcastChannel[]> {
+    return this.channelService.getBroadcastChannels(userId);
+  }
+
   // Creates a channel message
   @Post('message')
   async createChannelMessage(@Body() channelMessage: RawMessageDto): Promise<EncodedMessageDto> {
@@ -26,7 +46,7 @@ export class ChannelsController {
   }
 
   // process all received blockchain events
-  @Get('refresh')
+  @Post('refresh')
   async processAllEvents(): Promise<number> {
     return this.channelService.processAllPendingEvents();
   }

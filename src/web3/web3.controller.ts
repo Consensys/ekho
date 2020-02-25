@@ -1,11 +1,11 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Param, Post } from '@nestjs/common';
 import { Web3Service } from './web3.service';
 
 @Controller('web3')
 export class Web3Controller {
   constructor(private readonly web3Service: Web3Service) {}
 
-  @Get('refresh')
+  @Post('refresh')
   async GetBlockchainEvents(): Promise<void> {
     return this.web3Service.Refresh();
   }
