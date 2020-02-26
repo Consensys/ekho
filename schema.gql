@@ -16,7 +16,7 @@ type ChannelMember {
   user: User!
   contact: Contact!
   messageChainKey: String!
-  nonce: Float!
+  nextChannelIdentifier: String!
   users: [ChannelMember!]!
   UserChannelMemberships: [ChannelMember!]!
   ContactChannelMemberships: [ChannelMember!]!
@@ -53,15 +53,6 @@ input ContactHandshakeDto {
 
 input CreateChannelDto {
   name: String!
-  channelKey: String!
-}
-
-input CreateChannelMemberDto {
-  messageChainKey: String!
-  nonce: Float!
-  channelId: Float!
-  userId: Float!
-  contactId: Float!
 }
 
 """
@@ -102,8 +93,6 @@ input SendMessageDto {
 type User {
   id: ID!
   name: String!
-  privateSigningKey: String!
-  publicSigningKey: String!
   channelmembers: [ChannelMember!]
   contacts: [Contact!]
 }

@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CryptographyService } from '../cryptography/cryptography.service';
 import { KeyManager } from '../key-manager/key-manager.interface';
 import CreateUserDto from './dto/create-user.dto';
 import UserDto from './dto/user.dto';
@@ -12,7 +11,6 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly cryptographyService: CryptographyService,
     @Inject('KeyManager')
     private readonly keyManagerService: KeyManager,
   ) {}
@@ -20,8 +18,6 @@ export class UsersService {
   async create(user: CreateUserDto): Promise<UserDto> {
     const newUser = new User();
     newUser.name = user.name;
-    const keyPair = this.cryptographyService.generateSigningKeyPair();
-    newUser.publicSigningKey = keyPair.publicKey;
 
     const queryRunner = this.userRepository.manager.connection.createQueryRunner();
     queryRunner.startTransaction();
@@ -53,7 +49,7 @@ export class UsersService {
     return this.keyManagerService.sign(id, data);
   }
 
-  async findByName(name: string): Promise<UserDto> {
+  async findByName(name: string): Promise<User> {
     return this.userRepository.findOne({
       select: ['name'],
       where: { name },
@@ -61,27 +57,18 @@ export class UsersService {
   }
 
   async find(name: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { name } });
-    return this.populatePrivateKey(user);
+    return this.userRepository.findOne({ where: { name } });
   }
 
   async findById(id: number, orFail = false): Promise<User> {
     if (orFail) {
-      const user = await this.userRepository.findOneOrFail(id);
-      return this.populatePrivateKey(user);
+      return this.userRepository.findOneOrFail(id);
     } else {
-      const user = await this.userRepository.findOne(id);
-      return this.populatePrivateKey(user);
+      return this.userRepository.findOne(id);
     }
   }
 
   async delete(name: string): Promise<void> {
     await this.userRepository.delete({ name });
-  }
-
-  private async populatePrivateKey(user: User): Promise<User> {
-    const publicSigningKey = await this.keyManagerService.readPublicSigningKey(user.id);
-    user.publicSigningKey = publicSigningKey;
-    return user;
   }
 }

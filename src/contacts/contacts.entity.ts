@@ -29,15 +29,15 @@ export class Contact {
   handshakePublicKey: string;
 
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   signingKey?: string;
 
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   oneuseKey?: string;
 
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   signature?: string;
 
   @Field(type => [ChannelMember], { nullable: true })

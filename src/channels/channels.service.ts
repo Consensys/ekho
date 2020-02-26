@@ -44,7 +44,7 @@ export class ChannelsService {
     private readonly contactService: ContactsService,
     private readonly cryptoService: CryptographyService,
     @Inject('KeyManager')
-    private readonly vaultService: KeyManager,
+    private readonly keyManager: KeyManager,
     private readonly ipfsService: IpfsService,
     private readonly web3Service: Web3Service,
     private readonly eventService: EventsService,
@@ -97,6 +97,7 @@ export class ChannelsService {
     // get the user - fail if they don't exist
     // TODO change this to a user & channel passed in aand get the channelmemberid from that
     const messageSender = await this.userService.findById(channelMember.user.id, true);
+    const messageSenderPK = await this.keyManager.readPublicSigningKey(messageSender.id);
 
     // get next expected message nonce
     const nonce = await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
@@ -106,7 +107,7 @@ export class ChannelsService {
 
     // Get the Channel Identifier for the message
     const channelIdentifier = await this.createChannelIdentifier(
-      messageSender.publicSigningKey,
+      messageSenderPK,
       channelMember.channel.channelKey,
       nonce,
     );
@@ -124,7 +125,7 @@ export class ChannelsService {
     const encryptedMessageLink = this.cryptoService.encrypt(messageLink, nonce, messageKey);
 
     // sign the encrypted IPFS hash with the user signing key
-    const encryptedMessageLinkSignature = await this.vaultService.sign(messageSender.id, encryptedMessageLink);
+    const encryptedMessageLinkSignature = await this.keyManager.sign(messageSender.id, encryptedMessageLink);
 
     // send the blockchain transaction
     const mined = await this.sendToChain(channelIdentifier, encryptedMessageLink, encryptedMessageLinkSignature);
@@ -136,7 +137,7 @@ export class ChannelsService {
 
       // Update the member next channel identifier
       channelMember.nextChannelIdentifier = await this.createChannelIdentifier(
-        messageSender.publicSigningKey,
+        messageSenderPK,
         channelMember.channel.channelKey,
         nonce + 1,
       );
@@ -346,9 +347,10 @@ export class ChannelsService {
 
     if (user) {
       Logger.debug('... for user id ', user.id.toString());
+      const userPublicSigningKey = await this.keyManager.readPublicSigningKey(user.id);
 
       newChannelMember.nextChannelIdentifier = await this.createChannelIdentifier(
-        user.publicSigningKey,
+        userPublicSigningKey,
         channel.channelKey,
         this.INITIAL_NONCE,
       );
