@@ -15,15 +15,6 @@ export class User {
   @Column({ length: 500 })
   name: string;
 
-  // TODO remove private signing key when channels are merged
-  //      removing now will cause lots of conflicts on on-going work
-  @Column({ nullable: true })
-  privateSigningKey?: string;
-
-  @Field()
-  @Column()
-  publicSigningKey?: string;
-
   @Field(type => [ChannelMember], { nullable: true })
   @OneToMany(
     type => ChannelMember,

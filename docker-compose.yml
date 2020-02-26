@@ -24,6 +24,16 @@ services:
     volumes:
       - ./conf/vault-dev.json:/config.json
       - ekho-vault:/vault/file
+  vault-configure:
+    image: alpine:3.11.3
+    restart: on-failure
+    environment:
+      - VAULT_URL=http://vault:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=ekho-vault-token
+    volumes:
+      - ./bin/wait-for-command.sh:/bin/wait-for-command:ro
+      - ./bin/provision-vault-dev.sh:/bin/provision-vault:ro
+    command: sh -c "/bin/provision-vault"
 volumes:
   ekho-db:
   ekho-vault:

@@ -7,8 +7,8 @@ import * as supertest from 'supertest';
 import { ContactsModule } from '../src/contacts/contacts.module';
 import ContactHandshakeDto from '../src/contacts/dto/contact-handshake.dto';
 import { DevelopmentModule } from '../src/development/development.module';
+import keyManagerConfiguration from '../src/key-manager/key-manager.configuration';
 import UserDto from '../src/users/dto/user.dto';
-import vaultConfiguration from '../src/vault/vault.configuration';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -28,7 +28,7 @@ describe('AppController (e2e)', () => {
         TypeOrmModule.forRoot(),
         ConfigModule.forRoot({
           isGlobal: true,
-          load: [vaultConfiguration],
+          load: [keyManagerConfiguration],
         }),
       ],
     }).compile();

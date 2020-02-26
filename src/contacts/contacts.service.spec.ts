@@ -19,7 +19,6 @@ describe('ContactsService', () => {
   let cryptoService: CryptographyService;
   let cryptographyTestHelper: TestHelper;
 
-  let userKeySet;
   let contactKeySet;
 
   let expectedSignature: string;
@@ -44,13 +43,9 @@ describe('ContactsService', () => {
     cryptoService = module.get<CryptographyService>(CryptographyService);
     cryptographyTestHelper = getTestHelper(cryptoService);
 
-    userKeySet = await cryptographyTestHelper.generateAnonKeys();
     contactKeySet = await cryptographyTestHelper.generateAnonKeys();
 
-    anonUser = fakeUser({
-      privateSigningKey: userKeySet.signingPair.privateKey,
-      publicSigningKey: userKeySet.signingPair.publicKey,
-    });
+    anonUser = fakeUser();
     anonContact = fakeContact({
       handshakePublicKey: contactKeySet.oneTimePair.publicKey,
       handshakePrivateKey: contactKeySet.oneTimePair.privateKey,
