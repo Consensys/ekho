@@ -39,7 +39,7 @@ export const keyManagerFactory: FactoryProvider<KeyManager> = {
     const type = config.get<string>('keymanager.type');
     const builder = builders[type];
     if (!builder) {
-      throw Error(`Unexpected key-manager.type value: ${type}`);
+      throw Error(`Unexpected key-manager.type value: ${type ? type : 'undefined (missing KEY_MANAGER_TYPE in .env)'}`);
     }
     return builder();
   },
