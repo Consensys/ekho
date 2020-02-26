@@ -126,11 +126,15 @@ export class ChannelsService {
     // encrypt the IPFS hash with the message key
     const encryptedMessageLink = this.cryptoService.encrypt(messageLink, nonce, messageKey);
 
+    // TODO#31: we're going to sign the encrypted IPFS hash + message nonce (to prevent replay attacks)
+
     // sign the encrypted IPFS hash with the user signing key
     const encryptedMessageLinkSignature = this.cryptoService.generateSignature(
       encryptedMessageLink,
       (await messageSender).privateSigningKey,
     );
+
+    // TODO#31: we're going to encrypt the signature with the message key (additional step_)
 
     // send the blockchain transaction
     const mined = await this.sendToChain(channelIdentifier, encryptedMessageLink, encryptedMessageLinkSignature);
@@ -346,6 +350,9 @@ export class ChannelsService {
 
     Logger.debug('found message from channel member ', channelMember.id.toString());
 
+    // TODO#31: first decrypt the signature with the expected message key
+    // TODO#31: then the validate signature needs the nonce and message key before it can validate signature
+
     // check the signature
     const signed = this.cryptoService.validateSignature(
       signature,
@@ -509,6 +516,7 @@ export class ChannelsService {
     }
   }
 
+  // finds a channel member (if any) for a provided channel identifier
   private async findChannelMemberbyNextChannelIdentifier(identifier: string): Promise<ChannelMember> {
     Logger.debug('searching for channel member...');
 
@@ -518,12 +526,14 @@ export class ChannelsService {
     });
   }
 
+  // ratchets the message chain key to get the message key
   private async getMessageKey(messageChainKey: string): Promise<string> {
     Logger.debug('getting message key');
 
     return this.cryptoService.generateSHA256Hash(messageChainKey + this.MESSAGE_KEY_RATCHET);
   }
 
+  // returns the raw data (string for moment) from an encrypted IPFS link
   private async getRawMessage(encryptedLink: string, nonce: number, key: string): Promise<string> {
     Logger.debug('getting IPFS address');
 
@@ -533,12 +543,14 @@ export class ChannelsService {
     return rawMessage;
   }
 
+  // ratchets the chain key for forward secrecy
   private async ratchetChainKey(chainKey: string): Promise<string> {
     Logger.debug('ratcheting chain key');
 
     return this.cryptoService.generateSHA256Hash(chainKey + this.CHAIN_KEY_RATCHET);
   }
 
+  // updates the channel member's next channel identifier
   private async updateChannelMemberDetails(member: ChannelMember, nonce: number): Promise<ChannelMember> {
     Logger.debug('updating channel member ', member.id.toString());
 
@@ -551,6 +563,7 @@ export class ChannelsService {
     return member;
   }
 
+  // create a channel message entity
   private async createMessage(member: ChannelMember, message: string, nonce: number): Promise<ChannelMessage> {
     Logger.debug('creating channel message');
 
@@ -563,6 +576,7 @@ export class ChannelsService {
 
   // *** External Delivery methods ***
 
+  // sends encrypted data to IPFS
   private async sendToIpfs(message): Promise<string> {
     try {
       Logger.debug('sharing via IPFS');
@@ -578,6 +592,7 @@ export class ChannelsService {
     }
   }
 
+  // sends ekho event to chain
   private async sendToChain(channelId: string, link: string, signature: string): Promise<boolean> {
     try {
       Logger.debug('emitting event to chain');
