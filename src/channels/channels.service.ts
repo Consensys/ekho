@@ -265,11 +265,7 @@ export class ChannelsService {
     Logger.debug('found message from channel member ', channelMember.id.toString());
 
     // check the signature
-    const signed = this.cryptoService.validateSignature(
-      signature,
-      encryptedMessageLink,
-      channelMember.contact.signingKey,
-    );
+    const signed = this.keyManager.verifySignature(signature, encryptedMessageLink, channelMember.contact.signingKey);
 
     if (!signed) {
       throw new BadRequestException('message not correctly signed');

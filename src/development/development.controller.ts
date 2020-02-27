@@ -1,6 +1,7 @@
-import { Controller, Get, Logger, Param } from '@nestjs/common';
+import { Controller, Get, Inject, Logger, Param } from '@nestjs/common';
 import { ContactsService } from '../contacts/contacts.service';
 import { CryptographyService } from '../cryptography/cryptography.service';
+import { KeyManager } from '../key-manager/key-manager.interface';
 import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 
@@ -10,6 +11,8 @@ export class DevelopmentController {
     private readonly contactsService: ContactsService,
     private readonly usersService: UsersService,
     private readonly cryptographyService: CryptographyService,
+    @Inject('KeyManager')
+    private readonly keyManager: KeyManager,
   ) {}
 
   @Get('generate-master-key/:userId/:contactName')
@@ -43,11 +46,7 @@ export class DevelopmentController {
     @Param('oneUseKey') oneuseKey: string,
     @Param('signingKey') signingKey: string,
   ): Promise<any> {
-    const result = this.cryptographyService.validateSignature(
-      signature,
-      Buffer.from(oneuseKey).toString('base64'),
-      signingKey,
-    );
+    const result = await this.keyManager.verifySignature(signature, oneuseKey, signingKey);
     return { result };
   }
 }
