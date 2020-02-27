@@ -30,7 +30,7 @@ export const keyManagerFactory: FactoryProvider<KeyManager> = {
             'X-Vault-Token': vaultToken,
           },
         });
-        return new VaultKeyManager(axiosClient);
+        return new VaultKeyManager(axiosClient, cryptographyService);
       },
       db: (): KeyManager => {
         return new DbKeyManager(keypairRepository, cryptographyService);

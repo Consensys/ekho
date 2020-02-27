@@ -1,8 +1,9 @@
 import { AxiosInstance, AxiosResponse } from 'axios';
+import { CryptographyService } from '../../cryptography/cryptography.service';
 import { KeyManager } from '../key-manager.interface';
 
 export class VaultKeyManager implements KeyManager {
-  constructor(private readonly client: AxiosInstance) {}
+  constructor(private readonly client: AxiosInstance, private readonly cryptographyService: CryptographyService) {}
 
   async createSigningKey(id: number): Promise<void> {
     const payload = {
@@ -28,6 +29,15 @@ export class VaultKeyManager implements KeyManager {
     const fullSignature: string = response.data.data.signature;
     const signature = fullSignature.split(':')[2];
     return signature;
+  }
+
+  async verifySignatureById(id: number, signature: string, data: string): Promise<boolean> {
+    const pubKey: string = await this.readPublicSigningKey(id);
+    return this.verifySignature(signature, data, pubKey);
+  }
+
+  async verifySignature(signature: string, data: string, publicKey: string): Promise<boolean> {
+    return this.cryptographyService.validateSignature(signature, Buffer.from(data).toString('base64'), publicKey);
   }
 
   private checkResponse(response: AxiosResponse, context: string, expectedStatus = 200) {
