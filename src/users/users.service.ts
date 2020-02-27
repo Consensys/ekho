@@ -23,7 +23,7 @@ export class UsersService {
     queryRunner.startTransaction();
     try {
       const dbUser = await queryRunner.manager.save(newUser);
-      await this.keyManagerService.createSigningKey(dbUser.id);
+      await this.keyManagerService.createSigningKey(dbUser.id, queryRunner);
       await queryRunner.commitTransaction();
       return {
         id: dbUser.id,

@@ -355,11 +355,7 @@ export class ChannelsService {
     // TODO#31: then the validate signature needs the nonce and message key before it can validate signature
 
     // check the signature
-    const signed = this.cryptoService.validateSignature(
-      signature,
-      encryptedMessageLink,
-      channelMember.contact.signingKey,
-    );
+    const signed = this.keyManager.verifySignature(signature, encryptedMessageLink, channelMember.contact.signingKey);
 
     if (!signed) {
       throw new BadRequestException('message not correctly signed');
