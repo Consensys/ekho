@@ -4,8 +4,11 @@ export const mockUsersService: jest.Mock<Omit<UsersService, 'usersRepository cry
   return {
     create: jest.fn(),
     find: jest.fn(),
+    findAll: jest.fn(),
     findByName: jest.fn(),
     findById: jest.fn(),
     delete: jest.fn(),
+    getPublicKey: jest.fn(),
+    sign: jest.fn(),
   };
 });

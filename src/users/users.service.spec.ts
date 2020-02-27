@@ -3,7 +3,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { mockQueryRunner, mockRepository } from '../../test/test-helpers';
 import { CryptographyService } from '../cryptography/cryptography.service';
-import { VaultService } from '../vault/vault.service';
 import CreateUserDto from './dto/create-user.dto';
 import { User } from './entities/users.entity';
 import { fakeUser } from './test-helpers/faker';
@@ -27,7 +26,7 @@ describe('UsersService', () => {
         UsersService,
         CryptographyService,
         {
-          provide: VaultService,
+          provide: 'KeyManager',
           useValue: vaultServiceMock,
         },
         { provide: getRepositoryToken(User), useClass: mockRepository },
@@ -109,5 +108,16 @@ describe('UsersService', () => {
     expect(repository.findOneOrFail).toBeCalledTimes(1);
     expect(repository.findOneOrFail).lastCalledWith(anonUser.id);
     expect(actual).toBe(anonUser);
+  });
+
+  it('findAll just barfs back all the users', async () => {
+    const expected = [anonUser];
+    jest.spyOn(repository, 'find').mockResolvedValueOnce(expected);
+
+    const actual = await service.findAll();
+
+    expect(repository.find).toBeCalledTimes(1);
+    expect(repository.find).lastCalledWith();
+    expect(actual).toBe(expected);
   });
 });

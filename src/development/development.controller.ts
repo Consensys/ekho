@@ -43,7 +43,11 @@ export class DevelopmentController {
     @Param('oneUseKey') oneuseKey: string,
     @Param('signingKey') signingKey: string,
   ): Promise<any> {
-    const result = this.cryptographyService.validateSignature(signature, oneuseKey, signingKey);
+    const result = this.cryptographyService.validateSignature(
+      signature,
+      Buffer.from(oneuseKey).toString('base64'),
+      signingKey,
+    );
     return { result };
   }
 }

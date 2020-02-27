@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, getRepository, IsNull, Repository } from 'typeorm';
 import { Contact } from '../contacts/contacts.entity';
@@ -8,6 +8,7 @@ import EkhoEventDto from '../events/dto/ekhoevent.dto';
 import { EventsService } from '../events/events.service';
 import { IpfsMessageDto } from '../ipfs/dto/ipfs-message.dto';
 import { IpfsService } from '../ipfs/ipfs.service';
+import { KeyManager } from '../key-manager/key-manager.interface';
 import { User } from '../users/entities/users.entity';
 import { UsersService } from '../users/users.service';
 import { Web3Service } from '../web3/web3.service';
@@ -48,6 +49,8 @@ export class ChannelsService {
     private readonly userService: UsersService,
     private readonly contactService: ContactsService,
     private readonly cryptoService: CryptographyService,
+    @Inject('KeyManager')
+    private readonly keyManager: KeyManager,
     private readonly ipfsService: IpfsService,
     private readonly web3Service: Web3Service,
     private readonly eventService: EventsService,
@@ -99,7 +102,8 @@ export class ChannelsService {
 
     // get the user - fail if they don't exist
     // TODO change this to a user & channel passed in aand get the channelmemberid from that
-    const messageSender = this.userService.findById(channelMember.user.id, true);
+    const messageSender = await this.userService.findById(channelMember.user.id, true);
+    const messageSenderPK = await this.keyManager.readPublicSigningKey(messageSender.id);
 
     // get next expected message nonce
     const nonce = await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
@@ -109,7 +113,7 @@ export class ChannelsService {
 
     // Get the Channel Identifier for the message
     const channelIdentifier = await this.createChannelIdentifier(
-      (await messageSender).publicSigningKey,
+      messageSenderPK,
       channelMember.channel.channelKey,
       nonce,
     );
@@ -129,10 +133,7 @@ export class ChannelsService {
     // TODO#31: we're going to sign the encrypted IPFS hash + message nonce (to prevent replay attacks)
 
     // sign the encrypted IPFS hash with the user signing key
-    const encryptedMessageLinkSignature = this.cryptoService.generateSignature(
-      encryptedMessageLink,
-      (await messageSender).privateSigningKey,
-    );
+    const encryptedMessageLinkSignature = await this.keyManager.sign(messageSender.id, encryptedMessageLink);
 
     // TODO#31: we're going to encrypt the signature with the message key (additional step_)
 
@@ -146,7 +147,7 @@ export class ChannelsService {
 
       // Update the member next channel identifier
       channelMember.nextChannelIdentifier = await this.createChannelIdentifier(
-        (await messageSender).publicSigningKey,
+        messageSenderPK,
         channelMember.channel.channelKey,
         nonce + 1,
       );
@@ -436,9 +437,10 @@ export class ChannelsService {
 
     if (user) {
       Logger.debug('... for user id ', user.id.toString());
+      const userPublicSigningKey = await this.keyManager.readPublicSigningKey(user.id);
 
       newChannelMember.nextChannelIdentifier = await this.createChannelIdentifier(
-        user.publicSigningKey,
+        userPublicSigningKey,
         channel.channelKey,
         this.INITIAL_NONCE,
       );

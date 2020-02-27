@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import BroadcastChannelDto from './dto/broadcastchannel.dto';
 import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
@@ -69,8 +69,8 @@ export class ChannelsController {
 
   // TODO pass and filter by userid
   // gets channel member by id
-  @Get('member')
-  async findChannelMemberById(@Query('id') id: number): Promise<ChannelMember> {
+  @Get('member/:id')
+  async findChannelMemberById(@Param('id') id: number): Promise<ChannelMember> {
     return this.channelService.findChannelMemberById(id);
   }
   // TODO pass and filter by userid
@@ -88,8 +88,8 @@ export class ChannelsController {
 
   // TODO pass and filter by userid
   // Retrieves a channel message by id
-  @Get('message')
-  async findChannelMessageById(@Query('id') id: number): Promise<ChannelMessage> {
+  @Get('message/:id')
+  async findChannelMessageById(@Param('id') id: number): Promise<ChannelMessage> {
     return this.channelService.findChannelMessageById(id);
   }
 }

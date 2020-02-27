@@ -8,12 +8,15 @@ import { User } from 'src/users/entities/users.entity';
 import { UsersModule } from 'src/users/users.module';
 import { Web3Module } from 'src/web3/web3.module';
 import { CryptographyModule } from '../cryptography/cryptography.module';
+import { KeyManagerModule } from '../key-manager/key-manager.module';
 import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
 import { BroadcastChannel } from './entities/broadcastchannels.entity';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
 import { Channel } from './entities/channels.entity';
+import { ChannelResolver } from './resolvers/channel.resolver';
+import { ChannelMembersResolver } from './resolvers/channelmembers.resolver';
 
 @Module({
   imports: [
@@ -24,9 +27,10 @@ import { Channel } from './entities/channels.entity';
     IpfsModule,
     Web3Module,
     EventsModule,
+    KeyManagerModule,
   ],
   exports: [ChannelsService],
-  providers: [ChannelsService],
+  providers: [ChannelsService, ChannelResolver, ChannelMembersResolver],
   controllers: [ChannelsController],
 })
 export class ChannelsModule {}
