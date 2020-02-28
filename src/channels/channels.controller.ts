@@ -5,6 +5,7 @@ import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
 import CreateBroadcastChannelListenerDto from './dto/create-broadcastchannellistener.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
+import ProcessReport from './dto/processreport.dto';
 import RawMessageDto from './dto/rawmessage.dto';
 import { BroadcastChannel } from './entities/broadcastchannels.entity';
 import { ChannelMember } from './entities/channelmembers.entity';
@@ -47,7 +48,7 @@ export class ChannelsController {
 
   // process all received blockchain events
   @Post('refresh')
-  async processAllEvents(): Promise<number> {
+  async processAllEvents(): Promise<ProcessReport> {
     return this.channelService.processAllPendingEvents();
   }
 
