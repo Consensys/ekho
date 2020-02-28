@@ -28,6 +28,7 @@ export class DevelopmentController {
   async getContact(@Param('userId') userId: number, @Param('contactName') contactName: string): Promise<any> {
     const contact = await this.contactsService.findOne(userId, contactName, true);
     const contactHandshake = {
+      id: contact.id,
       name: contact.name,
       identifier: contact.identifier,
       handshakePublicKey: contact.handshakePublicKey,

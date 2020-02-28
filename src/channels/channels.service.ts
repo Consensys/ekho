@@ -204,16 +204,40 @@ export class ChannelsService {
   // *** (CHANNEL MESSAGE) Find Methods **
 
   // Finds a channelmessage  by id (TODO: for user id)
-  async findChannelMessageById(id: number): Promise<ChannelMessage> {
-    return this.channelMessageRepository.findOneOrFail({
-      relations: ['channelmember'],
-      where: { id },
+  async findChannelMessageByUserId(id: number): Promise<ChannelMessage[]> {
+    const allMessages = await this.channelMessageRepository.find({
+      relations: ['channelMember', 'channelMember.user'],
+      // problem: where clause not working as expected
+      // where: { channelMember: { id: 33}} // this works
+      // tried various options but did not seem to work
+      // where: { channelMember: { userId: {id} }},
+      // where: { channelMember: { userId: { id: 99 }} }, // doesnt work
+      // where: { channelMember: {  user: { id: 99 } } },  // doesnt work
+      // where: { channelMember: {  userId: 99 } }, // doesnt work
+      // where: { channelMember: { user: { id }}} // doesn't work
+      // where: {  channelMember: { messageChainKey: 'dfce83f8d1c44918d0fb53dd7b7234fdfe715aaaafc241b24e439c964b531af6'}} // did not work either
+      order: { nonce: 'ASC' },
     });
+    // as the where clause above isn't working, doing in process filtering for now
+    // but for some odd reason, id passes as string... converting to int to use in filter
+    // suspecting a bug in nestjs
+    return allMessages.filter(m => m.channelMember.user?.id === parseInt(`${id}`, 10));
+  }
+
+  // Finds a channelmessage  by id (TODO: for user id)
+  async findChannelMessageByContactId(id: number): Promise<ChannelMessage[]> {
+    const allMessages = await this.channelMessageRepository.find({
+      relations: ['channelMember', 'channelMember.contact'],
+      // missing where clause - see above findChannelMessageByUserId
+      order: { nonce: 'ASC' },
+    });
+    // see above findChannelMessageByUserId
+    return allMessages.filter(m => m.channelMember.contact?.id === parseInt(`${id}`, 10));
   }
 
   // Finds all channel messages (TODO: for user id)
   async findAllChannelMessages(): Promise<ChannelMessage[]> {
-    return this.channelMessageRepository.find({ relations: ['channelmember'] });
+    return this.channelMessageRepository.find({ relations: ['channelMember'] });
   }
 
   // *** (CHANNEL MEMBER) Find methods ***

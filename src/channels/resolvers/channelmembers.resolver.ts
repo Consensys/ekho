@@ -1,6 +1,6 @@
 import { Resolver } from '@nestjs/graphql';
-import { Contact } from 'src/contacts/contacts.entity';
 import { FieldResolver, Root } from 'type-graphql';
+import { Contact } from '../../contacts/contacts.entity';
 import { User } from '../../users/entities/users.entity';
 import { ChannelsService } from '../channels.service';
 import { ChannelMember } from '../entities/channelmembers.entity';

@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CryptographyKeyPairDto } from 'src/cryptography/dto/cryptography-keypair.dto';
 import { Repository } from 'typeorm';
 import { CryptographyService } from '../cryptography/cryptography.service';
+import { CryptographyKeyPairDto } from '../cryptography/dto/cryptography-keypair.dto';
 import { KeyManager } from '../key-manager/key-manager.interface';
 import { UsersService } from '../users/users.service';
 import { Contact } from './contacts.entity';
