@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { ChannelsService } from './channels.service';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
@@ -61,16 +62,28 @@ export class ChannelsController {
     return this.channelService.findAllChannelMembers();
   }
 
-  // TODO: pass in and filter by user id
+  // Retrieves a channel messages
+  /**
+   * Retrieves channel messages. Supports query filters. No filters will return all messages
+   * @param userId filter to only return messages sent by user ID
+   * @param contactId filter to return only return messages received from contact ID
+   */
+  @ApiQuery({ name: 'userId', required: false })
+  @ApiQuery({ name: 'contactId', required: false })
   @Get('message')
-  async findAllChannelMessages(): Promise<ChannelMessage[]> {
+  async findChannelMessage(
+    @Query('userId') userId?: number,
+    @Query('contactId') contactId?: number,
+  ): Promise<ChannelMessage[]> {
+    if (userId && contactId) {
+      throw Error('Only one filter can be specified');
+    }
+    if (userId) {
+      return this.channelService.findChannelMessageByUserId(contactId);
+    }
+    if (contactId) {
+      return this.channelService.findChannelMessageByContactId(contactId);
+    }
     return this.channelService.findAllChannelMessages();
-  }
-
-  // TODO pass and filter by userid
-  // Retrieves a channel message by id
-  @Get('message/:id')
-  async findChannelMessageById(@Param('id') id: number): Promise<ChannelMessage> {
-    return this.channelService.findChannelMessageById(id);
   }
 }
