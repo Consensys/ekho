@@ -15,6 +15,7 @@ import { Web3Service } from '../web3/web3.service';
 import ChannelMemberDto from './dto/channelmember.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
+import ProcessReport from './dto/processreport.dto';
 import RawMessageDto from './dto/rawmessage.dto';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
@@ -53,8 +54,12 @@ export class ChannelsService {
   // *** Functional Methods ***
 
   // Process all pending blockchain events in DB
-  async processAllPendingEvents(): Promise<number> {
-    let eventsProcessed = 0;
+  async processAllPendingEvents(): Promise<ProcessReport> {
+    const processReport = new ProcessReport();
+    processReport.receivedMessages = 0;
+    processReport.processedTotal = 0;
+    processReport.receivedMessageEvents = [];
+
     let completed: boolean = false;
     Logger.debug('Processing pending events');
     try {
@@ -68,23 +73,26 @@ export class ChannelsService {
 
           try {
             const message: RawMessageDto = await this.validateAndDecryptEvent(incomingMessage);
+            if (message) {
+              processReport.receivedMessages++;
+              processReport.receivedMessageEvents.push(incomingMessage);
+            }
           } catch (e) {
             Logger.debug('Event could not be decoded', unprocessedEvent.eventIdentifier.toString());
           } finally {
             await this.eventService.markEventAsProcessed(unprocessedEvent.eventIdentifier);
-            eventsProcessed++;
+            processReport.processedTotal++;
           }
         } else {
           completed = true;
           Logger.debug('no unprocessed events');
-          Logger.debug('events processed: ', eventsProcessed.toString());
         }
       }
     } catch (e) {
       Logger.debug('Error getting unprocessed events ', e.message);
       throw e;
     }
-    return eventsProcessed;
+    return processReport;
   }
 
   // Create a channel message

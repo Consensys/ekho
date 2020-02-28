@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
+import ProcessReport from './dto/processreport.dto';
 import RawMessageDto from './dto/rawmessage.dto';
 import { ChannelMember } from './entities/channelmembers.entity';
 import { ChannelMessage } from './entities/channelmessages.entity';
@@ -27,7 +28,7 @@ export class ChannelsController {
 
   // process all received blockchain events
   @Get('refresh')
-  async processAllEvents(): Promise<number> {
+  async processAllEvents(): Promise<ProcessReport> {
     return this.channelService.processAllPendingEvents();
   }
 
