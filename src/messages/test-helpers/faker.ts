@@ -1,6 +1,6 @@
-import { ChannelMessage } from 'src/channels/entities/channelmessages.entity';
 import { fakerFactory } from '../../../test/test-helpers';
 import { ChannelMember } from '../../channels/entities/channelmembers.entity';
+import { ChannelMessage } from '../../channels/entities/channelmessages.entity';
 import { Channel } from '../../channels/entities/channels.entity';
 import { fakeContact } from '../../contacts/test-helpers/faker';
 import { fakeUser } from '../../users/test-helpers/faker';

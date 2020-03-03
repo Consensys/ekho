@@ -27,6 +27,8 @@ import { Channel } from './entities/channels.entity';
 @Injectable()
 export class ChannelsService {
   private readonly BASE_64 = 'base64';
+  private readonly UTF_8 = 'utf-8';
+  private readonly HEX = 'hex';
   private readonly CHAIN_KEY_ID = 1;
   private readonly CHAIN_KEY_CONTEXT = 'ChainKey';
   private readonly MESSAGE_KEY_RATCHET = 1;
@@ -58,7 +60,11 @@ export class ChannelsService {
 
   // Process all pending blockchain events in DB
   async processAllPendingEvents(): Promise<ProcessReport> {
-    let eventsProcessed = 0;
+    const processReport = new ProcessReport();
+    processReport.receivedMessages = 0;
+    processReport.processedTotal = 0;
+    processReport.receivedMessageEvents = [];
+
     let completed: boolean = false;
     Logger.debug('Processing pending events');
     try {
@@ -72,23 +78,26 @@ export class ChannelsService {
 
           try {
             const message: RawMessageDto = await this.validateAndDecryptEvent(incomingMessage);
+            if (message) {
+              processReport.receivedMessages++;
+              processReport.receivedMessageEvents.push(incomingMessage);
+            }
           } catch (e) {
             Logger.debug('Event could not be decoded', unprocessedEvent.eventIdentifier.toString());
           } finally {
             await this.eventService.markEventAsProcessed(unprocessedEvent.eventIdentifier);
-            eventsProcessed++;
+            processReport.processedTotal++;
           }
         } else {
           completed = true;
           Logger.debug('no unprocessed events');
-          Logger.debug('events processed: ', eventsProcessed.toString());
         }
       }
     } catch (e) {
       Logger.debug('Error getting unprocessed events ', e.message);
       throw e;
     }
-    return null;
+    return processReport;
   }
 
   // Create a channel message
@@ -120,13 +129,19 @@ export class ChannelsService {
     const messageKey = await this.getMessageKey(channelMember.messageChainKey);
 
     // encrypt the message
-    const newEncryptedMessage = this.cryptoService.encrypt(newChannelMessage.messageContents, nonce, messageKey);
+    const newEncryptedMessage = this.cryptoService.encrypt(
+      newChannelMessage.messageContents,
+      nonce,
+      messageKey,
+      this.UTF_8,
+      this.BASE_64,
+    );
 
     // send the message to IPFS
     const messageLink = await this.sendToIpfs(newEncryptedMessage);
 
     // encrypt the message link with the message key
-    const encryptedMessageLink = this.cryptoService.encrypt(messageLink, nonce, messageKey);
+    const encryptedMessageLink = this.cryptoService.encrypt(messageLink, nonce, messageKey, this.UTF_8, this.BASE_64);
 
     // hash the encrypted message link with message nonce (to prevent replay attacks)
     const EMLwithNonce = this.cryptoService.generateSHA256Hash(encryptedMessageLink + nonce.toString());
@@ -135,7 +150,7 @@ export class ChannelsService {
     const Signature = await this.keyManager.sign(messageSender.id, EMLwithNonce);
 
     // encrypt the signature with the message key
-    const encryptedSignature = this.cryptoService.encrypt(Signature, nonce, messageKey);
+    const encryptedSignature = this.cryptoService.encrypt(Signature, nonce, messageKey, this.BASE_64, this.BASE_64);
 
     // send the blockchain transaction
     const mined = await this.sendToChain(channelIdentifier, encryptedMessageLink, encryptedSignature);
@@ -283,16 +298,40 @@ export class ChannelsService {
   // *** (CHANNEL MESSAGE) Find Methods **
 
   // Finds a channelmessage  by id (TODO: for user id)
-  async findChannelMessageById(id: number): Promise<ChannelMessage> {
-    return this.channelMessageRepository.findOneOrFail({
-      relations: ['channelmember'],
-      where: { id },
+  async findChannelMessageByUserId(id: number): Promise<ChannelMessage[]> {
+    const allMessages = await this.channelMessageRepository.find({
+      relations: ['channelMember', 'channelMember.user'],
+      // problem: where clause not working as expected
+      // where: { channelMember: { id: 33}} // this works
+      // tried various options but did not seem to work
+      // where: { channelMember: { userId: {id} }},
+      // where: { channelMember: { userId: { id: 99 }} }, // doesnt work
+      // where: { channelMember: {  user: { id: 99 } } },  // doesnt work
+      // where: { channelMember: {  userId: 99 } }, // doesnt work
+      // where: { channelMember: { user: { id }}} // doesn't work
+      // where: {  channelMember: { messageChainKey: 'dfce83f8d1c44918d0fb53dd7b7234fdfe715aaaafc241b24e439c964b531af6'}} // did not work either
+      order: { nonce: 'ASC' },
     });
+    // as the where clause above isn't working, doing in process filtering for now
+    // but for some odd reason, id passes as string... converting to int to use in filter
+    // suspecting a bug in nestjs
+    return allMessages.filter(m => m.channelMember.user?.id === parseInt(`${id}`, 10));
+  }
+
+  // Finds a channelmessage  by id (TODO: for user id)
+  async findChannelMessageByContactId(id: number): Promise<ChannelMessage[]> {
+    const allMessages = await this.channelMessageRepository.find({
+      relations: ['channelMember', 'channelMember.contact'],
+      // missing where clause - see above findChannelMessageByUserId
+      order: { nonce: 'ASC' },
+    });
+    // see above findChannelMessageByUserId
+    return allMessages.filter(m => m.channelMember.contact?.id === parseInt(`${id}`, 10));
   }
 
   // Finds all channel messages (TODO: for user id)
   async findAllChannelMessages(): Promise<ChannelMessage[]> {
-    return this.channelMessageRepository.find({ relations: ['channelmember'] });
+    return this.channelMessageRepository.find({ relations: ['channelMember'] });
   }
 
   // *** (CHANNEL MEMBER) Find methods ***
@@ -358,7 +397,7 @@ export class ChannelsService {
     const nonce = await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
 
     // first decrypt the signature with the expected message key
-    const decryptedSignature = this.cryptoService.decrypt(signature, nonce, messageKey);
+    const decryptedSignature = this.cryptoService.decrypt(signature, nonce, messageKey, this.BASE_64, this.BASE_64);
 
     // then the validate signature needs the nonce and message key before it can validate signature
     const EMLwithNonce = this.cryptoService.generateSHA256Hash(encryptedMessageLink + nonce.toString());
@@ -536,9 +575,9 @@ export class ChannelsService {
   private async getRawMessage(encryptedLink: string, nonce: number, key: string): Promise<string> {
     Logger.debug('getting IPFS address');
 
-    const rawMessageLink = this.cryptoService.decrypt(encryptedLink, nonce, key);
+    const rawMessageLink = this.cryptoService.decrypt(encryptedLink, nonce, key, this.BASE_64, this.UTF_8);
     const rawMessageEncrypted = (await this.ipfsService.retrieve(rawMessageLink)).content;
-    const rawMessage = this.cryptoService.decrypt(rawMessageEncrypted, nonce, key);
+    const rawMessage = this.cryptoService.decrypt(rawMessageEncrypted, nonce, key, this.BASE_64, this.UTF_8);
     return rawMessage;
   }
 

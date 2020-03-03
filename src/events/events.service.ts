@@ -77,7 +77,7 @@ export class EventsService {
     } else {
       Logger.debug('one event found, eventid: ', firstUnprocessedEvent.id);
       const newEvent = new EkhoEventDto();
-      newEvent.eventIdentifier = firstUnprocessedEvent.eventIdentifier;
+      newEvent.eventIdentifier = firstUnprocessedEvent.id;
       newEvent.channelIdentifier = firstUnprocessedEvent.channelId;
       newEvent.encryptedMessageLink = firstUnprocessedEvent.content;
       newEvent.encryptedMessageLinkSignature = firstUnprocessedEvent.signature;

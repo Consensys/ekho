@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Contact } from 'src/contacts/contacts.entity';
-import { User } from 'src/users/entities/users.entity';
 import { Field, ID, InputType } from 'type-graphql';
+import { Contact } from '../../contacts/contacts.entity';
+import { User } from '../../users/entities/users.entity';
 import { Channel } from '../entities/channels.entity';
 
 @InputType()
