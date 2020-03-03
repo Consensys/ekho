@@ -1,0 +1,1568 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ekho documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">ekho documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>CryptographyService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/cryptography/cryptography.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#decrypt">decrypt</a>
+                            </li>
+                            <li>
+                                <a href="#deriveSymmetricKeyfromSecret">deriveSymmetricKeyfromSecret</a>
+                            </li>
+                            <li>
+                                <a href="#encrypt">encrypt</a>
+                            </li>
+                            <li>
+                                <a href="#generateECDHSharedSecret">generateECDHSharedSecret</a>
+                            </li>
+                            <li>
+                                <a href="#generateNonceBuffer">generateNonceBuffer</a>
+                            </li>
+                            <li>
+                                <a href="#generateOneUseKeyPair">generateOneUseKeyPair</a>
+                            </li>
+                            <li>
+                                <a href="#generateRandomBytes">generateRandomBytes</a>
+                            </li>
+                            <li>
+                                <a href="#generateRandomNumber">generateRandomNumber</a>
+                            </li>
+                            <li>
+                                <a href="#generateSHA256Hash">generateSHA256Hash</a>
+                            </li>
+                            <li>
+                                <a href="#generateSignature">generateSignature</a>
+                            </li>
+                            <li>
+                                <a href="#generateSigningKeyPair">generateSigningKeyPair</a>
+                            </li>
+                            <li>
+                                <a href="#getRandomisedBuffer">getRandomisedBuffer</a>
+                            </li>
+                            <li>
+                                <a href="#getZeroedBuffer">getZeroedBuffer</a>
+                            </li>
+                            <li>
+                                <a href="#validateSignature">validateSignature</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="decrypt"></a>
+                    <span class="name">
+                        <b>
+                            decrypt
+                        </b>
+                        <a href="#decrypt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>decrypt(dataStr: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nonceNumber: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, keyStr: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dataEncoding: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, encryptedEncoding: BufferEncoding)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="165"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:165</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Decrypts data using a symmetric key and nonce</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dataStr</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>nonceNumber</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>keyStr</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>dataEncoding</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>&#x27;utf-8&#x27;</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>encryptedEncoding</td>
+                                    <td>
+                                            <code>BufferEncoding</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>&#x27;hex&#x27;</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>buffer containing decrypted data</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deriveSymmetricKeyfromSecret"></a>
+                    <span class="name">
+                        <b>
+                            deriveSymmetricKeyfromSecret
+                        </b>
+                        <a href="#deriveSymmetricKeyfromSecret"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>deriveSymmetricKeyfromSecret(secret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, context: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:112</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Derives a symmetric key from secret</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>secret</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>input buffer containing key derivation secret</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>nonce</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>number used once - must not be reused or secret will be exposed!</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>context</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>string describing context of key generation</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>buffer containing the derived 32-byte symmetric key</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="encrypt"></a>
+                    <span class="name">
+                        <b>
+                            encrypt
+                        </b>
+                        <a href="#encrypt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>encrypt(dataStr: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nonceNumber: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, keyStr: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dataEncoding: BufferEncoding, encryptedEncoding: BufferEncoding)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="141"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:141</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Encrypts data using a symmetric key and nonce</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dataStr</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>nonceNumber</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>keyStr</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>dataEncoding</td>
+                                    <td>
+                                            <code>BufferEncoding</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>&#x27;utf-8&#x27;</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>encryptedEncoding</td>
+                                    <td>
+                                            <code>BufferEncoding</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>&#x27;hex&#x27;</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>buffer containing encrypted data</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateECDHSharedSecret"></a>
+                    <span class="name">
+                        <b>
+                            generateECDHSharedSecret
+                        </b>
+                        <a href="#generateECDHSharedSecret"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateECDHSharedSecret(publicKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, privateKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:53</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates an ECDH shared secret from one-use keys</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>publicKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>other party public one-use key</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>privateKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>user private one-use key</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>sharedSecret buffer containing ECDH shared secret</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateNonceBuffer"></a>
+                    <span class="name">
+                        <b>
+                            generateNonceBuffer
+                        </b>
+                        <a href="#generateNonceBuffer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateNonceBuffer(nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:126</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates an 8-byte buffer from nonce</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>nonce</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>number passed in - either random 32-bit integer or counter</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Buffer</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>nonceBuffer padded noncebuffer suitable for use in chacha20 encryption/decryption</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateOneUseKeyPair"></a>
+                    <span class="name">
+                        <b>
+                            generateOneUseKeyPair
+                        </b>
+                        <a href="#generateOneUseKeyPair"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateOneUseKeyPair()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:33</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generate a public and private one-use key pair (c25519)
+This is used to perform Diffie-Hellman secret exchanges
+not for signing!</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/CryptographyKeyPairDto.html" target="_self" >CryptographyKeyPairDto</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>dto containing public and private key buffers</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateRandomBytes"></a>
+                    <span class="name">
+                        <b>
+                            generateRandomBytes
+                        </b>
+                        <a href="#generateRandomBytes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateRandomBytes()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="192"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:192</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates a random 32-byte buffer</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Buffer</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateRandomNumber"></a>
+                    <span class="name">
+                        <b>
+                            generateRandomNumber
+                        </b>
+                        <a href="#generateRandomNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateRandomNumber()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:185</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates 32-bit random number</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateSHA256Hash"></a>
+                    <span class="name">
+                        <b>
+                            generateSHA256Hash
+                        </b>
+                        <a href="#generateSHA256Hash"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateSHA256Hash(data: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:97</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates a SHA256 hash</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>input buffer to be hashed</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>buffer containing the 32-byte SHA-256 hash</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateSignature"></a>
+                    <span class="name">
+                        <b>
+                            generateSignature
+                        </b>
+                        <a href="#generateSignature"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateSignature(data: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, privateSigningKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="67"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:67</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates a digital signature of data using the private signing key</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>data to be signed</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>privateSigningKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>key used to sign data</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>buffer containing signature</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="generateSigningKeyPair"></a>
+                    <span class="name">
+                        <b>
+                            generateSigningKeyPair
+                        </b>
+                        <a href="#generateSigningKeyPair"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>generateSigningKeyPair()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="13"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:13</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Generates a public and private signing key pair (ed25519)</p>
+</div>
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/CryptographyKeyPairDto.html" target="_self" >CryptographyKeyPairDto</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>dto containing public and private key buffers</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getRandomisedBuffer"></a>
+                    <span class="name">
+                        <b>
+                            getRandomisedBuffer
+                        </b>
+                        <a href="#getRandomisedBuffer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getRandomisedBuffer(size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="204"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:204</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>size</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Buffer</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getZeroedBuffer"></a>
+                    <span class="name">
+                        <b>
+                            getZeroedBuffer
+                        </b>
+                        <a href="#getZeroedBuffer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getZeroedBuffer(size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="198"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:198</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>size</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Buffer</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateSignature"></a>
+                    <span class="name">
+                        <b>
+                            validateSignature
+                        </b>
+                        <a href="#validateSignature"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validateSignature(signature: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, data: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, publicSigningKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">src/cryptography/cryptography.service.ts:82</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validates a digital signature of data using the public signing key</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>signature</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>detached signature of data param</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>data</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>data that has been signed</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>publicSigningKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>public key of signing keypair used to sign data</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>boolean true/false if signature valid/invalid</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@nestjs/common&#x27;;
+import SodiumNative from &#x27;sodium-native&#x27;;
+import { CryptographyKeyPairDto } from &#x27;./dto/cryptography-keypair.dto&#x27;;
+
+const BASE64 &#x3D; &#x27;base64&#x27;;
+
+@Injectable()
+export class CryptographyService {
+  /**
+   * Generates a public and private signing key pair (ed25519)
+   * @returns dto containing public and private key buffers
+   */
+  generateSigningKeyPair(): CryptographyKeyPairDto {
+    const publicSigningKey: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_sign_PUBLICKEYBYTES);
+    const privateSigningKey: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_sign_SECRETKEYBYTES);
+
+    SodiumNative.crypto_sign_keypair(publicSigningKey, privateSigningKey);
+
+    const keyPair: CryptographyKeyPairDto &#x3D; {
+      publicKey: publicSigningKey.toString(BASE64),
+      privateKey: privateSigningKey.toString(BASE64),
+    };
+
+    return keyPair;
+  }
+
+  /**
+   * Generate a public and private one-use key pair (c25519)
+   * This is used to perform Diffie-Hellman secret exchanges
+   * not for signing!
+   * @returns dto containing public and private key buffers
+   */
+  generateOneUseKeyPair(): CryptographyKeyPairDto {
+    const publicOneUseKey: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_scalarmult_BYTES);
+    const privateOneUseKey: Buffer &#x3D; this.getRandomisedBuffer(SodiumNative.crypto_scalarmult_SCALARBYTES);
+
+    SodiumNative.crypto_scalarmult_base(publicOneUseKey, privateOneUseKey);
+
+    const keyPair: CryptographyKeyPairDto &#x3D; {
+      publicKey: publicOneUseKey.toString(BASE64),
+      privateKey: privateOneUseKey.toString(BASE64),
+    };
+
+    return keyPair;
+  }
+
+  /**
+   * Generates an ECDH shared secret from one-use keys
+   * @param publicKey other party public one-use key
+   * @param privateKey user private one-use key
+   * @returns sharedSecret buffer containing ECDH shared secret
+   */
+  generateECDHSharedSecret(publicKey: string, privateKey: string): string {
+    const sharedSecret: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_scalarmult_BYTES);
+
+    SodiumNative.crypto_scalarmult(sharedSecret, Buffer.from(privateKey, BASE64), Buffer.from(publicKey, BASE64));
+
+    return sharedSecret.toString(BASE64);
+  }
+
+  /**
+   * Generates a digital signature of data using the private signing key
+   * @param data data to be signed
+   * @param privateSigningKey key used to sign data
+   * @returns buffer containing signature
+   */
+  generateSignature(data: string, privateSigningKey: string): string {
+    const signature: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_sign_BYTES);
+
+    SodiumNative.crypto_sign_detached(signature, Buffer.from(data, BASE64), Buffer.from(privateSigningKey, BASE64));
+
+    return signature.toString(BASE64);
+  }
+
+  /**
+   * Validates a digital signature of data using the public signing key
+   * @param signature detached signature of data param
+   * @param data data that has been signed
+   * @param publicSigningKey public key of signing keypair used to sign data
+   * @returns boolean true/false if signature valid/invalid
+   */
+  validateSignature(signature: string, data: string, publicSigningKey: string): boolean {
+    const retval: boolean &#x3D; SodiumNative.crypto_sign_verify_detached(
+      Buffer.from(signature, BASE64),
+      Buffer.from(data, BASE64),
+      Buffer.from(publicSigningKey, BASE64),
+    );
+
+    return retval;
+  }
+
+  /**
+   * Generates a SHA256 hash
+   * @param data input buffer to be hashed
+   * @returns buffer containing the 32-byte SHA-256 hash
+   */
+  generateSHA256Hash(data: string): string {
+    const outputHash: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_hash_sha256_BYTES);
+
+    SodiumNative.crypto_hash_sha256(outputHash, Buffer.from(data));
+
+    return outputHash.toString(&#x27;hex&#x27;);
+  }
+
+  /**
+   * Derives a symmetric key from secret
+   * @param secret input buffer containing key derivation secret
+   * @param nonce number used once - must not be reused or secret will be exposed!
+   * @param context string describing context of key generation
+   * @returns buffer containing the derived 32-byte symmetric key
+   */
+  deriveSymmetricKeyfromSecret(secret: string, nonce: number, context: string): string {
+    const outputSymmetricKey: Buffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_kdf_KEYBYTES);
+    const keyContext: Buffer &#x3D; Buffer.from(context);
+
+    SodiumNative.crypto_kdf_derive_from_key(outputSymmetricKey, nonce, keyContext, Buffer.from(secret, BASE64));
+
+    return outputSymmetricKey.toString(BASE64);
+  }
+
+  /**
+   * Generates an 8-byte buffer from nonce
+   * @param nonce number passed in - either random 32-bit integer or counter
+   * @returns nonceBuffer padded noncebuffer suitable for use in chacha20 encryption/decryption
+   */
+  generateNonceBuffer(nonce: number): Buffer {
+    const nonceBuffer &#x3D; this.getZeroedBuffer(SodiumNative.crypto_stream_chacha20_NONCEBYTES);
+
+    nonceBuffer.writeUInt32BE(nonce, 0);
+
+    return nonceBuffer;
+  }
+
+  /**
+   * Encrypts data using a symmetric key and nonce
+   * @param data data buffer to be encrypted
+   * @param nonce number used once - must not be reused or secret will be exposed
+   * @param key symmetric key used to encrypt data
+   * @returns buffer containing encrypted data
+   */
+  encrypt(
+    dataStr: string,
+    nonceNumber: number,
+    keyStr: string,
+    dataEncoding: BufferEncoding &#x3D; &#x27;utf-8&#x27;,
+    encryptedEncoding: BufferEncoding &#x3D; &#x27;hex&#x27;,
+  ): string {
+    const data &#x3D; Buffer.from(dataStr, dataEncoding);
+    const nonce &#x3D; this.generateNonceBuffer(nonceNumber);
+    const key &#x3D; Buffer.from(keyStr);
+    const encryptedData: Buffer &#x3D; this.getZeroedBuffer(data.length);
+
+    SodiumNative.crypto_stream_chacha20_xor(encryptedData, data, nonce, key);
+
+    return encryptedData.toString(encryptedEncoding);
+  }
+
+  /**
+   * Decrypts data using a symmetric key and nonce
+   * @param data data buffer to be decrypted
+   * @param nonce number used once - must not be reused or secret will be exposed
+   * @param key symmetric key used to decrypt data
+   * @returns buffer containing decrypted data
+   */
+  decrypt(
+    dataStr: string,
+    nonceNumber: number,
+    keyStr: string,
+    dataEncoding &#x3D; &#x27;utf-8&#x27;,
+    encryptedEncoding: BufferEncoding &#x3D; &#x27;hex&#x27;,
+  ): string {
+    const data &#x3D; Buffer.from(dataStr, encryptedEncoding);
+    const nonce &#x3D; this.generateNonceBuffer(nonceNumber);
+    const key &#x3D; Buffer.from(keyStr);
+    const decryptedData: Buffer &#x3D; this.getZeroedBuffer(data.length);
+
+    SodiumNative.crypto_stream_chacha20_xor(decryptedData, data, nonce, key);
+
+    return decryptedData.toString(dataEncoding);
+  }
+
+  /**
+   * Generates 32-bit random number
+   */
+  generateRandomNumber(): number {
+    return SodiumNative.randombytes_random();
+  }
+
+  /**
+   * Generates a random 32-byte buffer
+   */
+  generateRandomBytes(): Buffer {
+    const retval &#x3D; Buffer.alloc(32);
+    SodiumNative.randombytes_buf(retval);
+    return retval;
+  }
+
+  getZeroedBuffer(size: number): Buffer {
+    const buff &#x3D; SodiumNative.sodium_malloc(size);
+    SodiumNative.sodium_memzero(buff);
+    return buff;
+  }
+
+  getRandomisedBuffer(size: number): Buffer {
+    const buff &#x3D; this.getZeroedBuffer(size);
+    SodiumNative.randombytes_buf(buff);
+    return buff;
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CryptographyService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

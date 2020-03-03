@@ -1,0 +1,214 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ekho documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">ekho documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Interfaces</li>
+  <li>StringIndexedObject</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>test/test-helpers.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="inputs">Indexable</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <code>[name: string]:        <code><a href="../interfaces/StringIndexedObject.html" target="_self" >StringIndexedObject | string</a></code>
+</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">test/test-helpers.ts:34</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export const mockQueryRunner &#x3D; {
+  startTransaction: jest.fn(),
+  commitTransaction: jest.fn(),
+  rollbackTransaction: jest.fn(),
+  release: jest.fn(),
+  manager: {
+    save: jest.fn(),
+  },
+};
+
+export const mockRepository &#x3D; jest.fn(() &#x3D;&gt; {
+  return {
+    metadata: {
+      columns: [],
+      relations: [],
+    },
+    save: jest.fn(),
+    find: jest.fn(),
+    findOne: jest.fn(),
+    findOneOrFail: jest.fn(),
+    delete: jest.fn(),
+    manager: {
+      connection: {
+        createQueryRunner: jest.fn(() &#x3D;&gt; mockQueryRunner),
+      },
+    },
+  };
+});
+
+export interface StringIndexedObject {
+  [name: string]: StringIndexedObject | string;
+}
+
+/**
+ * Mock a ConfigService which takes a config object and can get values from within that object.
+ * @param values A config object, or just the subset of the config object being used in this test.
+ * @returns object with a function &#x27;get&#x27; which takes a dot-seperated path to a config property on &#x27;values&#x27; and returns it.
+ */
+export const mockConfigService &#x3D; (values: StringIndexedObject) &#x3D;&gt; {
+  const mockedConfigServiceGetter &#x3D; get(values);
+  return {
+    get: mockedConfigServiceGetter,
+  };
+};
+
+const get &#x3D; (values: StringIndexedObject) &#x3D;&gt; (dotSeperatedPath: string &#x3D; &#x27;&#x27;) &#x3D;&gt; {
+  const path &#x3D; dotSeperatedPath.split(&#x27;.&#x27;);
+  const [firstKey, ...childKeys] &#x3D; path;
+  return getIn(values, firstKey, ...childKeys);
+};
+
+const getIn &#x3D; (obj: StringIndexedObject, currentKey: string, ...deeperKeys: string[]): string &#x3D;&gt; {
+  const [nextDeepestKey, ...rest] &#x3D; deeperKeys;
+  const val &#x3D; obj[currentKey];
+
+  return typeof val &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? getIn(val, nextDeepestKey, ...rest) : val;
+};
+
+export const fakerFactory &#x3D; &lt;T&gt;(fixture: T) &#x3D;&gt; (partial?: Partial&lt;T&gt;): T &#x3D;&gt; {
+  return partial ? { ...fixture, ...partial } : fixture;
+};
+</code></pre>
+    </div>
+</div>
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'StringIndexedObject.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

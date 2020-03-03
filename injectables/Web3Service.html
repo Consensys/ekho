@@ -1,0 +1,990 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ekho documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">ekho documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>Web3Service</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/web3/web3.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#address">address</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#chain">chain</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#contractAddress">contractAddress</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#hardfork">hardfork</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#privateKey">privateKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#publicKey">publicKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#rpcUrl">rpcUrl</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#emitEvent">emitEvent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getTransactionCount">getTransactionCount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onModuleInit">onModuleInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#Refresh">Refresh</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#sendSignerTransaction">sendSignerTransaction</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(eventsService: <a href="../injectables/EventsService.html">EventsService</a>, configService: ConfigService, web3: Web3)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/web3/web3.service.ts:36</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>eventsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EventsService.html" target="_self" >EventsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>web3</td>
+                                                  
+                                                        <td>
+                                                                    <code>Web3</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="emitEvent"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            emitEvent
+                        </b>
+                        <a href="#emitEvent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>emitEvent(channelId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, content: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, signature: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="114"
+                            class="link-to-prism">src/web3/web3.service.ts:114</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channelId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>content</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>signature</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTransactionCount"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            getTransactionCount
+                        </b>
+                        <a href="#getTransactionCount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getTransactionCount(account: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="159"
+                            class="link-to-prism">src/web3/web3.service.ts:159</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>account</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;number&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onModuleInit"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            onModuleInit
+                        </b>
+                        <a href="#onModuleInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onModuleInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="52"
+                            class="link-to-prism">src/web3/web3.service.ts:52</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Refresh"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            Refresh
+                        </b>
+                        <a href="#Refresh"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>Refresh()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">src/web3/web3.service.ts:56</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendSignerTransaction"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            sendSignerTransaction
+                        </b>
+                        <a href="#sendSignerTransaction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendSignerTransaction(raw: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="171"
+                            class="link-to-prism">src/web3/web3.service.ts:171</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>raw</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="address"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            address</b>
+                            <a href="#address"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/web3/web3.service.ts:34</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="chain"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            chain</b>
+                            <a href="#chain"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/web3/web3.service.ts:30</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Probably need to create a deploy contract method or check with the gurus whats the best way to deal with it.
+For now, this was deployed in Ropsten: 0x5b821362887db76980399bf4206ba747bef7ad95</p>
+<p>   pragma solidity &gt;=0.4.22 &lt;0.6.0;
+   contract MessageNotifier {</p>
+<div><pre class="line-numbers"><code class="language-none">   event NotifyNewMessage(string messageUid);
+
+   function notify(string memory messageUid) public {
+       emit NotifyNewMessage(messageUid);
+   }</code></pre></div><p>   }</p>
+</div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="contractAddress"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            contractAddress</b>
+                            <a href="#contractAddress"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/web3/web3.service.ts:33</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="hardfork"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            hardfork</b>
+                            <a href="#hardfork"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/web3/web3.service.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="privateKey"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            privateKey</b>
+                            <a href="#privateKey"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/web3/web3.service.ts:35</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="publicKey"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            publicKey</b>
+                            <a href="#publicKey"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/web3/web3.service.ts:36</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="rpcUrl"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            rpcUrl</b>
+                            <a href="#rpcUrl"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/web3/web3.service.ts:32</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &#x27;@nestjs/common&#x27;;
+import { ConfigService } from &#x27;@nestjs/config&#x27;;
+import { Transaction as Tx } from &#x27;ethereumjs-tx&#x27;;
+import { bufferToHex } from &#x27;ethereumjs-util&#x27;;
+import Web3 from &#x27;web3&#x27;;
+import { Block } from &#x27;../events/entities/blocks.entity&#x27;;
+import { EkhoEvent } from &#x27;../events/entities/events.entity&#x27;;
+import { EventsService } from &#x27;../events/events.service&#x27;;
+import { Web3Constants } from &#x27;./web3.constants&#x27;;
+
+@Injectable()
+export class Web3Service {
+  /**
+   * Probably need to create a deploy contract method or check with the gurus whats the best way to deal with it.
+   * For now, this was deployed in Ropsten: 0x5b821362887db76980399bf4206ba747bef7ad95
+   *
+   *   pragma solidity &gt;&#x3D;0.4.22 &lt;0.6.0;
+   *   contract MessageNotifier {
+   *
+   *       event NotifyNewMessage(string messageUid);
+   *
+   *       function notify(string memory messageUid) public {
+   *           emit NotifyNewMessage(messageUid);
+   *       }
+   *   }
+   */
+
+  // TODO - checkout with the gurus how ABI should be stored and other good practices as this has been completly hammered out
+
+  private readonly chain;
+  private readonly hardfork;
+  private readonly rpcUrl;
+  private readonly contractAddress;
+  private readonly address;
+  private readonly privateKey;
+  private readonly publicKey;
+
+  constructor(
+    private readonly eventsService: EventsService,
+    private readonly configService: ConfigService,
+    private readonly web3: Web3,
+  ) {
+    this.chain &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.chain&#x27;);
+    this.hardfork &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.hardfork&#x27;);
+    this.rpcUrl &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.rpcUrl&#x27;);
+    this.contractAddress &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.contractAddress&#x27;);
+    this.address &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.broadcastAccount.address&#x27;);
+    this.publicKey &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.broadcastAccount.publicKey&#x27;);
+    this.privateKey &#x3D; this.configService.get&lt;string&gt;(&#x27;web3.broadcastAccount.privateKey&#x27;);
+  }
+
+  async onModuleInit(): Promise&lt;void&gt; {
+    await this.Refresh();
+  }
+
+  async Refresh(): Promise&lt;void&gt; {
+    Logger.debug(&#x27;eventlog subscriber: polling blockchain for new log events.&#x27;);
+    let transactionsFound: number &#x3D; 0;
+    const options &#x3D; {
+      fromBlock: await this.eventsService.getLatestBlock(),
+      address: this.contractAddress,
+    };
+    let lastSavedBlock: number &#x3D; options.fromBlock;
+    this.web3.eth
+      .subscribe(&#x27;logs&#x27;, options, (error, result) &#x3D;&gt; {
+        if (error) {
+          Logger.error(result);
+        }
+      })
+      .on(&#x27;data&#x27;, async log &#x3D;&gt; {
+        Logger.debug(&#x27;eventlog subscriber: new blockchain event found&#x27;);
+        const blockNumber &#x3D; log.blockNumber;
+        const transactionHash &#x3D; log.transactionHash;
+
+        const decoded &#x3D; this.web3.eth.abi.decodeParameters([&#x27;string&#x27;, &#x27;string&#x27;, &#x27;string&#x27;], log.data);
+        const channelId &#x3D; Web3.utils.toUtf8(decoded[0]);
+        const content &#x3D; Web3.utils.toUtf8(decoded[1]);
+        const signature &#x3D; Web3.utils.toUtf8(decoded[2]);
+
+        let tx &#x3D; await this.eventsService.getByTransactionHash(transactionHash);
+        if (!tx) {
+          tx &#x3D; new EkhoEvent();
+        }
+
+        const currentBlock &#x3D; new Block();
+        currentBlock.blockNumber &#x3D; blockNumber;
+
+        tx.txHash &#x3D; transactionHash;
+        tx.channelId &#x3D; channelId;
+        tx.content &#x3D; content;
+        tx.signature &#x3D; signature;
+        tx.status &#x3D; &#x27;mined&#x27;; // TODO: change to ENUM
+        tx.block &#x3D; currentBlock;
+        tx.processed &#x3D; false;
+        // TODO: wrap these saves in a transaction
+        if (blockNumber &gt; lastSavedBlock) {
+          lastSavedBlock &#x3D; await this.eventsService.saveBlockInfo(currentBlock);
+        }
+        const dbEvent &#x3D; await this.eventsService.getByTransactionHash(tx.txHash);
+        if (!dbEvent) {
+          Logger.debug(&#x27;eventlog subscriber: saving new event to db&#x27;, tx.txHash);
+          await this.eventsService.save(tx);
+          transactionsFound++;
+        }
+      })
+      .on(&#x27;changed&#x27;, log &#x3D;&gt; {
+        Logger.debug(log);
+      });
+    Logger.debug(
+      &#x60;eventlog subscriber: subscribed and retrieved ${transactionsFound} new transactions from contract ${this.contractAddress} via ${this.rpcUrl}&#x60;,
+    );
+  }
+
+  async emitEvent(channelId: string, content: string, signature: string): Promise&lt;string&gt; {
+    Logger.debug(&#x27;... getting nonce&#x27;);
+    const txCount &#x3D; await this.getTransactionCount(this.address);
+    Logger.debug(&#x60;nonce: ${txCount}&#x60;);
+    const bufferedPrivateKey &#x3D; Buffer.from(this.privateKey, &#x27;hex&#x27;);
+    const contract &#x3D; new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
+
+    const data &#x3D; contract.methods
+      .notify(Web3.utils.fromAscii(channelId), Web3.utils.fromAscii(content), Web3.utils.fromAscii(signature))
+      .encodeABI();
+
+    const txObject &#x3D; {
+      nonce: this.web3.utils.toHex(txCount),
+      gasLimit: this.web3.utils.toHex(800000),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei(&#x27;15&#x27;, &#x27;gwei&#x27;)),
+      to: this.contractAddress,
+      data,
+    };
+
+    const tx &#x3D; new Tx(txObject, { chain: this.chain, hardfork: this.hardfork });
+    if (!(tx.validate() &amp;&amp; bufferToHex(tx.getSenderAddress()) &#x3D;&#x3D;&#x3D; this.address)) {
+      // TODO: need to dig why this fails while transaction gets executed and mined successfully
+      // throw Error(&#x27;Invalid transaction&#x27;);
+    }
+
+    tx.sign(bufferedPrivateKey);
+
+    const serializedTx &#x3D; tx.serialize();
+    const raw &#x3D; &#x27;0x&#x27; + serializedTx.toString(&#x27;hex&#x27;);
+
+    try {
+      Logger.debug(&#x27;broadcasting transaction to chain&#x27;);
+      const txHash &#x3D; await this.sendSignerTransaction(raw);
+      if (txHash) {
+        Logger.debug(&#x27;...transaction mined on chain: &#x27;, txHash);
+        return txHash;
+      } else {
+        throw new Error(&#x27;error writing to chain&#x27;);
+      }
+    } catch (e) {
+      Logger.debug(&#x27;transaction failed: &#x27;, (e as Error).message);
+      throw e;
+    }
+  }
+
+  async getTransactionCount(account: string): Promise&lt;number&gt; {
+    try {
+      const txCount &#x3D; await this.web3.eth.getTransactionCount(account);
+      return txCount;
+    } catch (e) {
+      return e;
+    }
+    // return new Promise(async (resolve, reject) &#x3D;&gt; {
+    //   this.web3.eth.getTransactionCount(account, (err, txCount) &#x3D;&gt; (err ? reject(&#x60;${err}&#x60;) : resolve(txCount)));
+    // });
+  }
+
+  async sendSignerTransaction(raw: string): Promise&lt;string&gt; {
+    try {
+      const txHash &#x3D; await this.web3.eth.sendSignedTransaction(raw);
+      return txHash.transactionHash;
+    } catch (e) {
+      throw e;
+    }
+    // return new Promise(async (resolve, reject) &#x3D;&gt; {
+    //   this.web3.eth.sendSignedTransaction(raw, (err, txHash) &#x3D;&gt; (err ? reject(&#x60;${err}&#x60;) : resolve(txHash)));
+    // });
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'Web3Service.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

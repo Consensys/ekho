@@ -1,0 +1,3704 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ekho documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">ekho documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li>ChannelsService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/channels/channels.service.ts</code>
+        </p>
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#BASE_64">BASE_64</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#CHAIN_KEY_CONTEXT">CHAIN_KEY_CONTEXT</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#CHAIN_KEY_ID">CHAIN_KEY_ID</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#CHAIN_KEY_RATCHET">CHAIN_KEY_RATCHET</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#INITIAL_NONCE">INITIAL_NONCE</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#MESSAGE_KEY_RATCHET">MESSAGE_KEY_RATCHET</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createChannel">createChannel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createChannelAndMembers">createChannelAndMembers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createChannelIdentifier">createChannelIdentifier</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createChannelKey">createChannelKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createChannelMember">createChannelMember</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createChannelMessage">createChannelMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createMessage">createMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createMessageChainKey">createMessageChainKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createSharedSecret">createSharedSecret</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannelMembers">findAllChannelMembers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannelMembersByChannelId">findAllChannelMembersByChannelId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannelMembersByContactId">findAllChannelMembersByContactId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannelMembersByUserId">findAllChannelMembersByUserId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannelMessages">findAllChannelMessages</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannelMessagesByChannelId">findAllChannelMessagesByChannelId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findAllChannels">findAllChannels</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findChannelById">findChannelById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findChannelMemberById">findChannelMemberById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#findChannelMemberbyNextChannelIdentifier">findChannelMemberbyNextChannelIdentifier</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findChannelMemberByUserAndChannel">findChannelMemberByUserAndChannel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findChannelMessageByContactId">findChannelMessageByContactId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findChannelMessageByUserId">findChannelMessageByUserId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getExpectedMessageNonceByChannelMemberId">getExpectedMessageNonceByChannelMemberId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMessageKey">getMessageKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getRawMessage">getRawMessage</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#processAllPendingEvents">processAllPendingEvents</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#ratchetChainKey">ratchetChainKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#sendToChain">sendToChain</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#sendToIpfs">sendToIpfs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateChannelMember">updateChannelMember</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateChannelMemberDetails">updateChannelMemberDetails</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#validateAndDecryptEvent">validateAndDecryptEvent</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(channelRepository: <a href="../classes/Channel.html">Repository<Channel></a>, channelMemberRepository: Repository<ChannelMember>, channelMessageRepository: Repository<ChannelMessage>, userRepository: <a href="../classes/User.html">Repository<User></a>, contactRepository: <a href="../classes/Contact.html">Repository<Contact></a>, userService: <a href="../injectables/UsersService.html">UsersService</a>, contactService: <a href="../injectables/ContactsService.html">ContactsService</a>, cryptoService: <a href="../injectables/CryptographyService.html">CryptographyService</a>, keyManager: <a href="../interfaces/KeyManager.html">KeyManager</a>, ipfsService: <a href="../injectables/IpfsService.html">IpfsService</a>, web3Service: <a href="../injectables/Web3Service.html">Web3Service</a>, eventService: <a href="../injectables/EventsService.html">EventsService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/channels/channels.service.ts:31</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>channelRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/Channel.html" target="_self" >Repository&lt;Channel&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>channelMemberRepository</td>
+                                                  
+                                                        <td>
+                                                                    <code>Repository&lt;ChannelMember&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>channelMessageRepository</td>
+                                                  
+                                                        <td>
+                                                                    <code>Repository&lt;ChannelMessage&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/User.html" target="_self" >Repository&lt;User&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>contactRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/Contact.html" target="_self" >Repository&lt;Contact&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>userService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UsersService.html" target="_self" >UsersService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>contactService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ContactsService.html" target="_self" >ContactsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>cryptoService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CryptographyService.html" target="_self" >CryptographyService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>keyManager</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/KeyManager.html" target="_self" >KeyManager</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>ipfsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/IpfsService.html" target="_self" >IpfsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>web3Service</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/Web3Service.html" target="_self" >Web3Service</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>eventService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EventsService.html" target="_self" >EventsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChannel"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createChannel
+                        </b>
+                        <a href="#createChannel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChannel(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, secret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="404"
+                            class="link-to-prism">src/channels/channels.service.ts:404</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>secret</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Channel.html" target="_self" >Promise&lt;Channel&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChannelAndMembers"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            createChannelAndMembers
+                        </b>
+                        <a href="#createChannelAndMembers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChannelAndMembers(channel: <a href="../classes/CreateChannelDto.html">CreateChannelDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="170"
+                            class="link-to-prism">src/channels/channels.service.ts:170</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channel</td>
+                                    <td>
+                                                <code><a href="../classes/CreateChannelDto.html" target="_self" >CreateChannelDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Channel.html" target="_self" >Promise&lt;Channel&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChannelIdentifier"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createChannelIdentifier
+                        </b>
+                        <a href="#createChannelIdentifier"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChannelIdentifier(signingKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, channelKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="358"
+                            class="link-to-prism">src/channels/channels.service.ts:358</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>signingKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>channelKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>nonce</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChannelKey"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createChannelKey
+                        </b>
+                        <a href="#createChannelKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChannelKey(sharedSecret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="346"
+                            class="link-to-prism">src/channels/channels.service.ts:346</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>sharedSecret</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChannelMember"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createChannelMember
+                        </b>
+                        <a href="#createChannelMember"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChannelMember(user: <a href="../classes/User.html">User</a>, contact: <a href="../classes/Contact.html">Contact</a>, channel: <a href="../classes/Channel.html">Channel</a>, secret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="364"
+                            class="link-to-prism">src/channels/channels.service.ts:364</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>user</td>
+                                    <td>
+                                                <code><a href="../classes/User.html" target="_self" >User</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>contact</td>
+                                    <td>
+                                                <code><a href="../classes/Contact.html" target="_self" >Contact</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>channel</td>
+                                    <td>
+                                                <code><a href="../classes/Channel.html" target="_self" >Channel</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>secret</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createChannelMessage"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            createChannelMessage
+                        </b>
+                        <a href="#createChannelMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createChannelMessage(channelMessage: <a href="../classes/RawMessageDto.html">RawMessageDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/channels/channels.service.ts:99</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channelMessage</td>
+                                    <td>
+                                                <code><a href="../classes/RawMessageDto.html" target="_self" >RawMessageDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;EncodedMessageDto&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createMessage"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createMessage
+                        </b>
+                        <a href="#createMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createMessage(member: <a href="../classes/ChannelMember.html">ChannelMember</a>, message: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="486"
+                            class="link-to-prism">src/channels/channels.service.ts:486</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>member</td>
+                                    <td>
+                                                <code><a href="../classes/ChannelMember.html" target="_self" >ChannelMember</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>message</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>nonce</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMessage&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createMessageChainKey"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createMessageChainKey
+                        </b>
+                        <a href="#createMessageChainKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createMessageChainKey(sharedSecret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="337"
+                            class="link-to-prism">src/channels/channels.service.ts:337</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>sharedSecret</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createSharedSecret"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            createSharedSecret
+                        </b>
+                        <a href="#createSharedSecret"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createSharedSecret(channelContact: <a href="../classes/Contact.html">Contact</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="352"
+                            class="link-to-prism">src/channels/channels.service.ts:352</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channelContact</td>
+                                    <td>
+                                                <code><a href="../classes/Contact.html" target="_self" >Contact</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannelMembers"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannelMembers
+                        </b>
+                        <a href="#findAllChannelMembers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannelMembers()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="254"
+                            class="link-to-prism">src/channels/channels.service.ts:254</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember[]&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannelMembersByChannelId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannelMembersByChannelId
+                        </b>
+                        <a href="#findAllChannelMembersByChannelId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannelMembersByChannelId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="551"
+                            class="link-to-prism">src/channels/channels.service.ts:551</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find all channel members for a given channel id</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>channel id</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember[]&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>ChannelMember[] array of channel members in the channel</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannelMembersByContactId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannelMembersByContactId
+                        </b>
+                        <a href="#findAllChannelMembersByContactId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannelMembersByContactId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="530"
+                            class="link-to-prism">src/channels/channels.service.ts:530</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Finds all channel member records for a given contact id</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>contact id</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember[]&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannelMembersByUserId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannelMembersByUserId
+                        </b>
+                        <a href="#findAllChannelMembersByUserId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannelMembersByUserId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="540"
+                            class="link-to-prism">src/channels/channels.service.ts:540</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find all channel member records for a given user id</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>user id</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember[]&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannelMessages"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannelMessages
+                        </b>
+                        <a href="#findAllChannelMessages"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannelMessages()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="239"
+                            class="link-to-prism">src/channels/channels.service.ts:239</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMessage[]&gt;</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannelMessagesByChannelId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannelMessagesByChannelId
+                        </b>
+                        <a href="#findAllChannelMessagesByChannelId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannelMessagesByChannelId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="562"
+                            class="link-to-prism">src/channels/channels.service.ts:562</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Returns all channel messages by channel id</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Channel id</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMessage[]&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>ChannelMessage[] list of channel messages (includes all child relationships)</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAllChannels"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findAllChannels
+                        </b>
+                        <a href="#findAllChannels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findAllChannels()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="279"
+                            class="link-to-prism">src/channels/channels.service.ts:279</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Channel.html" target="_self" >Promise&lt;Channel[]&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findChannelById"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findChannelById
+                        </b>
+                        <a href="#findChannelById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findChannelById(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="271"
+                            class="link-to-prism">src/channels/channels.service.ts:271</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/Channel.html" target="_self" >Promise&lt;Channel&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findChannelMemberById"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findChannelMemberById
+                        </b>
+                        <a href="#findChannelMemberById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findChannelMemberById(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="246"
+                            class="link-to-prism">src/channels/channels.service.ts:246</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findChannelMemberbyNextChannelIdentifier"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            findChannelMemberbyNextChannelIdentifier
+                        </b>
+                        <a href="#findChannelMemberbyNextChannelIdentifier"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findChannelMemberbyNextChannelIdentifier(identifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="444"
+                            class="link-to-prism">src/channels/channels.service.ts:444</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>identifier</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findChannelMemberByUserAndChannel"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findChannelMemberByUserAndChannel
+                        </b>
+                        <a href="#findChannelMemberByUserAndChannel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findChannelMemberByUserAndChannel(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, channelId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="261"
+                            class="link-to-prism">src/channels/channels.service.ts:261</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>userId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>channelId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findChannelMessageByContactId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findChannelMessageByContactId
+                        </b>
+                        <a href="#findChannelMessageByContactId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findChannelMessageByContactId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="228"
+                            class="link-to-prism">src/channels/channels.service.ts:228</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMessage[]&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findChannelMessageByUserId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            findChannelMessageByUserId
+                        </b>
+                        <a href="#findChannelMessageByUserId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findChannelMessageByUserId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="207"
+                            class="link-to-prism">src/channels/channels.service.ts:207</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMessage[]&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getExpectedMessageNonceByChannelMemberId"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            getExpectedMessageNonceByChannelMemberId
+                        </b>
+                        <a href="#getExpectedMessageNonceByChannelMemberId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getExpectedMessageNonceByChannelMemberId(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="424"
+                            class="link-to-prism">src/channels/channels.service.ts:424</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;number&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMessageKey"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            getMessageKey
+                        </b>
+                        <a href="#getMessageKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMessageKey(messageChainKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="453"
+                            class="link-to-prism">src/channels/channels.service.ts:453</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>messageChainKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getRawMessage"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            getRawMessage
+                        </b>
+                        <a href="#getRawMessage"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getRawMessage(encryptedLink: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="459"
+                            class="link-to-prism">src/channels/channels.service.ts:459</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>encryptedLink</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>nonce</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>key</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processAllPendingEvents"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Async</span>
+                            processAllPendingEvents
+                        </b>
+                        <a href="#processAllPendingEvents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>processAllPendingEvents()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">src/channels/channels.service.ts:57</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ProcessReport.html" target="_self" >Promise&lt;ProcessReport&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ratchetChainKey"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            ratchetChainKey
+                        </b>
+                        <a href="#ratchetChainKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ratchetChainKey(chainKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="468"
+                            class="link-to-prism">src/channels/channels.service.ts:468</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>chainKey</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendToChain"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            sendToChain
+                        </b>
+                        <a href="#sendToChain"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendToChain(channelId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, link: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, signature: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="513"
+                            class="link-to-prism">src/channels/channels.service.ts:513</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channelId</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>link</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>signature</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sendToIpfs"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            sendToIpfs
+                        </b>
+                        <a href="#sendToIpfs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendToIpfs(message)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="498"
+                            class="link-to-prism">src/channels/channels.service.ts:498</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>message</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateChannelMember"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            updateChannelMember
+                        </b>
+                        <a href="#updateChannelMember"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateChannelMember(channelMember: <a href="../classes/ChannelMemberDto.html">ChannelMemberDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="414"
+                            class="link-to-prism">src/channels/channels.service.ts:414</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channelMember</td>
+                                    <td>
+                                                <code><a href="../classes/ChannelMemberDto.html" target="_self" >ChannelMemberDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateChannelMemberDetails"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            updateChannelMemberDetails
+                        </b>
+                        <a href="#updateChannelMemberDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateChannelMemberDetails(member: <a href="../classes/ChannelMember.html">ChannelMember</a>, nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="474"
+                            class="link-to-prism">src/channels/channels.service.ts:474</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>member</td>
+                                    <td>
+                                                <code><a href="../classes/ChannelMember.html" target="_self" >ChannelMember</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>nonce</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;ChannelMember&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateAndDecryptEvent"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                            validateAndDecryptEvent
+                        </b>
+                        <a href="#validateAndDecryptEvent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateAndDecryptEvent(channelMessage: <a href="../classes/EncodedMessageDto.html">EncodedMessageDto</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="286"
+                            class="link-to-prism">src/channels/channels.service.ts:286</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>channelMessage</td>
+                                    <td>
+                                                <code><a href="../classes/EncodedMessageDto.html" target="_self" >EncodedMessageDto</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Promise&lt;RawMessageDto&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+        <h3 id="inputs">
+            Properties
+        </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="BASE_64"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            BASE_64</b>
+                            <a href="#BASE_64"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;base64&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/channels/channels.service.ts:26</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="CHAIN_KEY_CONTEXT"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            CHAIN_KEY_CONTEXT</b>
+                            <a href="#CHAIN_KEY_CONTEXT"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;ChainKey&#x27;</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/channels/channels.service.ts:28</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="CHAIN_KEY_ID"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            CHAIN_KEY_ID</b>
+                            <a href="#CHAIN_KEY_ID"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>1</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/channels/channels.service.ts:27</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="CHAIN_KEY_RATCHET"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            CHAIN_KEY_RATCHET</b>
+                            <a href="#CHAIN_KEY_RATCHET"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>2</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/channels/channels.service.ts:30</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="INITIAL_NONCE"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            INITIAL_NONCE</b>
+                            <a href="#INITIAL_NONCE"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>1</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/channels/channels.service.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="MESSAGE_KEY_RATCHET"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Readonly</span>
+                            MESSAGE_KEY_RATCHET</b>
+                            <a href="#MESSAGE_KEY_RATCHET"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>1</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/channels/channels.service.ts:29</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Inject, Injectable, Logger } from &#x27;@nestjs/common&#x27;;
+import { InjectRepository } from &#x27;@nestjs/typeorm&#x27;;
+import { getManager, getRepository, IsNull, Repository } from &#x27;typeorm&#x27;;
+import { Contact } from &#x27;../contacts/contacts.entity&#x27;;
+import { ContactsService } from &#x27;../contacts/contacts.service&#x27;;
+import { CryptographyService } from &#x27;../cryptography/cryptography.service&#x27;;
+import EkhoEventDto from &#x27;../events/dto/ekhoevent.dto&#x27;;
+import { EventsService } from &#x27;../events/events.service&#x27;;
+import { IpfsMessageDto } from &#x27;../ipfs/dto/ipfs-message.dto&#x27;;
+import { IpfsService } from &#x27;../ipfs/ipfs.service&#x27;;
+import { KeyManager } from &#x27;../key-manager/key-manager.interface&#x27;;
+import { User } from &#x27;../users/entities/users.entity&#x27;;
+import { UsersService } from &#x27;../users/users.service&#x27;;
+import { Web3Service } from &#x27;../web3/web3.service&#x27;;
+import ChannelMemberDto from &#x27;./dto/channelmember.dto&#x27;;
+import CreateChannelDto from &#x27;./dto/create-channel.dto&#x27;;
+import EncodedMessageDto from &#x27;./dto/encodedmessage.dto&#x27;;
+import ProcessReport from &#x27;./dto/processreport.dto&#x27;;
+import RawMessageDto from &#x27;./dto/rawmessage.dto&#x27;;
+import { ChannelMember } from &#x27;./entities/channelmembers.entity&#x27;;
+import { ChannelMessage } from &#x27;./entities/channelmessages.entity&#x27;;
+import { Channel } from &#x27;./entities/channels.entity&#x27;;
+
+@Injectable()
+export class ChannelsService {
+  private readonly BASE_64 &#x3D; &#x27;base64&#x27;;
+  private readonly CHAIN_KEY_ID &#x3D; 1;
+  private readonly CHAIN_KEY_CONTEXT &#x3D; &#x27;ChainKey&#x27;;
+  private readonly MESSAGE_KEY_RATCHET &#x3D; 1;
+  private readonly CHAIN_KEY_RATCHET &#x3D; 2;
+  private readonly INITIAL_NONCE &#x3D; 1;
+
+  constructor(
+    @InjectRepository(Channel)
+    private readonly channelRepository: Repository&lt;Channel&gt;,
+    @InjectRepository(ChannelMember)
+    private readonly channelMemberRepository: Repository&lt;ChannelMember&gt;,
+    @InjectRepository(ChannelMessage)
+    private readonly channelMessageRepository: Repository&lt;ChannelMessage&gt;,
+    @InjectRepository(User)
+    private readonly userRepository: Repository&lt;User&gt;,
+    @InjectRepository(Contact)
+    private readonly contactRepository: Repository&lt;Contact&gt;,
+    private readonly userService: UsersService,
+    private readonly contactService: ContactsService,
+    private readonly cryptoService: CryptographyService,
+    @Inject(&#x27;KeyManager&#x27;)
+    private readonly keyManager: KeyManager,
+    private readonly ipfsService: IpfsService,
+    private readonly web3Service: Web3Service,
+    private readonly eventService: EventsService,
+  ) {}
+
+  // *** Functional Methods ***
+
+  // Process all pending blockchain events in DB
+  async processAllPendingEvents(): Promise&lt;ProcessReport&gt; {
+    const processReport &#x3D; new ProcessReport();
+    processReport.receivedMessages &#x3D; 0;
+    processReport.processedTotal &#x3D; 0;
+    processReport.receivedMessageEvents &#x3D; [];
+
+    let completed: boolean &#x3D; false;
+    Logger.debug(&#x27;Processing pending events&#x27;);
+    try {
+      while (!completed) {
+        const unprocessedEvent: EkhoEventDto &#x3D; await this.eventService.getFirstUnprocessedEvent();
+        if (unprocessedEvent) {
+          const incomingMessage &#x3D; new EncodedMessageDto();
+          incomingMessage.channelIdentifier &#x3D; unprocessedEvent.channelIdentifier;
+          incomingMessage.encryptedMessageLink &#x3D; unprocessedEvent.encryptedMessageLink;
+          incomingMessage.encryptedMessageLinkSignature &#x3D; unprocessedEvent.encryptedMessageLinkSignature;
+
+          try {
+            const message: RawMessageDto &#x3D; await this.validateAndDecryptEvent(incomingMessage);
+            if (message) {
+              processReport.receivedMessages++;
+              processReport.receivedMessageEvents.push(incomingMessage);
+            }
+          } catch (e) {
+            Logger.debug(&#x27;Event could not be decoded&#x27;, unprocessedEvent.eventIdentifier.toString());
+          } finally {
+            await this.eventService.markEventAsProcessed(unprocessedEvent.eventIdentifier);
+            processReport.processedTotal++;
+          }
+        } else {
+          completed &#x3D; true;
+          Logger.debug(&#x27;no unprocessed events&#x27;);
+        }
+      }
+    } catch (e) {
+      Logger.debug(&#x27;Error getting unprocessed events &#x27;, e.message);
+      throw e;
+    }
+    return processReport;
+  }
+
+  // Create a channel message
+  async createChannelMessage(channelMessage: RawMessageDto): Promise&lt;EncodedMessageDto&gt; {
+    Logger.debug(&#x27;Sending channel message for user &#x27;, channelMessage.userId.toString());
+
+    // get the channel member
+    const channelMember &#x3D; await this.findChannelMemberByUserAndChannel(channelMessage.userId, channelMessage.channelId);
+
+    // get the user - fail if they don&#x27;t exist
+    // TODO change this to a user &amp; channel passed in aand get the channelmemberid from that
+    const messageSender &#x3D; await this.userService.findById(channelMember.user.id, true);
+    const messageSenderPK &#x3D; await this.keyManager.readPublicSigningKey(messageSender.id);
+
+    // get next expected message nonce
+    const nonce &#x3D; await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
+
+    // the message is coming from the user, so it&#x27;s an outgoing message
+    const newChannelMessage &#x3D; await this.createMessage(channelMember, channelMessage.messageContents, nonce);
+
+    // Get the Channel Identifier for the message
+    const channelIdentifier &#x3D; await this.createChannelIdentifier(
+      messageSenderPK,
+      channelMember.channel.channelKey,
+      nonce,
+    );
+
+    // Get the message key
+    const messageKey &#x3D; await this.getMessageKey(channelMember.messageChainKey);
+
+    // encrypt the message
+    const newEncryptedMessage &#x3D; this.cryptoService.encrypt(newChannelMessage.messageContents, nonce, messageKey);
+
+    // send the message to IPFS
+    const messageLink &#x3D; await this.sendToIpfs(newEncryptedMessage);
+
+    // encrypt the IPFS hash with the message key
+    const encryptedMessageLink &#x3D; this.cryptoService.encrypt(messageLink, nonce, messageKey);
+
+    // sign the encrypted IPFS hash with the user signing key
+    const encryptedMessageLinkSignature &#x3D; await this.keyManager.sign(messageSender.id, encryptedMessageLink);
+
+    // send the blockchain transaction
+    const mined &#x3D; await this.sendToChain(channelIdentifier, encryptedMessageLink, encryptedMessageLinkSignature);
+
+    // sacrifice a chicken in the hope that this has been successful
+    if (mined) {
+      // Update the member message chain key
+      channelMember.messageChainKey &#x3D; await this.ratchetChainKey(channelMember.messageChainKey);
+
+      // Update the member next channel identifier
+      channelMember.nextChannelIdentifier &#x3D; await this.createChannelIdentifier(
+        messageSenderPK,
+        channelMember.channel.channelKey,
+        nonce + 1,
+      );
+
+      // save the channel member &amp; message details
+      await getManager().transaction(async transactionalEntityManager &#x3D;&gt; {
+        await transactionalEntityManager.save(newChannelMessage);
+        await transactionalEntityManager.save(channelMember);
+      });
+
+      Logger.debug(&#x27;Channel message sent&#x27;);
+      // return the encoded message
+      const encodedMessage &#x3D; new EncodedMessageDto();
+      encodedMessage.channelIdentifier &#x3D; channelIdentifier;
+      encodedMessage.encryptedMessageLink &#x3D; encryptedMessageLink;
+      encodedMessage.encryptedMessageLinkSignature &#x3D; encryptedMessageLinkSignature;
+      return encodedMessage;
+    }
+  }
+
+  // Create a channel and members
+  async createChannelAndMembers(channel: CreateChannelDto): Promise&lt;Channel&gt; {
+    Logger.debug(&#x27;creating channel and members&#x27;);
+
+    // 1. get user
+    const channelUser &#x3D; await this.userService.findById(channel.userId);
+
+    // 2. get contact (must be owned by user)
+    const channelContact &#x3D; await this.contactService.findOneContact(channel.userId, channel.contactId);
+
+    // 3. create shared secret
+    const sharedSecret &#x3D; await this.createSharedSecret(channelContact);
+
+    // 4. create channel
+    const newChannel &#x3D; await this.createChannel(channel.name, sharedSecret);
+
+    // 5. create channelmember for user
+    const userChannelMember &#x3D; await this.createChannelMember(channelUser, null, newChannel, sharedSecret);
+
+    // 6. create channelmember for contact
+    const contactChannelMember &#x3D; await this.createChannelMember(null, channelContact, newChannel, sharedSecret);
+
+    // 7. save everything (in a transaction)
+    await getManager().transaction(async transactionalEntityManager &#x3D;&gt; {
+      await transactionalEntityManager.save(newChannel);
+      await transactionalEntityManager.save(userChannelMember);
+      await transactionalEntityManager.save(contactChannelMember);
+    });
+
+    Logger.debug(&#x27;channel and members created &#x27;, newChannel.id.toString());
+
+    // 8. return the saved channel
+    return await this.findChannelById(newChannel.id);
+  }
+
+  // *** (CHANNEL MESSAGE) Find Methods **
+
+  // Finds a channelmessage  by id (TODO: for user id)
+  async findChannelMessageByUserId(id: number): Promise&lt;ChannelMessage[]&gt; {
+    const allMessages &#x3D; await this.channelMessageRepository.find({
+      relations: [&#x27;channelMember&#x27;, &#x27;channelMember.user&#x27;],
+      // problem: where clause not working as expected
+      // where: { channelMember: { id: 33}} // this works
+      // tried various options but did not seem to work
+      // where: { channelMember: { userId: {id} }},
+      // where: { channelMember: { userId: { id: 99 }} }, // doesnt work
+      // where: { channelMember: {  user: { id: 99 } } },  // doesnt work
+      // where: { channelMember: {  userId: 99 } }, // doesnt work
+      // where: { channelMember: { user: { id }}} // doesn&#x27;t work
+      // where: {  channelMember: { messageChainKey: &#x27;dfce83f8d1c44918d0fb53dd7b7234fdfe715aaaafc241b24e439c964b531af6&#x27;}} // did not work either
+      order: { nonce: &#x27;ASC&#x27; },
+    });
+    // as the where clause above isn&#x27;t working, doing in process filtering for now
+    // but for some odd reason, id passes as string... converting to int to use in filter
+    // suspecting a bug in nestjs
+    return allMessages.filter(m &#x3D;&gt; m.channelMember.user?.id &#x3D;&#x3D;&#x3D; parseInt(&#x60;${id}&#x60;, 10));
+  }
+
+  // Finds a channelmessage  by id (TODO: for user id)
+  async findChannelMessageByContactId(id: number): Promise&lt;ChannelMessage[]&gt; {
+    const allMessages &#x3D; await this.channelMessageRepository.find({
+      relations: [&#x27;channelMember&#x27;, &#x27;channelMember.contact&#x27;],
+      // missing where clause - see above findChannelMessageByUserId
+      order: { nonce: &#x27;ASC&#x27; },
+    });
+    // see above findChannelMessageByUserId
+    return allMessages.filter(m &#x3D;&gt; m.channelMember.contact?.id &#x3D;&#x3D;&#x3D; parseInt(&#x60;${id}&#x60;, 10));
+  }
+
+  // Finds all channel messages (TODO: for user id)
+  async findAllChannelMessages(): Promise&lt;ChannelMessage[]&gt; {
+    return this.channelMessageRepository.find({ relations: [&#x27;channelMember&#x27;] });
+  }
+
+  // *** (CHANNEL MEMBER) Find methods ***
+
+  // Finds channel member by id (TODO: for user id)
+  async findChannelMemberById(id: number): Promise&lt;ChannelMember&gt; {
+    return this.channelMemberRepository.findOneOrFail({
+      relations: [&#x27;channel&#x27;, &#x27;contact&#x27;, &#x27;user&#x27;],
+      where: { id },
+    });
+  }
+
+  // Finds all records based on search criteria (TODO: for user id)
+  async findAllChannelMembers(): Promise&lt;ChannelMember[]&gt; {
+    return this.channelMemberRepository.find({
+      relations: [&#x27;channel&#x27;, &#x27;contact&#x27;, &#x27;user&#x27;],
+    });
+  }
+
+  // Finds channel member by userid and channelid
+  async findChannelMemberByUserAndChannel(userId: number, channelId: number): Promise&lt;ChannelMember&gt; {
+    return this.channelMemberRepository.findOneOrFail({
+      relations: [&#x27;channel&#x27;, &#x27;contact&#x27;, &#x27;user&#x27;],
+      where: { channel: channelId, user: userId },
+    });
+  }
+
+  // *** Channel FIND Methods ***
+
+  // Finds a channel by its channel id (TODO: for user id)
+  async findChannelById(id: number): Promise&lt;Channel&gt; {
+    return this.channelRepository.findOneOrFail({
+      relations: [&#x27;channelmembers&#x27;],
+      where: { id },
+    });
+  }
+
+  // Finds all channels (TODO: for user id)
+  async findAllChannels(): Promise&lt;Channel[]&gt; {
+    return this.channelRepository.find({ relations: [&#x27;channelmembers&#x27;] });
+  }
+
+  // *** Private methods ***
+
+  // Validate and decrypt a blockchain event
+  private async validateAndDecryptEvent(channelMessage: EncodedMessageDto): Promise&lt;RawMessageDto&gt; {
+    Logger.debug(&#x27;validating and decrypting event&#x27;);
+
+    // break up the message into its parts
+    const channelIdentifier &#x3D; channelMessage.channelIdentifier;
+    const encryptedMessageLink &#x3D; channelMessage.encryptedMessageLink;
+    const signature &#x3D; channelMessage.encryptedMessageLinkSignature;
+
+    // find the channel member
+    const channelMember &#x3D; await this.findChannelMemberbyNextChannelIdentifier(channelIdentifier);
+
+    Logger.debug(&#x27;found message from channel member &#x27;, channelMember.id.toString());
+
+    // check the signature
+    const signed &#x3D; this.keyManager.verifySignature(signature, encryptedMessageLink, channelMember.contact.signingKey);
+
+    if (!signed) {
+      throw new BadRequestException(&#x27;message not correctly signed&#x27;);
+    } else {
+      Logger.debug(&#x27;signature valid&#x27;);
+
+      // get the message key
+      const messageKey &#x3D; await this.getMessageKey(channelMember.messageChainKey);
+
+      // get next expected message nonce
+      const nonce &#x3D; await this.getExpectedMessageNonceByChannelMemberId(channelMember.id);
+
+      // get the raw message
+      const rawMessage &#x3D; await this.getRawMessage(encryptedMessageLink, nonce, messageKey);
+
+      // the message is an incoming message, so set up the Channel Message object
+      const newChannelMessage &#x3D; await this.createMessage(channelMember, rawMessage, nonce);
+
+      // update the channel member
+      const updatedChannelMember &#x3D; await this.updateChannelMemberDetails(channelMember, nonce);
+
+      Logger.debug(&#x27;saving message to database&#x27;);
+      // update the db
+      await getManager().transaction(async transactionalEntityManager &#x3D;&gt; {
+        await transactionalEntityManager.save(newChannelMessage);
+        await transactionalEntityManager.save(updatedChannelMember);
+      });
+
+      // output the raw message
+      const rawMessageContents &#x3D; new RawMessageDto();
+      rawMessageContents.messageContents &#x3D; newChannelMessage.messageContents;
+
+      return rawMessageContents;
+    }
+  }
+
+  private async createMessageChainKey(sharedSecret: string): Promise&lt;string&gt; {
+    Logger.debug(&#x27;creating message chain key&#x27;);
+
+    const chainKeyId &#x3D; this.CHAIN_KEY_ID;
+    const chainKeyContext &#x3D; this.CHAIN_KEY_CONTEXT;
+    const messageChainKey &#x3D; this.cryptoService.deriveSymmetricKeyfromSecret(sharedSecret, chainKeyId, chainKeyContext);
+    return messageChainKey;
+  }
+
+  private async createChannelKey(sharedSecret: string): Promise&lt;string&gt; {
+    Logger.debug(&#x27;creating channel key&#x27;);
+
+    return this.cryptoService.generateSHA256Hash(sharedSecret + sharedSecret);
+  }
+
+  private async createSharedSecret(channelContact: Contact): Promise&lt;string&gt; {
+    Logger.debug(&#x27;creating shared secret&#x27;);
+
+    return this.cryptoService.generateECDHSharedSecret(channelContact.oneuseKey, channelContact.handshakePrivateKey);
+  }
+
+  private async createChannelIdentifier(signingKey: string, channelKey: string, nonce: number): Promise&lt;string&gt; {
+    Logger.debug(&#x27;creating channel identifier&#x27;);
+
+    return this.cryptoService.generateSHA256Hash(signingKey + channelKey + nonce);
+  }
+
+  private async createChannelMember(
+    user: User,
+    contact: Contact,
+    channel: Channel,
+    secret: string,
+  ): Promise&lt;ChannelMember&gt; {
+    Logger.debug(&#x27;creating channel member&#x27;);
+
+    const newChannelMember &#x3D; new ChannelMember();
+    newChannelMember.messageChainKey &#x3D; await this.createMessageChainKey(secret);
+    newChannelMember.channel &#x3D; channel;
+
+    if (user) {
+      Logger.debug(&#x27;... for user id &#x27;, user.id.toString());
+      const userPublicSigningKey &#x3D; await this.keyManager.readPublicSigningKey(user.id);
+
+      newChannelMember.nextChannelIdentifier &#x3D; await this.createChannelIdentifier(
+        userPublicSigningKey,
+        channel.channelKey,
+        this.INITIAL_NONCE,
+      );
+      newChannelMember.user &#x3D; user;
+      newChannelMember.contact &#x3D; null;
+    }
+
+    if (contact) {
+      Logger.debug(&#x27;... for contact id &#x27;, contact.id.toString());
+
+      newChannelMember.nextChannelIdentifier &#x3D; await this.createChannelIdentifier(
+        contact.signingKey,
+        channel.channelKey,
+        this.INITIAL_NONCE,
+      );
+      newChannelMember.user &#x3D; null;
+      newChannelMember.contact &#x3D; contact;
+    }
+
+    return newChannelMember;
+  }
+
+  private async createChannel(name: string, secret: string): Promise&lt;Channel&gt; {
+    Logger.debug(&#x27;creating channel &#x27;, name);
+
+    const newChannel &#x3D; new Channel();
+    newChannel.name &#x3D; name;
+    newChannel.channelKey &#x3D; await this.createChannelKey(secret);
+    return newChannel;
+  }
+
+  // Updates Channel Member (specifically *just* the Message Chain Key)
+  private async updateChannelMember(channelMember: ChannelMemberDto): Promise&lt;ChannelMember&gt; {
+    Logger.debug(&#x27;updating message chain key for channel member &#x27;, channelMember.id.toString());
+
+    const updatedChannelMember &#x3D; new ChannelMember();
+    updatedChannelMember.messageChainKey &#x3D; channelMember.messageChainKey;
+    await this.channelMemberRepository.save(updatedChannelMember);
+    return updatedChannelMember;
+  }
+
+  // Gets the current expected nonce for a channel member
+  private async getExpectedMessageNonceByChannelMemberId(id: number): Promise&lt;number&gt; {
+    Logger.debug(&#x27;getting expected nonce for channel member &#x27;, id.toString());
+
+    const latestChannelMessage &#x3D; await getRepository(ChannelMessage)
+      .createQueryBuilder(&#x27;ChannelMessage&#x27;)
+      .select(&#x27;MAX(ChannelMessage.nonce)&#x27;, &#x27;maxnonce&#x27;)
+      .where(&#x27;&quot;ChannelMessage&quot;.&quot;channelMemberId&quot; &#x3D; :id&#x27;, { id })
+      .groupBy(&#x27;&quot;ChannelMessage&quot;.&quot;channelMemberId&quot;&#x27;)
+      .getRawOne();
+
+    if (latestChannelMessage) {
+      return latestChannelMessage.maxnonce + 1;
+    } else {
+      Logger.debug(&#x27;no messages found, getting default nonce&#x27;);
+
+      // we have no messages, no next message will be nonce 1
+      return 1;
+    }
+  }
+
+  private async findChannelMemberbyNextChannelIdentifier(identifier: string): Promise&lt;ChannelMember&gt; {
+    Logger.debug(&#x27;searching for channel member...&#x27;);
+
+    return this.channelMemberRepository.findOneOrFail({
+      relations: [&#x27;user&#x27;, &#x27;contact&#x27;, &#x27;channel&#x27;],
+      where: { contactId: !IsNull(), userId: IsNull(), nextChannelIdentifier: identifier },
+    });
+  }
+
+  private async getMessageKey(messageChainKey: string): Promise&lt;string&gt; {
+    Logger.debug(&#x27;getting message key&#x27;);
+
+    return this.cryptoService.generateSHA256Hash(messageChainKey + this.MESSAGE_KEY_RATCHET);
+  }
+
+  private async getRawMessage(encryptedLink: string, nonce: number, key: string): Promise&lt;string&gt; {
+    Logger.debug(&#x27;getting IPFS address&#x27;);
+
+    const rawMessageLink &#x3D; this.cryptoService.decrypt(encryptedLink, nonce, key);
+    const rawMessageEncrypted &#x3D; (await this.ipfsService.retrieve(rawMessageLink)).content;
+    const rawMessage &#x3D; this.cryptoService.decrypt(rawMessageEncrypted, nonce, key);
+    return rawMessage;
+  }
+
+  private async ratchetChainKey(chainKey: string): Promise&lt;string&gt; {
+    Logger.debug(&#x27;ratcheting chain key&#x27;);
+
+    return this.cryptoService.generateSHA256Hash(chainKey + this.CHAIN_KEY_RATCHET);
+  }
+
+  private async updateChannelMemberDetails(member: ChannelMember, nonce: number): Promise&lt;ChannelMember&gt; {
+    Logger.debug(&#x27;updating channel member &#x27;, member.id.toString());
+
+    member.messageChainKey &#x3D; await this.ratchetChainKey(member.messageChainKey);
+    member.nextChannelIdentifier &#x3D; await this.createChannelIdentifier(
+      member.contact.signingKey,
+      member.channel.channelKey,
+      nonce + 1,
+    );
+    return member;
+  }
+
+  private async createMessage(member: ChannelMember, message: string, nonce: number): Promise&lt;ChannelMessage&gt; {
+    Logger.debug(&#x27;creating channel message&#x27;);
+
+    const channelMessage &#x3D; new ChannelMessage();
+    channelMessage.channelMember &#x3D; member;
+    channelMessage.messageContents &#x3D; message;
+    channelMessage.nonce &#x3D; nonce;
+    return channelMessage;
+  }
+
+  // *** External Delivery methods ***
+
+  private async sendToIpfs(message): Promise&lt;string&gt; {
+    try {
+      Logger.debug(&#x27;sharing via IPFS&#x27;);
+
+      // Send the encrypted message to IPFS - get back the IPFS hash
+      const ipfsMessage &#x3D; new IpfsMessageDto();
+      ipfsMessage.content &#x3D; message;
+      const messageLink &#x3D; await this.ipfsService.store(ipfsMessage);
+
+      return messageLink;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  private async sendToChain(channelId: string, link: string, signature: string): Promise&lt;boolean&gt; {
+    try {
+      Logger.debug(&#x27;emitting event to chain&#x27;);
+
+      await this.web3Service.emitEvent(channelId, link, signature);
+
+      return true;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  /* #region Excessive search methods */
+  /**
+   * Finds all channel member records for a given contact id
+   * @param id contact id
+   */
+  async findAllChannelMembersByContactId(id: number): Promise&lt;ChannelMember[]&gt; {
+    return this.channelMemberRepository.find({
+      where: { contactId: id },
+    });
+  }
+
+  /**
+   * Find all channel member records for a given user id
+   * @param id user id
+   */
+  async findAllChannelMembersByUserId(id: number): Promise&lt;ChannelMember[]&gt; {
+    return this.channelMemberRepository.find({
+      where: { userid: id },
+    });
+  }
+
+  /**
+   * Find all channel members for a given channel id
+   * @param id channel id
+   * @returns ChannelMember[] array of channel members in the channel
+   */
+  async findAllChannelMembersByChannelId(id: number): Promise&lt;ChannelMember[]&gt; {
+    return this.channelMemberRepository.find({
+      where: { channelId: id },
+    });
+  }
+
+  /**
+   * Returns all channel messages by channel id
+   * @param id Channel id
+   * @returns ChannelMessage[] list of channel messages (includes all child relationships)
+   */
+  async findAllChannelMessagesByChannelId(id: number): Promise&lt;ChannelMessage[]&gt; {
+    const channelMessages &#x3D; this.channelMessageRepository.find({
+      relations: [&#x27;channelMember&#x27;, &#x27;channelMember.channel&#x27;, &#x27;channelMember.user&#x27;, &#x27;channelMember.contact&#x27;],
+      where: { &#x27;channelMember.channel.channelid&#x27;: id },
+    });
+    return channelMessages;
+  }
+  /* #endregion */
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ChannelsService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
