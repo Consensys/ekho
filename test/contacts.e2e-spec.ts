@@ -283,15 +283,15 @@ describe('AppController (e2e)', () => {
     await processEvents();
 
     const bobBroadcastMessages: ChannelMessage[] = await getUserMessages(aliceContactFromBob.id);
-    const aliceBroadcaastMessages: ChannelMessage[] = await getUserMessages(bobContactFromAlice.id);
+    const aliceBroadcastMessages: ChannelMessage[] = await getUserMessages(bobContactFromAlice.id);
 
     expect(bobBroadcastMessages.length).toBe(3);
     expect(bobBroadcastMessages[2].nonce).toStrictEqual(1);
     expect(bobBroadcastMessages[2].messageContents).toStrictEqual(`[${testId}] broadcast message #1 from Alice`);
 
-    expect(aliceBroadcaastMessages.length).toBe(3);
-    expect(aliceBroadcaastMessages[2].nonce).toStrictEqual(1);
-    expect(aliceBroadcaastMessages[2].messageContents).toStrictEqual(`[${testId}] broadcast message #1 from Bob`);
+    expect(aliceBroadcastMessages.length).toBe(3);
+    expect(aliceBroadcastMessages[2].nonce).toStrictEqual(1);
+    expect(aliceBroadcastMessages[2].messageContents).toStrictEqual(`[${testId}] broadcast message #1 from Bob`);
   });
 
   afterAll(async () => {
