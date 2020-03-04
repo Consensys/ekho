@@ -6,6 +6,7 @@ const anonUser: User = {
   name: 'anon-user',
   channelmembers: [],
   contacts: [],
+  broadcastchannels: [],
 };
 
 export const fakeUser = fakerFactory<User>(anonUser);

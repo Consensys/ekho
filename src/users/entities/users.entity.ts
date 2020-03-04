@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BroadcastChannel } from '../../channels/entities/broadcastchannels.entity';
 import { ChannelMember } from '../../channels/entities/channelmembers.entity';
 import { Contact } from '../../contacts/contacts.entity';
 
@@ -28,4 +29,10 @@ export class User {
     contact => contact.user,
   )
   contacts: Contact[];
+
+  @OneToMany(
+    type => BroadcastChannel,
+    broadcastchannel => broadcastchannel.user,
+  )
+  broadcastchannels: BroadcastChannel[];
 }

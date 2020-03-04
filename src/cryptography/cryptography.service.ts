@@ -99,7 +99,7 @@ export class CryptographyService {
 
     SodiumNative.crypto_hash_sha256(outputHash, Buffer.from(data));
 
-    return outputHash.toString('hex');
+    return outputHash.toString('base64');
   }
 
   /**
@@ -143,11 +143,11 @@ export class CryptographyService {
     nonceNumber: number,
     keyStr: string,
     dataEncoding: BufferEncoding = 'utf-8',
-    encryptedEncoding: BufferEncoding = 'hex',
+    encryptedEncoding: BufferEncoding = 'base64',
   ): string {
     const data = Buffer.from(dataStr, dataEncoding);
     const nonce = this.generateNonceBuffer(nonceNumber);
-    const key = Buffer.from(keyStr);
+    const key = Buffer.from(keyStr, dataEncoding);
     const encryptedData: Buffer = this.getZeroedBuffer(data.length);
 
     SodiumNative.crypto_stream_chacha20_xor(encryptedData, data, nonce, key);
@@ -166,17 +166,17 @@ export class CryptographyService {
     dataStr: string,
     nonceNumber: number,
     keyStr: string,
-    dataEncoding = 'utf-8',
-    encryptedEncoding: BufferEncoding = 'hex',
+    dataEncoding: BufferEncoding = 'utf-8',
+    encryptedEncoding: BufferEncoding = 'base64',
   ): string {
-    const data = Buffer.from(dataStr, encryptedEncoding);
+    const data = Buffer.from(dataStr, dataEncoding);
     const nonce = this.generateNonceBuffer(nonceNumber);
-    const key = Buffer.from(keyStr);
+    const key = Buffer.from(keyStr, encryptedEncoding);
     const decryptedData: Buffer = this.getZeroedBuffer(data.length);
 
     SodiumNative.crypto_stream_chacha20_xor(decryptedData, data, nonce, key);
 
-    return decryptedData.toString(dataEncoding);
+    return decryptedData.toString(encryptedEncoding);
   }
 
   /**
