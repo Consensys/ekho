@@ -234,6 +234,64 @@ describe('AppController (e2e)', () => {
     expect(aliceMessages[0].messageContents).toStrictEqual(`[${testId}] message #1 from bob to alice`);
     expect(aliceMessages[1].nonce).toStrictEqual(2);
     expect(aliceMessages[1].messageContents).toStrictEqual(`[${testId}] message #2 from bob to alice`);
+
+    // ================================================================================================================
+
+    // ===== in scope helper functions =====
+
+    const createBroadcastChannel = async (name, userId) => {
+      const response = await supertest
+        .agent(app.getHttpServer())
+        .post('/channels/broadcast')
+        .send({ name: `${name}`, userId: `${userId}` })
+        .expect(201);
+      return response.body;
+    };
+    const createBroadcastChannelListener = async (name, userId, contactId, key) => {
+      const response = await supertest
+        .agent(app.getHttpServer())
+        .post('/channels/broadcast/listener')
+        .send({ name: `${name}`, userId: `${userId}`, contactId: `${contactId}`, key: `${key}` })
+        .expect(201);
+      return response.body;
+    };
+
+    const BobBroadcastChannel = await createBroadcastChannel('bob-broadcast', bob.id);
+    const AliceBroadcastChannel = await createBroadcastChannel('alice-broadcast', alice.id);
+
+    await createBroadcastChannelListener(
+      'alice-listener-bob-broadcast',
+      alice.id,
+      bobContactFromAlice.id,
+      BobBroadcastChannel.broadcastKey,
+    );
+
+    await createBroadcastChannelListener(
+      'alice-listener-bob-broadcast',
+      bob.id,
+      aliceContactFromBob.id,
+      AliceBroadcastChannel.broadcastKey,
+    );
+
+    await createChannelMessage(`[${testId}] broadcast message #1 from Bob`, bob.id, BobBroadcastChannel.channelId);
+    await createChannelMessage(
+      `[${testId}] broadcast message #1 from Alice`,
+      alice.id,
+      AliceBroadcastChannel.channelId,
+    );
+
+    await processEvents();
+
+    const bobBroadcastMessages: ChannelMessage[] = await getUserMessages(aliceContactFromBob.id);
+    const aliceBroadcaastMessages: ChannelMessage[] = await getUserMessages(bobContactFromAlice.id);
+
+    expect(bobBroadcastMessages.length).toBe(3);
+    expect(bobBroadcastMessages[2].nonce).toStrictEqual(1);
+    expect(bobBroadcastMessages[2].messageContents).toStrictEqual(`[${testId}] broadcast message #1 from Alice`);
+
+    expect(aliceBroadcaastMessages.length).toBe(3);
+    expect(aliceBroadcaastMessages[2].nonce).toStrictEqual(1);
+    expect(aliceBroadcaastMessages[2].messageContents).toStrictEqual(`[${testId}] broadcast message #1 from Bob`);
   });
 
   afterAll(async () => {

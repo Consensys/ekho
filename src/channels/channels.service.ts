@@ -323,7 +323,7 @@ export class ChannelsService {
     const allMessages = await this.channelMessageRepository.find({
       relations: ['channelMember', 'channelMember.contact'],
       // missing where clause - see above findChannelMessageByUserId
-      order: { nonce: 'ASC' },
+      order: { id: 'ASC' },
     });
     // see above findChannelMessageByUserId
     return allMessages.filter(m => m.channelMember.contact?.id === parseInt(`${id}`, 10));
