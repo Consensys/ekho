@@ -94,7 +94,20 @@ export class CryptographyService {
    * @param data input buffer to be hashed
    * @returns buffer containing the 32-byte SHA-256 hash
    */
-  generateSHA256Hash(data: string): string {
+  shortHash(data: string, key: string): string {
+    const outputHash: Buffer = this.getZeroedBuffer(SodiumNative.crypto_shorthash_BYTES);
+
+    SodiumNative.crypto_shorthash(outputHash, Buffer.from(data), Buffer.from(key, BASE64));
+
+    return outputHash.toString(BASE64);
+  }
+
+  /**
+   * Generates a SHA256 hash
+   * @param data input buffer to be hashed
+   * @returns buffer containing the 32-byte SHA-256 hash
+   */
+  hash(data: string): string {
     const outputHash: Buffer = this.getZeroedBuffer(SodiumNative.crypto_hash_sha256_BYTES);
 
     SodiumNative.crypto_hash_sha256(outputHash, Buffer.from(data));

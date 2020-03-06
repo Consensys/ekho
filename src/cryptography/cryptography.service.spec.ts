@@ -57,10 +57,10 @@ describe('CryptographyService', () => {
     });
   });
 
-  describe('generateSHA256Hash', () => {
+  describe('hash', () => {
     it('should be able to hash shit', async () => {
       const anon = `durrr I'm a bunch of data, lalala.`;
-      const actual = service.generateSHA256Hash(anon);
+      const actual = service.hash(anon);
 
       expect(typeof actual).toBe('string');
       expect(Buffer.from(actual, 'hex')).toHaveProperty('length', SodiumNative.crypto_hash_sha256_BYTES);
@@ -70,8 +70,8 @@ describe('CryptographyService', () => {
       const one = 'the truth shall make ye fret';
       const other = 'the truth shall make ye fret';
 
-      const expected = service.generateSHA256Hash(one);
-      const actual = service.generateSHA256Hash(other);
+      const expected = service.hash(one);
+      const actual = service.hash(other);
 
       expect(actual).toEqual(expected);
     });
