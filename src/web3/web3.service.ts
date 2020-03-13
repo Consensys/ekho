@@ -212,53 +212,6 @@ export class Web3Service {
       throw e;
     }
   }
-  /*
-  async emitEvent(channelId: string, content: string, signature: string): Promise<string> {
-    Logger.debug('... getting nonce');
-    const txCount = await this.getTransactionCount(this.address);
-    Logger.debug(`nonce: ${txCount}`);
-    const bufferedPrivateKey = Buffer.from(this.privateKey, 'hex');
-
-    const contract = new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
-
-    const data = contract.methods
-      .notify(Web3.utils.fromAscii(channelId), Web3.utils.fromAscii(content), Web3.utils.fromAscii(signature))
-      .encodeABI();
-
-    const txObject = {
-      nonce: this.web3.utils.toHex(txCount),
-      gasLimit: this.web3.utils.toHex(8000000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'gwei')),
-      to: this.contractAddress,
-      data,
-    };
-
-    const tx = new Tx(txObject, { chain: this.chain, hardfork: this.hardfork });
-    if (!(tx.validate() && bufferToHex(tx.getSenderAddress()) === this.address)) {
-      // TODO: need to dig why this fails while transaction gets executed and mined successfully
-      // throw Error('Invalid transaction');
-    }
-
-    tx.sign(bufferedPrivateKey);
-
-    const serializedTx = tx.serialize();
-    const raw = '0x' + serializedTx.toString('hex');
-
-    try {
-      Logger.debug('broadcasting transaction to chain');
-      const txHash = await this.sendSignerTransaction(raw);
-      if (txHash) {
-        Logger.debug('...transaction mined on chain: ', txHash);
-        return txHash;
-      } else {
-        throw new Error('error writing to chain');
-      }
-    } catch (e) {
-      Logger.debug('transaction failed: ', (e as Error).message);
-      throw e;
-    }
-  }
-  */
 
   async getTransactionCount(account: string): Promise<number> {
     try {
