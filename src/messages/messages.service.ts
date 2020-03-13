@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EventsService } from '../events/events.service';
@@ -17,9 +17,11 @@ export class MessagesService {
   ) {}
 
   async sendMessage(from: string, to: string, channelId: string, content: string): Promise<void> {
+    /*
     const ipfsPath: string = await this.ipfsService.store({
       content,
     });
+
     Logger.debug(ipfsPath);
     const txHash: string = await this.web3Service.emitEvent(channelId, ipfsPath, '');
     Logger.debug(txHash);
@@ -32,6 +34,7 @@ export class MessagesService {
     message.ipfsPath = ipfsPath;
     message.txHash = txHash;
     message.channelId = channelId;
+    */
     // TODO: need to rethink this part
     // await this.messageRepository.save(message);
   }
