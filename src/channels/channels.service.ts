@@ -1,5 +1,6 @@
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EkhoEvent } from 'src/events/entities/events.entity';
 import { getManager, getRepository, IsNull, Repository } from 'typeorm';
 import { Contact } from '../contacts/contacts.entity';
 import { ContactsService } from '../contacts/contacts.service';
@@ -75,9 +76,11 @@ export class ChannelsService {
           incomingMessage.channelIdentifier = unprocessedEvent.channelIdentifier;
           incomingMessage.encryptedMessageLink = unprocessedEvent.encryptedMessageLink;
           incomingMessage.encryptedMessageLinkSignature = unprocessedEvent.encryptedMessageLinkSignature;
+          // get the original event
+          const msgEvent: EkhoEvent = await this.eventService.getOneById(unprocessedEvent.eventIdentifier);
 
           try {
-            const message: RawMessageDto = await this.validateAndDecryptEvent(incomingMessage);
+            const message: RawMessageDto = await this.validateAndDecryptEvent(msgEvent, incomingMessage);
             if (message) {
               processReport.receivedMessages++;
               processReport.receivedMessageEvents.push(incomingMessage);
@@ -127,6 +130,9 @@ export class ChannelsService {
 
     // Get the message key
     const messageKey = await this.getMessageKey(channelMember.messageChainKey);
+
+    // update the message with the message key  //TODO refactor this so it's less fragmented
+    newChannelMessage.messageKey = messageKey;
 
     // encrypt the message
     const newEncryptedMessage = this.cryptoService.encrypt(
@@ -377,7 +383,10 @@ export class ChannelsService {
   // *** Private methods ***
 
   // Validate and decrypt a blockchain event
-  private async validateAndDecryptEvent(channelMessage: EncodedMessageDto): Promise<RawMessageDto> {
+  private async validateAndDecryptEvent(
+    messageEvent: EkhoEvent,
+    channelMessage: EncodedMessageDto,
+  ): Promise<RawMessageDto> {
     Logger.debug('validating and decrypting event');
 
     // break up the message into its parts
@@ -420,6 +429,9 @@ export class ChannelsService {
 
         // the message is an incoming message, so set up the Channel Message object
         const newChannelMessage = await this.createMessage(channelMember, rawMessage, nonce);
+
+        // associate the message with the event
+        newChannelMessage.event = messageEvent;
 
         // update the channel member
         const updatedChannelMember = await this.updateChannelMemberDetails(channelMember, nonce);
@@ -641,7 +653,12 @@ export class ChannelsService {
     try {
       Logger.debug('emitting event to chain');
 
-      await this.web3Service.emitEvent(channelId, link, signature);
+      const ekho: EkhoEventDto = new EkhoEventDto();
+      ekho.channelIdentifier = channelId;
+      ekho.encryptedMessageLink = link;
+      ekho.encryptedMessageLinkSignature = signature;
+
+      await this.web3Service.emitEkho(ekho);
 
       return true;
     } catch (e) {

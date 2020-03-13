@@ -1,5 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Block } from './blocks.entity';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class EkhoEvent {
@@ -24,12 +23,8 @@ export class EkhoEvent {
   @CreateDateColumn()
   createdDate: Date;
 
-  @ManyToOne(
-    type => Block,
-    block => block.blockevents,
-  )
-  @JoinColumn({ name: 'blockId' })
-  block: Block;
+  @Column({ nullable: true })
+  block: number;
 
   @Column({ nullable: false })
   processed: boolean;

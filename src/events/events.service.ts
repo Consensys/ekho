@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getRepository, Repository } from 'typeorm';
 import EkhoEventDto from './dto/ekhoevent.dto';
-import { Block } from './entities/blocks.entity';
 import { EkhoEvent } from './entities/events.entity';
 
 @Injectable()
@@ -10,8 +9,6 @@ export class EventsService {
   constructor(
     @InjectRepository(EkhoEvent)
     private readonly eventsRepository: Repository<EkhoEvent>,
-    @InjectRepository(Block)
-    private readonly blockRepository: Repository<Block>,
   ) {}
 
   async getAll(): Promise<EkhoEvent[]> {
@@ -35,14 +32,10 @@ export class EventsService {
     await this.eventsRepository.save(event);
   }
 
-  async saveBlockInfo(block: Block): Promise<number> {
-    return (await this.blockRepository.save(block)).blockNumber;
-  }
-
   async getLatestBlock(): Promise<number> {
-    const cachedBlocks = await getRepository(Block)
+    const cachedBlocks = await getRepository(EkhoEvent)
       .createQueryBuilder('Block')
-      .select('MAX("blockNumber")', 'max')
+      .select('MAX("block")', 'max')
       .getRawOne();
 
     if (!cachedBlocks.max) {

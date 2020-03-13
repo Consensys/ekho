@@ -8,6 +8,7 @@ export default () => ({
       address: process.env.WEB3_BROADCAST_ACC_ADDRESS,
       publicKey: process.env.WEB3_BROADCAST_ACC_PUBLIC_KEY,
       privateKey: process.env.WEB3_BROADCAST_ACC_PRIVATE_KEY,
+      gasPrice: process.env.WEB3_GASPRICE || '10',
     },
   },
 });
@@ -28,6 +29,7 @@ interface BroadcastAccountConfig {
   address: string;
   publicKey: string;
   privateKey: string;
+  gasPrice: string;
 }
 
 export const mockWeb3Config: EkhoWeb3Config = {
@@ -40,6 +42,7 @@ export const mockWeb3Config: EkhoWeb3Config = {
       address: '0x0',
       publicKey: '0x123',
       privateKey: '0x456',
+      gasPrice: '10',
     },
   },
 };

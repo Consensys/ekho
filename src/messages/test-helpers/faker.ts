@@ -38,6 +38,8 @@ var anonChannelMessage: ChannelMessage = {
   channelMember: anonChannelMember,
   messageContents: 'anon-message-contents',
   nonce: 0,
+  messageKey: 'no-such-key',
+  event: null,
 };
 
 var anonChannel: Channel = {

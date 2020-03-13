@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Transaction as Tx } from 'ethereumjs-tx';
 import { bufferToHex } from 'ethereumjs-util';
 import Web3 from 'web3';
-import { Block } from '../events/entities/blocks.entity';
+import EkhoEventDto from '../events/dto/ekhoevent.dto';
 import { EkhoEvent } from '../events/entities/events.entity';
 import { EventsService } from '../events/events.service';
 import { Web3Constants } from './web3.constants';
@@ -34,6 +34,12 @@ export class Web3Service {
   private readonly address;
   private readonly privateKey;
   private readonly publicKey;
+  private readonly gasPrice;
+  private readonly BASE_64 = 'base64';
+  private readonly HEX_ENCODING = 'hex';
+  private readonly BYTES = 'bytes';
+  private readonly CHANNEL_ID_BYTES = 8;
+  private readonly SIGNATURE_BYTES = 64;
 
   constructor(
     private readonly eventsService: EventsService,
@@ -47,6 +53,7 @@ export class Web3Service {
     this.address = this.configService.get<string>('web3.broadcastAccount.address');
     this.publicKey = this.configService.get<string>('web3.broadcastAccount.publicKey');
     this.privateKey = this.configService.get<string>('web3.broadcastAccount.privateKey');
+    this.gasPrice = this.configService.get<string>('web3.broadcastAccount.gasPrice');
   }
 
   async onModuleInit(): Promise<void> {
@@ -56,11 +63,12 @@ export class Web3Service {
   async Refresh(): Promise<void> {
     Logger.debug('eventlog subscriber: polling blockchain for new log events.');
     let transactionsFound: number = 0;
+
     const options = {
-      fromBlock: await this.eventsService.getLatestBlock(),
+      fromBlock: 0,
       address: this.contractAddress,
     };
-    let lastSavedBlock: number = options.fromBlock;
+
     this.web3.eth
       .subscribe('logs', options, (error, result) => {
         if (error) {
@@ -72,30 +80,23 @@ export class Web3Service {
         const blockNumber = log.blockNumber;
         const transactionHash = log.transactionHash;
 
-        const decoded = this.web3.eth.abi.decodeParameters(['string', 'string', 'string'], log.data);
-        const channelId = Web3.utils.toUtf8(decoded[0]);
-        const content = Web3.utils.toUtf8(decoded[1]);
-        const signature = Web3.utils.toUtf8(decoded[2]);
+        const decoded = this.web3.eth.abi.decodeParameters([this.BYTES], log.data);
+        const ekho = Buffer.from(decoded[0].slice(2), this.HEX_ENCODING);
+        const event = await this.createEventFromEkho(ekho);
 
         let tx = await this.eventsService.getByTransactionHash(transactionHash);
         if (!tx) {
           tx = new EkhoEvent();
         }
 
-        const currentBlock = new Block();
-        currentBlock.blockNumber = blockNumber;
-
+        tx.channelId = event.channelIdentifier;
+        tx.content = event.encryptedMessageLink;
+        tx.signature = event.encryptedMessageLinkSignature;
         tx.txHash = transactionHash;
-        tx.channelId = channelId;
-        tx.content = content;
-        tx.signature = signature;
         tx.status = 'mined'; // TODO: change to ENUM
-        tx.block = currentBlock;
+        tx.block = blockNumber;
         tx.processed = false;
-        // TODO: wrap these saves in a transaction
-        if (blockNumber > lastSavedBlock) {
-          lastSavedBlock = await this.eventsService.saveBlockInfo(currentBlock);
-        }
+
         const dbEvent = await this.eventsService.getByTransactionHash(tx.txHash);
         if (!dbEvent) {
           Logger.debug('eventlog subscriber: saving new event to db', tx.txHash);
@@ -111,21 +112,68 @@ export class Web3Service {
     );
   }
 
-  async emitEvent(channelId: string, content: string, signature: string): Promise<string> {
-    Logger.debug('... getting nonce');
-    const txCount = await this.getTransactionCount(this.address);
-    Logger.debug(`nonce: ${txCount}`);
-    const bufferedPrivateKey = Buffer.from(this.privateKey, 'hex');
+  async generateStringContractData(channelId: string, content: string, signature: string): Promise<any> {
     const contract = new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
 
     const data = contract.methods
       .notify(Web3.utils.fromAscii(channelId), Web3.utils.fromAscii(content), Web3.utils.fromAscii(signature))
       .encodeABI();
 
+    return data;
+  }
+
+  // creates the binary data to store on-chain from an ekho event dto
+  async createEkhoFromEvent(event: EkhoEventDto): Promise<Buffer> {
+    const temp: Buffer[] = [];
+
+    temp[0] = Buffer.from(event.channelIdentifier, this.BASE_64);
+    temp[1] = Buffer.from(event.encryptedMessageLink, this.BASE_64);
+    temp[2] = Buffer.from(event.encryptedMessageLinkSignature, this.BASE_64);
+    const ekho: Buffer = Buffer.concat(temp);
+
+    return ekho;
+  }
+
+  // creates an ekho event dto from the binary data stored on chain
+  async createEventFromEkho(ekho: Buffer): Promise<EkhoEventDto> {
+    const event = new EkhoEventDto();
+
+    event.channelIdentifier = Buffer.from(ekho.slice(0, this.CHANNEL_ID_BYTES)).toString(this.BASE_64);
+    event.encryptedMessageLink = Buffer.from(
+      ekho.slice(this.CHANNEL_ID_BYTES, ekho.length - this.SIGNATURE_BYTES),
+    ).toString(this.BASE_64);
+    event.encryptedMessageLinkSignature = Buffer.from(
+      ekho.slice(ekho.length - this.SIGNATURE_BYTES, ekho.length),
+    ).toString(this.BASE_64);
+
+    return event;
+  }
+
+  async emitEkho(event?: EkhoEventDto): Promise<string> {
+    Logger.debug('... getting nonce');
+    const txCount = await this.getTransactionCount(this.address);
+    Logger.debug(`nonce: ${txCount}`);
+
+    const bufferedPrivateKey = Buffer.from(this.privateKey, this.HEX_ENCODING);
+
+    const contract = new this.web3.eth.Contract(Web3Constants.abi as any, this.contractAddress);
+
+    let ekho: Buffer;
+
+    // create random data if we haven't received an event
+    if (event) {
+      ekho = await this.createEkhoFromEvent(event);
+    } else {
+      Logger.debug('emitting random data');
+      ekho = require('crypto').randomBytes(118); // TODO: use cryptomodule for this
+    }
+
+    const data = contract.methods.broadcast(ekho).encodeABI();
+
     const txObject = {
       nonce: this.web3.utils.toHex(txCount),
       gasLimit: this.web3.utils.toHex(800000),
-      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('15', 'gwei')),
+      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei(this.gasPrice, 'gwei')),
       to: this.contractAddress,
       data,
     };
@@ -135,18 +183,27 @@ export class Web3Service {
       // TODO: need to dig why this fails while transaction gets executed and mined successfully
       // throw Error('Invalid transaction');
     }
-
     tx.sign(bufferedPrivateKey);
 
     const serializedTx = tx.serialize();
-    const raw = '0x' + serializedTx.toString('hex');
-
+    const raw = '0x' + serializedTx.toString(this.HEX_ENCODING);
+    let txHash: any;
     try {
       Logger.debug('broadcasting transaction to chain');
-      const txHash = await this.sendSignerTransaction(raw);
+
+      // squishing any unhandled promise exceptions...
+      // so many try catches to cope with web3...
+      try {
+        txHash = await this.web3.eth.sendSignedTransaction(raw).catch(err => {
+          Logger.debug('shhhh');
+        });
+      } catch (e) {
+        Logger.debug('no, really, shhhh');
+      }
+
       if (txHash) {
-        Logger.debug('...transaction mined on chain: ', txHash);
-        return txHash;
+        Logger.debug('...transaction mined on chain: ', txHash.transactionHash);
+        return txHash.transactionHash;
       } else {
         throw new Error('error writing to chain');
       }
