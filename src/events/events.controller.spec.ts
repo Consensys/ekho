@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { mockRepository } from '../../test/test-helpers';
-import { Block } from './entities/blocks.entity';
 import { EkhoEvent } from './entities/events.entity';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
@@ -10,7 +9,7 @@ describe('Events Controller', () => {
   let controller: EventsController;
 
   /*
-  let anonEvent: EkhoEvent = {
+  const anonEvent: EkhoEvent = {
     id: -1,
     txHash: '0x123',
     status: 'DERP',
@@ -18,23 +17,14 @@ describe('Events Controller', () => {
     channelId: 'ANON_CHANNELID',
     content: 'lalala',
     signature: 'Made in Ireland',
-    block: anonBlock,
+    block: 1,
     processed: false,
   };
+  */
 
-  let anonBlock: Block = {
-    id: -1,
-    blockNumber: 0,
-    blockevents: [anonEvent],
-  };
-*/
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        { provide: getRepositoryToken(EkhoEvent), useClass: mockRepository },
-        { provide: getRepositoryToken(Block), useClass: mockRepository },
-        EventsService,
-      ],
+      providers: [{ provide: getRepositoryToken(EkhoEvent), useClass: mockRepository }, EventsService],
       controllers: [EventsController],
     }).compile();
     // const service: EventsService = module.get<EventsService>(EventsService);

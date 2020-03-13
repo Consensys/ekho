@@ -1,13 +1,14 @@
 export default () => ({
   web3: {
-    chain: process.env.WEB3_CHAIN || 'ropsten',
-    hardfork: process.env.WEB3_HARDFORK || 'petersburg',
+    chain: process.env.WEB3_CHAIN || 'rinkeby',
+    hardfork: process.env.WEB3_HARDFORK || 'istanbul',
     rpcUrl: process.env.WEB3_RPC_URL,
     contractAddress: process.env.WEB3_CONTRACT_ADDRESS,
     broadcastAccount: {
       address: process.env.WEB3_BROADCAST_ACC_ADDRESS,
       publicKey: process.env.WEB3_BROADCAST_ACC_PUBLIC_KEY,
       privateKey: process.env.WEB3_BROADCAST_ACC_PRIVATE_KEY,
+      gasPrice: process.env.WEB3_GASPRICE || '10',
     },
   },
 });
@@ -28,6 +29,7 @@ interface BroadcastAccountConfig {
   address: string;
   publicKey: string;
   privateKey: string;
+  gasPrice: string;
 }
 
 export const mockWeb3Config: EkhoWeb3Config = {
@@ -40,6 +42,7 @@ export const mockWeb3Config: EkhoWeb3Config = {
       address: '0x0',
       publicKey: '0x123',
       privateKey: '0x456',
+      gasPrice: '10',
     },
   },
 };

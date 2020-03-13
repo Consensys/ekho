@@ -1,5 +1,4 @@
 import { fakerFactory } from '../../../test/test-helpers';
-import { Block } from '../entities/blocks.entity';
 import { EkhoEvent } from '../entities/events.entity';
 /* tslint:disable prefer-const no-var no-var-keyword */
 
@@ -11,14 +10,8 @@ var anonEvent: EkhoEvent = {
   channelId: 'ANON_CHANNELID',
   content: 'lalala',
   signature: 'Made in Ireland',
-  block: anonBlock,
+  block: 1,
   processed: false,
-};
-
-var anonBlock: Block = {
-  id: -1,
-  blockNumber: 0,
-  blockevents: [anonEvent],
 };
 
 export const fakeEvent = fakerFactory<EkhoEvent>(anonEvent);
