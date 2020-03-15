@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CryptographyService } from '../cryptography/cryptography.service';
@@ -10,6 +10,8 @@ import ContactHandshakeDto from './dto/contact-handshake.dto';
 
 @Injectable()
 export class ContactsService {
+  private readonly BROADCASTER = '_BROADCASTER';
+
   constructor(
     @InjectRepository(Contact)
     private readonly contactsRepository: Repository<Contact>,
@@ -55,6 +57,24 @@ export class ContactsService {
     });
   }
 
+  async findOneContactBySigningKey(userId: number, name: string, signingKey: string): Promise<Contact> {
+    let contact = new Contact();
+    try {
+      contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, signingKey } });
+    } catch (err) {
+      Logger.error(err);
+    }
+
+    if (contact) {
+      return contact;
+    } else {
+      const newContact = await this.createContact(userId, name + this.BROADCASTER);
+      newContact.signingKey = signingKey;
+      await this.contactsRepository.save(newContact);
+      return newContact;
+    }
+  }
+
   async findOneOrCreate(userId: number, name: string): Promise<Contact> {
     const contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, name } });
     if (contact) {
@@ -89,8 +109,8 @@ export class ContactsService {
   }
 
   private async generateHandshake(userId: number, contact: Contact): Promise<ContactHandshakeDto> {
-    const publicSigningKey = await this.usersService.getPublicKey(userId);
-    const signature = await this.usersService.sign(userId, contact.handshakePublicKey);
+    const publicSigningKey = await this.keyManager.readPublicSigningKey(userId);
+    const signature = await this.keyManager.sign(userId, contact.handshakePublicKey);
     const contactHandshake = new ContactHandshakeDto();
     contactHandshake.identifier = contact.identifier;
     contactHandshake.oneuseKey = contact.handshakePublicKey;

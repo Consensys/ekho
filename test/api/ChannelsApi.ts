@@ -1,4 +1,5 @@
 import { INestApplication } from '@nestjs/common';
+import BroadcastChannelLinkDto from 'src/channels/dto/link-broadcastchannel.dto';
 import * as supertest from 'supertest';
 
 export class ChannelsApi {
@@ -30,7 +31,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async getUserMessages(userId: number) {
+  async getUserMessages(userId) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .get(`/channels/message?contactId=${userId}`)
@@ -43,6 +44,15 @@ export class ChannelsApi {
       .agent(this.app.getHttpServer())
       .post('/channels/broadcast')
       .send({ name: `${name}`, userId: `${userId}` })
+      .expect(201);
+    return response.body;
+  }
+
+  async followBroadcast(userId, channel: BroadcastChannelLinkDto) {
+    const response = await supertest
+      .agent(this.app.getHttpServer())
+      .post(`/channels/broadcast/follow/${userId}`)
+      .send(channel)
       .expect(201);
     return response.body;
   }

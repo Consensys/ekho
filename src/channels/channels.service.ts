@@ -18,6 +18,7 @@ import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
 import CreateBroadcastChannelListenerDto from './dto/create-broadcastchannellistener.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
+import BroadcastChannelLinkDto from './dto/link-broadcastchannel.dto';
 import ProcessReport from './dto/processreport.dto';
 import RawMessageDto from './dto/rawmessage.dto';
 import { BroadcastChannel } from './entities/broadcastchannels.entity';
@@ -220,6 +221,63 @@ export class ChannelsService {
     return await this.findChannelById(newChannel.id);
   }
 
+  async getBroadcastChannelLink(userId: number, channelId: number): Promise<BroadcastChannelLinkDto> {
+    await this.userService.findById(userId);
+    const broadcastChannel = await this.broadcastChannelRepository.findOneOrFail({
+      relations: ['channel'],
+      where: { user: { id: userId }, channelId },
+    });
+
+    const channelLink = new BroadcastChannelLinkDto();
+    channelLink.name = broadcastChannel.channel.name;
+    channelLink.broadcastKey = broadcastChannel.broadcastKey;
+    channelLink.signingKey = await this.keyManager.readPublicSigningKey(userId);
+    const dataToSign = this.cryptoService.hash(channelLink.name + channelLink.broadcastKey + channelLink.signingKey);
+    channelLink.signature = await this.keyManager.sign(userId, dataToSign);
+    const verified = this.cryptoService.validateSignature(channelLink.signature, dataToSign, channelLink.signingKey);
+    if (!verified) {
+      throw new Error('signature not validating correctly');
+    }
+
+    return channelLink;
+  }
+
+  // adds a broadcast channel from a non-contact source
+  async followBroadcast(userId: number, channelLink: BroadcastChannelLinkDto): Promise<Channel> {
+    Logger.debug('creating broadcast channel listener');
+    // 1. get user (fail if not found)
+    await this.userService.findById(userId);
+
+    // validate signature
+    const signedData = this.cryptoService.hash(channelLink.name + channelLink.broadcastKey + channelLink.signingKey);
+    const signed = this.cryptoService.validateSignature(channelLink.signature, signedData, channelLink.signingKey);
+
+    if (signed) {
+      // check if contact exists for this signingkey (in which case use them)
+      const contact = await this.contactService.findOneContactBySigningKey(
+        userId,
+        channelLink.name,
+        channelLink.signingKey,
+      );
+
+      // create channel
+      const newChannel = await this.createChannel(channelLink.name, channelLink.broadcastKey);
+
+      const userChannelMember = await this.createChannelMember(null, contact, newChannel, channelLink.broadcastKey);
+
+      // save everything (in a transaction)
+
+      await getManager().transaction(async transactionalEntityManager => {
+        await transactionalEntityManager.save(newChannel);
+        await transactionalEntityManager.save(userChannelMember);
+      });
+
+      Logger.debug('broadcast channel listener created ', newChannel.id.toString());
+      // 8. return the saved channel
+      return await this.findChannelById(newChannel.id);
+    }
+  }
+
   // Create a channel and members
   async createBroadcastChannel(channel: CreateBroadcastChannelDto): Promise<BroadcastChannelDto> {
     Logger.debug('creating broadcast channel');
@@ -250,11 +308,9 @@ export class ChannelsService {
 
     // 8. return the broadcast channel details
     const newBroadcastChannel = new BroadcastChannelDto();
-    newBroadcastChannel.name = channel.name;
     newBroadcastChannel.channelId = newChannel.id;
     newBroadcastChannel.userId = channel.userId;
-    newBroadcastChannel.broadcastKey = sharedSecret;
-
+    newBroadcastChannel.broadcastLink = await this.getBroadcastChannelLink(channelUser.id, newChannel.id);
     return newBroadcastChannel;
   }
 

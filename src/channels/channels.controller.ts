@@ -6,6 +6,7 @@ import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
 import CreateBroadcastChannelListenerDto from './dto/create-broadcastchannellistener.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
+import BroadcastChannelLinkDto from './dto/link-broadcastchannel.dto';
 import ProcessReport from './dto/processreport.dto';
 import RawMessageDto from './dto/rawmessage.dto';
 import { BroadcastChannel } from './entities/broadcastchannels.entity';
@@ -29,6 +30,11 @@ export class ChannelsController {
   @Post('broadcast/listener')
   async createBroadcastChannelListener(@Body() channel: CreateBroadcastChannelListenerDto): Promise<Channel> {
     return this.channelService.createBroadcastChannelListener(channel);
+  }
+
+  @Post('broadcast/follow/:userId')
+  async followBroadcast(@Param('userId') userId: number, @Body() channel: BroadcastChannelLinkDto): Promise<Channel> {
+    return this.channelService.followBroadcast(userId, channel);
   }
 
   @Post('broadcast')
@@ -62,6 +68,17 @@ export class ChannelsController {
     return this.channelService.findAllChannels();
   }
 
+  @ApiQuery({ name: 'userId', required: true })
+  @ApiQuery({ name: 'channelId', required: true })
+  @Get('broadcast/link')
+  async getBroadcastChannelLink(
+    @Query('userId') userId: number,
+    @Query('channelId') channelId: number,
+  ): Promise<BroadcastChannelLinkDto> {
+    const link = this.channelService.getBroadcastChannelLink(userId, channelId);
+    return link;
+  }
+
   // TODO pass and filter by userid
   // Gets channel by id
   @Get()
@@ -75,6 +92,7 @@ export class ChannelsController {
   async findChannelMemberById(@Param('id') id: number): Promise<ChannelMember> {
     return this.channelService.findChannelMemberById(id);
   }
+
   // TODO pass and filter by userid
   // gets all channel members
   @Get('member')
