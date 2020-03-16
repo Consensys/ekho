@@ -15,7 +15,7 @@ import web3Configuration from './web3/web3.configuration';
 @Module({
   imports: [
     GraphQLModule.forRoot({
-      include: [UsersModule, ContactsModule],
+      include: [UsersModule, ContactsModule, DevelopmentModule],
       playground: true,
       autoSchemaFile: 'schema.gql',
     }),

@@ -712,7 +712,8 @@ export class ChannelsService {
    */
   async findAllChannelMembersByUserId(id: number): Promise<ChannelMember[]> {
     return this.channelMemberRepository.find({
-      where: { userid: id },
+      relations: ['channel'],
+      where: { user: { id } },
     });
   }
 

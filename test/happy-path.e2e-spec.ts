@@ -63,8 +63,8 @@ describe('Happy Path (e2e)', () => {
   });
 
   describe('contacts', () => {
-    const aliceContactName = `alice-contact-${testId}`;
-    const bobContactName = `bob-contact-${testId}`;
+    const aliceContactName = `alice-contact`;
+    const bobContactName = `bob-contact`;
     let bobToAliceHandshake: ContactHandshakeDto;
     let aliceToBobHandshake: ContactHandshakeDto;
     it('1) bob generates handshake to alice', async () => {

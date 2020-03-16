@@ -38,7 +38,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['contacts'] });
   }
 
   async getPublicKey(id: number): Promise<string> {
@@ -51,7 +51,7 @@ export class UsersService {
 
   async findByName(name: string): Promise<User> {
     return this.userRepository.findOne({
-      select: ['name'],
+      relations: ['contacts'],
       where: { name },
     });
   }

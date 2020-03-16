@@ -79,6 +79,9 @@ type Message {
 }
 
 type Query {
+  Contacts: [Contact!]!
+  contactsByUserId(userId: Float!): [Contact!]!
+  userById(id: Float!): User!
   userByName(name: String!): User!
   Users: [User!]!
 }
@@ -93,6 +96,7 @@ input SendMessageDto {
 type User {
   id: ID!
   name: String!
-  channelmembers: [ChannelMember!]
+  channelmembers: [ChannelMember!]!
   contacts: [Contact!]
+  user: User!
 }
