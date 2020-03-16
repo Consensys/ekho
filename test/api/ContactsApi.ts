@@ -7,7 +7,7 @@ export class ContactsApi {
   async initHandshake(userId: number, contactName: string) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .post(`/contacts/generate-init-handshake/${userId}/${contactName}`)
+      .post(`/contacts/generate-init-handshake/${userId}/${contactName}-${this.testId}`)
       .expect(201);
     return response.body;
   }
@@ -15,7 +15,7 @@ export class ContactsApi {
   async acceptInitHandshake(userId, contactName, handshake) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .post(`/contacts/accept-init-handshake/${userId}/${contactName}`)
+      .post(`/contacts/accept-init-handshake/${userId}/${contactName}-${this.testId}`)
       .send(handshake)
       .expect(201);
     return response.body;
@@ -24,7 +24,7 @@ export class ContactsApi {
   async replyHandshake(userId, contactName) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .post(`/contacts/generate-reply-handshake/${userId}/${contactName}`)
+      .post(`/contacts/generate-reply-handshake/${userId}/${contactName}-${this.testId}`)
       .expect(201);
     return response.body;
   }
@@ -32,7 +32,7 @@ export class ContactsApi {
   async acceptReplyHandshake(userId, contactName, handshake) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .post(`/contacts/accept-reply-handshake/${userId}/${contactName}`)
+      .post(`/contacts/accept-reply-handshake/${userId}/${contactName}-${this.testId}`)
       .send(handshake)
       .expect(201);
     return response.body;
@@ -42,7 +42,7 @@ export class ContactsApi {
   async getMasterKey(userId, contactName) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .get(`/development/generate-master-key/${userId}/${contactName}`)
+      .get(`/development/generate-master-key/${userId}/${contactName}-${this.testId}`)
       .expect(200);
     return response.body;
   }
@@ -50,7 +50,7 @@ export class ContactsApi {
   async getContact(userId, contactName) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .get(`/development/contact/${userId}/${contactName}`)
+      .get(`/development/contact/${userId}/${contactName}-${this.testId}`)
       .expect(200);
     return response.body;
   }
