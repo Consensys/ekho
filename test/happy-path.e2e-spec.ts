@@ -31,6 +31,7 @@ describe('Happy Path (e2e)', () => {
 
   beforeAll(async () => {
     testId = moment(new Date()).format('YYYYMMDD-HHmmss');
+    console.log('testId', testId);
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         DevelopmentModule,

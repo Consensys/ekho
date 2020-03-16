@@ -205,7 +205,7 @@ export class ChannelsService {
     const dataToSign = this.cryptoService.hash(channelLink.name + channelLink.broadcastKey + channelLink.signingKey);
     channelLink.signature = await this.keyManager.sign(userId, dataToSign);
 
-    const verified = this.cryptoService.validateSignature(channelLink.signature, dataToSign, channelLink.signingKey);
+    const verified = this.keyManager.verifySignature(channelLink.signature, dataToSign, channelLink.signingKey);
 
     if (!verified) {
       throw new Error('signature not validating correctly');
@@ -222,7 +222,7 @@ export class ChannelsService {
 
     // validate signature
     const signedData = this.cryptoService.hash(channelLink.name + channelLink.broadcastKey + channelLink.signingKey);
-    const signed = this.cryptoService.validateSignature(channelLink.signature, signedData, channelLink.signingKey);
+    const signed = this.keyManager.verifySignature(channelLink.signature, signedData, channelLink.signingKey);
 
     if (signed) {
       // check if contact exists for this signingkey (in which case use them)
