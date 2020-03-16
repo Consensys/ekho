@@ -15,7 +15,6 @@ import { UsersService } from '../users/users.service';
 import { Web3Service } from '../web3/web3.service';
 import BroadcastChannelDto from './dto/broadcastchannel.dto';
 import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
-import CreateBroadcastChannelListenerDto from './dto/create-broadcastchannellistener.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
 import BroadcastChannelLinkDto from './dto/link-broadcastchannel.dto';
@@ -190,39 +189,9 @@ export class ChannelsService {
     }
   }
 
-  // Creates a broadcast channel listener
-  async createBroadcastChannelListener(channel: CreateBroadcastChannelListenerDto): Promise<Channel> {
-    Logger.debug('creating broadcast channel listener');
-
-    // 1. get user (fail if not found)
-    await this.userService.findById(channel.userId);
-
-    // 2. get contact (must be owned by user)
-    const channelContact = await this.contactService.findOneContact(channel.userId, channel.contactId);
-
-    // 3. get the provided channel secret
-    const sharedSecret = channel.key;
-
-    // 4. create channel
-    const newChannel = await this.createChannel(channel.name, sharedSecret);
-
-    // 5. create channelmember for contact
-    const userChannelMember = await this.createChannelMember(null, channelContact, newChannel, sharedSecret);
-
-    // 7. save everything (in a transaction)
-    await getManager().transaction(async transactionalEntityManager => {
-      await transactionalEntityManager.save(newChannel);
-      await transactionalEntityManager.save(userChannelMember);
-    });
-
-    Logger.debug('broadcast channel listener created ', newChannel.id.toString());
-
-    // 8. return the saved channel
-    return await this.findChannelById(newChannel.id);
-  }
-
   async getBroadcastChannelLink(userId: number, channelId: number): Promise<BroadcastChannelLinkDto> {
     await this.userService.findById(userId);
+
     const broadcastChannel = await this.broadcastChannelRepository.findOneOrFail({
       relations: ['channel'],
       where: { user: { id: userId }, channelId },
@@ -231,10 +200,13 @@ export class ChannelsService {
     const channelLink = new BroadcastChannelLinkDto();
     channelLink.name = broadcastChannel.channel.name;
     channelLink.broadcastKey = broadcastChannel.broadcastKey;
+
     channelLink.signingKey = await this.keyManager.readPublicSigningKey(userId);
     const dataToSign = this.cryptoService.hash(channelLink.name + channelLink.broadcastKey + channelLink.signingKey);
     channelLink.signature = await this.keyManager.sign(userId, dataToSign);
+
     const verified = this.cryptoService.validateSignature(channelLink.signature, dataToSign, channelLink.signingKey);
+
     if (!verified) {
       throw new Error('signature not validating correctly');
     }
@@ -282,19 +254,19 @@ export class ChannelsService {
   async createBroadcastChannel(channel: CreateBroadcastChannelDto): Promise<BroadcastChannelDto> {
     Logger.debug('creating broadcast channel');
 
-    // 1. get user
+    // get user
     const channelUser = await this.userService.findById(channel.userId);
 
-    // 3. create shared secret
+    // create shared secret
     const sharedSecret = await this.cryptoService.generateRandomBytes().toString(this.BASE_64);
 
-    // 4. create channel
+    // create channel
     const newChannel = await this.createChannel(channel.name, sharedSecret);
 
-    // 5. create channelmember for user
+    // create channelmember for user
     const userChannelMember = await this.createChannelMember(channelUser, null, newChannel, sharedSecret);
 
-    // 6. create Broadcast Channel for user
+    // create Broadcast Channel for user
     const broadcastChannel = await this.linkBroadcastChannel(channel.name, sharedSecret, channelUser, newChannel);
 
     // 7. save everything (in a transaction)
@@ -304,13 +276,14 @@ export class ChannelsService {
       await transactionalEntityManager.save(broadcastChannel);
     });
 
-    Logger.debug('broadcast channel created ', newChannel.id.toString());
-
-    // 8. return the broadcast channel details
+    // get the broadcast channel + sharing link details
     const newBroadcastChannel = new BroadcastChannelDto();
     newBroadcastChannel.channelId = newChannel.id;
     newBroadcastChannel.userId = channel.userId;
     newBroadcastChannel.broadcastLink = await this.getBroadcastChannelLink(channelUser.id, newChannel.id);
+
+    Logger.debug('broadcast channel created ', newChannel.id.toString());
+
     return newBroadcastChannel;
   }
 

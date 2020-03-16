@@ -39,7 +39,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async createBroadcastChannel(name, userId) {
+  async createBroadcastChannel(name: string, userId: number) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post('/channels/broadcast')
@@ -48,7 +48,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async followBroadcast(userId, channel: BroadcastChannelLinkDto) {
+  async followBroadcast(userId: number, channel: BroadcastChannelLinkDto) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post(`/channels/broadcast/follow/${userId}`)
@@ -57,7 +57,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async createBroadcastChannelListener(name, userId, contactId, key) {
+  async createBroadcastChannelListener(name: string, userId: number, contactId: number, key: string) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post('/channels/broadcast/listener')
