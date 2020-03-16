@@ -3,9 +3,9 @@ import { ApiQuery } from '@nestjs/swagger';
 import { ChannelsService } from './channels.service';
 import BroadcastChannelDto from './dto/broadcastchannel.dto';
 import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
-import CreateBroadcastChannelListenerDto from './dto/create-broadcastchannellistener.dto';
 import CreateChannelDto from './dto/create-channel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
+import BroadcastChannelLinkDto from './dto/link-broadcastchannel.dto';
 import ProcessReport from './dto/processreport.dto';
 import RawMessageDto from './dto/rawmessage.dto';
 import { BroadcastChannel } from './entities/broadcastchannels.entity';
@@ -17,28 +17,10 @@ import { Channel } from './entities/channels.entity';
 export class ChannelsController {
   constructor(private readonly channelService: ChannelsService) {}
 
-  // functional methods section
-
   // Creates a channel and members
   @Post()
   async createChannel(@Body() channel: CreateChannelDto): Promise<Channel> {
     return this.channelService.createChannelAndMembers(channel);
-  }
-
-  // creates a broadcast channel listener
-  @Post('broadcast/listener')
-  async createBroadcastChannelListener(@Body() channel: CreateBroadcastChannelListenerDto): Promise<Channel> {
-    return this.channelService.createBroadcastChannelListener(channel);
-  }
-
-  @Post('broadcast')
-  async createBroadcastChannel(@Body() channel: CreateBroadcastChannelDto): Promise<BroadcastChannelDto> {
-    return this.channelService.createBroadcastChannel(channel);
-  }
-
-  @Get('broadcast')
-  async findBroadcastChannels(@Query('userid') userId: number): Promise<BroadcastChannel[]> {
-    return this.channelService.getBroadcastChannels(userId);
   }
 
   // Creates a channel message
@@ -51,6 +33,33 @@ export class ChannelsController {
   @Get('refresh')
   async processAllEvents(): Promise<ProcessReport> {
     return this.channelService.processAllPendingEvents();
+  }
+
+  @Post('broadcast/follow/:userId')
+  async followBroadcast(@Param('userId') userId: number, @Body() channel: BroadcastChannelLinkDto): Promise<Channel> {
+    return this.channelService.followBroadcast(userId, channel);
+  }
+
+  @ApiQuery({ name: 'userId', required: true })
+  @ApiQuery({ name: 'channelId', required: true })
+  @Get('broadcast/share')
+  async getBroadcastChannelLink(
+    @Query('userId') userId: number,
+    @Query('channelId') channelId: number,
+  ): Promise<BroadcastChannelLinkDto> {
+    const link = this.channelService.getBroadcastChannelLink(userId, channelId);
+    return link;
+  }
+
+  @Post('broadcast')
+  async createBroadcastChannel(@Body() channel: CreateBroadcastChannelDto): Promise<BroadcastChannelDto> {
+    return this.channelService.createBroadcastChannel(channel);
+  }
+
+  @ApiQuery({ name: 'userId', required: true })
+  @Get('broadcast')
+  async findBroadcastChannels(@Query('userId') userId: number): Promise<BroadcastChannel[]> {
+    return this.channelService.getBroadcastChannels(userId);
   }
 
   // query methods section
@@ -75,6 +84,7 @@ export class ChannelsController {
   async findChannelMemberById(@Param('id') id: number): Promise<ChannelMember> {
     return this.channelService.findChannelMemberById(id);
   }
+
   // TODO pass and filter by userid
   // gets all channel members
   @Get('member')

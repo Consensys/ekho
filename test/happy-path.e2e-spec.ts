@@ -180,21 +180,11 @@ describe('Happy Path (e2e)', () => {
     });
 
     it('2) bob creates a broadcast listener to alices messages', async () => {
-      await channelsApi.createBroadcastChannelListener(
-        'alice-listener-bob-broadcast',
-        alice.id,
-        bobContactFromAlice.id,
-        bobBroadcastChannel.broadcastKey,
-      );
+      await channelsApi.followBroadcast(bob.id, aliceBroadcastChannel.broadcastLink);
     });
 
     it('2) alice creates a broadcast listener to bobs messages', async () => {
-      await channelsApi.createBroadcastChannelListener(
-        'alice-listener-bob-broadcast',
-        bob.id,
-        aliceContactFromBob.id,
-        aliceBroadcastChannel.broadcastKey,
-      );
+      await channelsApi.followBroadcast(alice.id, bobBroadcastChannel.broadcastLink);
     });
 
     it('3) bob broadcasts a message', async () => {
