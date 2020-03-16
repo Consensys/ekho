@@ -226,6 +226,32 @@ const commands = {
   },
 };
 
+const usage = () => {
+  const log = Logger.getLogger('usage');
+  log.info('USAGE:');
+  const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
+  const ARGUMENT_NAMES = /([^\s,]+)/g;
+  const getParamNames = func => {
+    var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+    var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+    if (result === null) result = [];
+    return result;
+  };
+  const print = (node, cmd) => {
+    if (node && typeof node === 'object') {
+      Object.keys(node).forEach(childs => {
+        if (typeof node[childs] === 'function') {
+          const params = getParamNames(node[childs]);
+          log.info(`${cmd} ${childs} (${params})`);
+        } else {
+          print(node[childs], `${cmd} ${childs}`);
+        }
+      });
+    }
+  };
+  print(commands, ' $');
+};
+
 const runner = async (cmd = commands, pos = 0) => {
   const key = args[pos];
   if (cmd[key] && typeof cmd[key] === 'function') {
@@ -234,7 +260,7 @@ const runner = async (cmd = commands, pos = 0) => {
   } else if (cmd[key] && typeof cmd[key] === 'object') {
     await runner(cmd[key], pos + 1);
   } else {
-    throw Error('nopnop');
+    usage();
   }
 };
 
