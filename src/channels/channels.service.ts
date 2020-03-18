@@ -60,6 +60,64 @@ export class ChannelsService {
   // *** Functional Methods ***
 
   // Process all pending blockchain events in DB
+
+  // change this to iterating through all channel members
+  // looking for next channel identifier
+  // if it finds it, process it
+  // keep going until all channel members are done and
+  // no new events are found
+  // for loop through channel members
+  // if one channel identifier found, process and iterate again on that channel member
+  // until all events are processed
+  // go onto next channel member
+
+  async process(userId: number): Promise<ProcessReport> {
+    const processReport = new ProcessReport();
+    processReport.receivedMessages = 0;
+    processReport.processedTotal = 0;
+    processReport.receivedMessageEvents = [];
+
+    const channelMembersByUser = await this.findChannelMembersByUser(userId);
+
+    for (const channelMember of channelMembersByUser) {
+      let nextChannelIdentifier = channelMember.nextChannelIdentifier;
+      Logger.debug('channel member,', nextChannelIdentifier);
+
+      let allMessagesRead: boolean = false;
+
+      while (!allMessagesRead) {
+        // check if we have an event for that channel member
+        const newEvent: EkhoEvent = await this.eventService.getTransactionByChannelId(nextChannelIdentifier);
+
+        // if we have an event, process it
+        if (newEvent) {
+          Logger.debug('event found: ', newEvent.txHash);
+
+          const incomingMessage = new EncodedMessageDto();
+          incomingMessage.channelIdentifier = newEvent.channelId;
+          incomingMessage.encryptedMessageLink = newEvent.content;
+          incomingMessage.encryptedMessageLinkSignature = newEvent.signature;
+
+          try {
+            const message: RawMessageDto = await this.validateAndDecryptEvent(newEvent, incomingMessage);
+            if (message) {
+              processReport.receivedMessages++;
+              processReport.receivedMessageEvents.push(incomingMessage);
+              nextChannelIdentifier = await (await this.findChannelMemberById(channelMember.id)).nextChannelIdentifier;
+            }
+          } catch (e) {
+            Logger.debug('Event could not be decoded', newEvent.txHash.toString());
+          } finally {
+            processReport.processedTotal++;
+          }
+        } else {
+          allMessagesRead = true;
+        }
+      }
+    }
+    return processReport;
+  }
+
   async processAllPendingEvents(): Promise<ProcessReport> {
     const processReport = new ProcessReport();
     processReport.receivedMessages = 0;
@@ -70,6 +128,8 @@ export class ChannelsService {
     Logger.debug('Processing pending events');
     try {
       while (!completed) {
+        // iterate through contact
+
         const unprocessedEvent: EkhoEventDto = await this.eventService.getFirstUnprocessedEvent();
         if (unprocessedEvent) {
           const incomingMessage = new EncodedMessageDto();
@@ -100,6 +160,7 @@ export class ChannelsService {
       Logger.debug('Error getting unprocessed events ', e.message);
       throw e;
     }
+    Logger.debug('Received messages: ', processReport.receivedMessages.toString());
     return processReport;
   }
 
@@ -394,6 +455,16 @@ export class ChannelsService {
     });
   }
 
+  // Finds channel member by userid and channelid
+  async findChannelMembersByUser(userId: number): Promise<ChannelMember[]> {
+    const channelMembers = await getRepository(ChannelMember)
+      .createQueryBuilder('channelmember')
+      .innerJoin('channelmember.contact', 'contact', 'contact.user = :userId', { userId })
+      .getMany();
+
+    return channelMembers;
+  }
+
   // *** Channel FIND Methods ***
 
   // Finds a channel by its channel id (TODO: for user id)
@@ -460,7 +531,7 @@ export class ChannelsService {
         const newChannelMessage = await this.createMessage(channelMember, rawMessage, nonce);
 
         // associate the message with the event
-        newChannelMessage.event = messageEvent;
+        newChannelMessage.ekhoEvent = messageEvent;
 
         // update the channel member
         const updatedChannelMember = await this.updateChannelMemberDetails(channelMember, nonce);

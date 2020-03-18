@@ -29,10 +29,9 @@ export class ChannelsController {
     return this.channelService.createChannelMessage(channelMessage);
   }
 
-  // process all received blockchain events
   @Get('refresh')
-  async processAllEvents(): Promise<ProcessReport> {
-    return this.channelService.processAllPendingEvents();
+  async processTest(@Query('userId') userId: number): Promise<ProcessReport> {
+    return this.channelService.process(userId);
   }
 
   @Post('broadcast/follow/:userId')

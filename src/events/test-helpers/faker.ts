@@ -12,6 +12,7 @@ var anonEvent: EkhoEvent = {
   signature: 'Made in Ireland',
   block: 1,
   processed: false,
+  channelmessages: null,
 };
 
 export const fakeEvent = fakerFactory<EkhoEvent>(anonEvent);

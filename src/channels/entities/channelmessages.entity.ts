@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from 'type-graphql';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { EkhoEvent } from '../../events/entities/events.entity';
 import { ChannelMember } from './channelmembers.entity';
 
@@ -27,7 +27,9 @@ export class ChannelMessage {
   @Column({ default: null })
   messageKey: string;
 
-  @OneToOne(type => EkhoEvent)
-  @JoinColumn()
-  event: EkhoEvent;
+  @ManyToOne(
+    type => EkhoEvent,
+    event => event.channelmessages,
+  )
+  ekhoEvent: EkhoEvent;
 }
