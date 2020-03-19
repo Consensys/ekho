@@ -30,7 +30,7 @@ export class ChannelsController {
   }
 
   @Get('refresh')
-  async processTest(@Query('userId') userId: number): Promise<ProcessReport> {
+  async processEvents(@Query('userId') userId: number): Promise<ProcessReport> {
     return this.channelService.process(userId);
   }
 
