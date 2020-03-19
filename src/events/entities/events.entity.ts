@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ChannelMessage } from '../../channels/entities/channelmessages.entity';
 
 @Entity()
 export class EkhoEvent {
@@ -28,4 +29,10 @@ export class EkhoEvent {
 
   @Column({ nullable: false })
   processed: boolean;
+
+  @OneToMany(
+    type => ChannelMessage,
+    channelmessage => channelmessage.ekhoEvent,
+  )
+  channelmessages: ChannelMessage[];
 }

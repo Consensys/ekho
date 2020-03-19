@@ -39,7 +39,7 @@ var anonChannelMessage: ChannelMessage = {
   messageContents: 'anon-message-contents',
   nonce: 0,
   messageKey: 'no-such-key',
-  event: null,
+  ekhoEvent: null,
 };
 
 var anonChannel: Channel = {
