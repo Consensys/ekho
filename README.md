@@ -120,7 +120,8 @@ After reviewing it locally, add/commit/push the `./documentation`.
 
 To download all historical blockchain events, prior to sending any messages, run the following:
 
-- POST: /web3/refresh
+- POST:
+  `/web3/refresh`
 
 This will pull down all events emitted by the ekho contract, and make them ready for processing.
 
