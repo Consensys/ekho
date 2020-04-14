@@ -2,7 +2,7 @@
 
 Project Ekho - peer-to-peer communication module.
 
-Check [detailed documentation](https://consensys.github.io/ekho/).
+Check [detailed documentation](https://eoinco.github.io/ekho/).
 
 ## Installation
 
