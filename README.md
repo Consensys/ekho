@@ -122,16 +122,17 @@ To download all historical blockchain events, prior to sending any messages, run
 
 URL: `/web3/refresh`
 
-Method: POST
-
 This will pull down all events emitted by the ekho contract, and make them ready for processing.
 
 ### Creating a User
 
 To create a user:
 
-- POST: /users
-  Provide the user's name
+URL: `/users`
+
+Postdata:
+
+Provide the user's name
 
 ### Adding a Contact
 

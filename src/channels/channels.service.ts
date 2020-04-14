@@ -255,7 +255,7 @@ export class ChannelsService {
 
     const broadcastChannel = await this.broadcastChannelRepository.findOneOrFail({
       relations: ['channel'],
-      where: { user: { id: userId }, channelId },
+      where: { user: { id: userId }, channel: { id: channelId } },
     });
 
     const channelLink = new BroadcastChannelLinkDto();
