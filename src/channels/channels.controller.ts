@@ -4,6 +4,7 @@ import { ChannelsService } from './channels.service';
 import BroadcastChannelDto from './dto/broadcastchannel.dto';
 import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
 import CreateChannelDto from './dto/create-channel.dto';
+import CreateExternalChannelDto from './dto/create-externalchannel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
 import BroadcastChannelLinkDto from './dto/link-broadcastchannel.dto';
 import ProcessReport from './dto/processreport.dto';
@@ -21,6 +22,12 @@ export class ChannelsController {
   @Post()
   async createChannel(@Body() channel: CreateChannelDto): Promise<Channel> {
     return this.channelService.createChannelAndMembers(channel);
+  }
+
+  // Creates a channel to an externally-created contact (secret generated outside ekho)
+  @Post('integration')
+  async createExternalChannelAndMembers(@Body() channel: CreateExternalChannelDto): Promise<Channel> {
+    return this.channelService.createExternalChannelAndMembers(channel);
   }
 
   // Creates a channel message

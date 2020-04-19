@@ -16,6 +16,7 @@ import { Web3Service } from '../web3/web3.service';
 import BroadcastChannelDto from './dto/broadcastchannel.dto';
 import CreateBroadcastChannelDto from './dto/create-broadcastchannel.dto';
 import CreateChannelDto from './dto/create-channel.dto';
+import CreateExternalChannelDto from './dto/create-externalchannel.dto';
 import EncodedMessageDto from './dto/encodedmessage.dto';
 import BroadcastChannelLinkDto from './dto/link-broadcastchannel.dto';
 import ProcessReport from './dto/processreport.dto';
@@ -286,7 +287,7 @@ export class ChannelsService {
     const signed = this.keyManager.verifySignature(channelLink.signature, signedData, channelLink.signingKey);
 
     if (signed) {
-      // check if contact exists for this signingkey (in which case use them)
+      // check if contact exists for this signingkey (in which case use them, otherwise create one)
       const contact = await this.contactService.findOneContactBySigningKey(
         userId,
         channelLink.name,
@@ -354,6 +355,46 @@ export class ChannelsService {
       relations: ['channel', 'user'],
       where: { user: userId },
     });
+  }
+
+  // Create a contact and channel based on an external contact
+  // (where the handshake is performed outside of ekho)
+  async createExternalChannelAndMembers(channel: CreateExternalChannelDto): Promise<Channel> {
+    Logger.debug('creating external contact, channel and members');
+
+    // 1. get user
+    const channelUser = await this.userService.findById(channel.userId);
+
+    // 2. find / create contact
+    const channelContact = await this.contactService.findOrCreateExternalContact(
+      channel.userId,
+      channel.contactName,
+      channel.contactPublicKey,
+      channel.contactIntegrationId,
+    );
+
+    const sharedSecret = channel.channelSharedSecret;
+
+    // 4. create channel
+    const newChannel = await this.createChannel(channel.name, sharedSecret);
+
+    // 5. create channelmember for user
+    const userChannelMember = await this.createChannelMember(channelUser, null, newChannel, sharedSecret);
+
+    // 6. create channelmember for contact
+    const contactChannelMember = await this.createChannelMember(null, channelContact, newChannel, sharedSecret);
+
+    // 7. save everything (in a transaction)
+    await getManager().transaction(async transactionalEntityManager => {
+      await transactionalEntityManager.save(newChannel);
+      await transactionalEntityManager.save(userChannelMember);
+      await transactionalEntityManager.save(contactChannelMember);
+    });
+
+    Logger.debug('channel and members created ', newChannel.id.toString());
+
+    // 8. return the saved channel
+    return await this.findChannelById(newChannel.id);
   }
 
   // Create a channel and members
