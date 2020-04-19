@@ -55,6 +55,10 @@ input CreateChannelDto {
   name: String!
 }
 
+input CreateExternalChannelDto {
+  userId: Float!
+}
+
 """
 New user name
 """

@@ -11,6 +11,7 @@ import ContactHandshakeDto from './dto/contact-handshake.dto';
 @Injectable()
 export class ContactsService {
   private readonly BROADCASTER = '_BROADCASTER';
+  private readonly EXTERNAL = '_EXTERNAL';
 
   constructor(
     @InjectRepository(Contact)
@@ -70,6 +71,33 @@ export class ContactsService {
     } else {
       const newContact = await this.createContact(userId, name + this.BROADCASTER);
       newContact.signingKey = signingKey;
+
+      await this.contactsRepository.save(newContact);
+      return newContact;
+    }
+  }
+
+  async findOrCreateExternalContact(
+    userId: number,
+    name: string,
+    signingKey: string,
+    identifier: string,
+  ): Promise<Contact> {
+    let contact = new Contact();
+    try {
+      contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, signingKey, identifier } });
+    } catch (err) {
+      Logger.error(err);
+    }
+
+    if (contact) {
+      return contact;
+    } else {
+      const newContact = await this.createContact(userId, name + this.EXTERNAL);
+      newContact.signingKey = signingKey;
+      newContact.identifier = identifier;
+      newContact.handshakePrivateKey = 'N/A';
+      newContact.handshakePublicKey = 'N/A';
       await this.contactsRepository.save(newContact);
       return newContact;
     }

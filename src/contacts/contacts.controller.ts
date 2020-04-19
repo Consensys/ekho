@@ -12,6 +12,7 @@ export class ContactsController {
   async getContactsForUser(@Param('userId') userId: number): Promise<ContactDto[]> {
     return this.contactsService.getByUser(userId);
   }
+
   @Get(':userId/:contactId')
   async findContactByUser(@Param('userId') userId: number, @Param('contactId') contactId: number): Promise<Contact> {
     return this.contactsService.findOneContact(userId, contactId);
