@@ -23,10 +23,10 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async processEvents() {
+  async processEvents(userId: number) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .get('/channels/refresh')
+      .get('/channels/refresh?userId=' + userId)
       .expect(200);
     return response.body;
   }

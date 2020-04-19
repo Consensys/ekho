@@ -144,7 +144,8 @@ describe('Happy Path (e2e)', () => {
     });
 
     it('3) process events', async () => {
-      await channelsApi.processEvents();
+      await channelsApi.processEvents(bob.id);
+      await channelsApi.processEvents(alice.id);
     });
 
     it('4) bob reads 2 messages from alice', async () => {
@@ -204,7 +205,8 @@ describe('Happy Path (e2e)', () => {
     });
 
     it('4) process events', async () => {
-      await channelsApi.processEvents();
+      await channelsApi.processEvents(bob.id);
+      await channelsApi.processEvents(alice.id);
     });
 
     it('5) bob listens alices broadcast channel and reads its message', async () => {
